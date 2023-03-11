@@ -43,7 +43,8 @@
     "com.unity.modules.xr": "1.0.0",
     "com.unity.testtools.codecoverage": "1.2.2",
     "com.nowsprinting.create-script-folders-with-tests": "1.2.0",
-    "org.nuget.nunit.analyzers": "3.3.0"
+    "org.nuget.nunit.analyzers": "3.3.0",
+    "org.nuget.idisposableanalyzers": "4.0.2"
   },
   "scopedRegistries": [
     {
@@ -59,6 +60,7 @@
       "url": "https://unitynuget-registry.azurewebsites.net",
       "scopes": [
         "net.azurewebsites",
+        "org.nuget.idisposableanalyzers",
         "org.nuget.nunit.analyzers"
       ]
     }

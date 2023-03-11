@@ -38,6 +38,7 @@ MonoBehaviour:
     m_Url: https://unitynuget-registry.azurewebsites.net
     m_Scopes:
     - net.azurewebsites
+    - org.nuget.idisposableanalyzers
     - org.nuget.nunit.analyzers
     m_IsDefault: 0
     m_Capabilities: 0
