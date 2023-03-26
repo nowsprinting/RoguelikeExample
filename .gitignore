@@ -171,6 +171,9 @@ fabric.properties
 /[Aa]ssets/[Mm][Ll]-[Aa]gents*
 /results/
 
+# TextMesh Pro Essentials
+/[Aa]ssets/[Tt]ext[Mm]esh [Pp]ro*
+
 # 3rd party editor extensions
 /[Aa]ssets/[Cc]onsole[Pp]ro*
 /[Aa]ssets/[Pp]roxima*
