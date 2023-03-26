@@ -11,8 +11,13 @@ namespace RoguelikeExample.Dungeon.Generator
 {
     public static class MapGenerator
     {
+        private const int MinMapWidth = 7;
+        private const int MinMapHeight = 7;
+        private const int MinRoomCount = 1;
+        private const int MinRoomSize = 3;
+
         /// <summary>
-        /// ランダムなダンジョンマップを生成します
+        /// ランダムなダンジョンマップを生成して返す
         /// </summary>
         /// <param name="width">生成されるマップの幅（7以上）</param>
         /// <param name="height">生成されるマップの高さ（7以上）</param>
@@ -22,10 +27,10 @@ namespace RoguelikeExample.Dungeon.Generator
         /// <returns></returns>
         public static MapChip[,] Generate(int width, int height, int roomCount, int maxRoomSize, IRandom random = null)
         {
-            Assert.IsTrue(width >= 7);
-            Assert.IsTrue(height >= 7);
-            Assert.IsTrue(roomCount >= 1);
-            Assert.IsTrue(maxRoomSize >= 3 && maxRoomSize <= (Math.Min(width, height) - 4));
+            Assert.IsTrue(width >= MinMapWidth);
+            Assert.IsTrue(height >= MinMapHeight);
+            Assert.IsTrue(roomCount >= MinRoomCount);
+            Assert.IsTrue(maxRoomSize >= MinRoomSize && maxRoomSize <= (Math.Min(width, height) - 2));
 
             if (random == null)
             {
@@ -82,7 +87,6 @@ namespace RoguelikeExample.Dungeon.Generator
 
             public Room(int mapWidth, int mapHeight, int maxRoomSize, IRandom random)
             {
-                const int MinRoomSize = 3;
                 _width = random.Next(MinRoomSize, maxRoomSize);
                 _height = random.Next(MinRoomSize, maxRoomSize);
                 _x = random.Next(1, mapWidth - _width - 1);
@@ -114,11 +118,13 @@ namespace RoguelikeExample.Dungeon.Generator
                 {
                     var x = random.Next(_x, (_x + _width));
                     var y = random.Next(_y, (_y + _height));
-                    if (map[x, y] == MapChip.Room)
-                        // TODO: 通路の横に配置されるのも回避したい
+                    if (map[x, y] != MapChip.Room)
                     {
-                        return (x, y);
+                        continue; // 再抽選
                     }
+                    // TODO: 通路の横に配置されるのも回避したい。最小3x3なので必ず場所はある
+
+                    return (x, y);
                 }
             }
         }
@@ -141,6 +147,8 @@ namespace RoguelikeExample.Dungeon.Generator
                 map[startX, startY] = MapChip.Corridor;
                 startY += (startY < endY) ? 1 : -1;
             }
+
+            // TODO: 既存の通路を避けるようにしたい
         }
     }
 }

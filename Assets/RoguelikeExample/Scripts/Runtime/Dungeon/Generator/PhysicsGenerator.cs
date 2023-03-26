@@ -17,39 +17,45 @@ namespace RoguelikeExample.Dungeon.Generator
         {
             var width = map.GetLength(0);
             var height = map.GetLength(1);
-            var root = new GameObject();
+            var rootObject = new GameObject();
 
             for (var i = 0; i < width; i++)
             {
                 for (var j = 0; j < height; j++)
                 {
-                    GameObject gameObject;
-                    switch (map[i, j])
-                    {
-                        case MapChip.Wall:
-                            gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            break;
-                        case MapChip.Room:
-                        case MapChip.Corridor:
-                            gameObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
-                            gameObject.transform.localScale = new Vector3(0.1f, 1.0f, 0.1f);
-                            break;
-                        case MapChip.UpStair:
-                            gameObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                            break;
-                        case MapChip.DownStair:
-                            gameObject = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-
-                    gameObject.transform.position = new Vector3(i, 0, j);
-                    gameObject.transform.SetParent(root.transform);
+                    var newObject = CreateObject(map[i, j]);
+                    newObject.transform.position = new Vector3(i, 0, j);
+                    newObject.transform.SetParent(rootObject.transform);
                 }
             }
 
-            return root;
+            return rootObject;
+        }
+
+        private static GameObject CreateObject(MapChip chip)
+        {
+            GameObject gameObject;
+            switch (chip)
+            {
+                case MapChip.Wall:
+                    gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    break;
+                case MapChip.Room:
+                case MapChip.Corridor:
+                    gameObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
+                    gameObject.transform.localScale = new Vector3(0.1f, 1.0f, 0.1f);
+                    break;
+                case MapChip.UpStair:
+                    gameObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                    break;
+                case MapChip.DownStair:
+                    gameObject = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return gameObject;
         }
     }
 }
