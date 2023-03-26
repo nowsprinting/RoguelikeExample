@@ -24,7 +24,7 @@ namespace RoguelikeExample.Dungeon.Generator
                 for (var j = 0; j < height; j++)
                 {
                     var newObject = CreateObject(map[i, j]);
-                    newObject.transform.position = new Vector3(i, 0, j);
+                    newObject.transform.position = new Vector3(i, 0, -j);
                     newObject.transform.SetParent(rootObject.transform);
                 }
             }
@@ -46,7 +46,7 @@ namespace RoguelikeExample.Dungeon.Generator
                     gameObject.transform.localScale = new Vector3(0.1f, 1.0f, 0.1f);
                     break;
                 case MapChip.UpStair:
-                    gameObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                    gameObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     break;
                 case MapChip.DownStair:
                     gameObject = GameObject.CreatePrimitive(PrimitiveType.Cylinder);

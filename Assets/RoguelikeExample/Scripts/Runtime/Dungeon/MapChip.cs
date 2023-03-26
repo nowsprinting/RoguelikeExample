@@ -1,7 +1,7 @@
 // Copyright (c) 2023 Koji Hasegawa.
 // This software is released under the MIT License.
 
-namespace RoguelikeExample.Dungeon.Generator
+namespace RoguelikeExample.Dungeon
 {
     public enum MapChip
     {

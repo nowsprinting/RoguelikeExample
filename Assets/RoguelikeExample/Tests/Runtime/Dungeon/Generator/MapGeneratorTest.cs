@@ -5,6 +5,7 @@ using System;
 using System.Text;
 using NUnit.Framework;
 using RoguelikeExample.Random;
+using RoguelikeExample.Utils;
 using UnityEngine;
 
 namespace RoguelikeExample.Dungeon.Generator
@@ -39,27 +40,8 @@ namespace RoguelikeExample.Dungeon.Generator
             Debug.Log($"Using {random.ToString()}"); // 再現性を確保するためシード値を出力
 
             var map = MapGenerator.Generate(width, height, roomCount, maxRoomSize, random);
-            Debug.Log(Dump(map)); // マップをテキストで出力
+            Debug.Log(MapHelper.Dump(map)); // マップをテキストで出力
             return map;
-        }
-
-        private static string Dump(MapChip[,] map)
-        {
-            var width = map.GetLength(0);
-            var height = map.GetLength(1);
-            var builder = new StringBuilder();
-
-            for (var i = 0; i < height; i++)
-            {
-                for (var j = 0; j < width; j++)
-                {
-                    builder.Append(map[j, i].ToString("D"));
-                }
-
-                builder.Append(Environment.NewLine);
-            }
-
-            return builder.ToString();
         }
 
         [TestCaseSource(nameof(s_testCaseSource))]
@@ -78,16 +60,16 @@ namespace RoguelikeExample.Dungeon.Generator
         {
             var map = GenerateMap(width, height, roomCount, maxRoomSize);
 
-            for (var i = 0; i < width; i++)
+            for (var x = 0; x < width; x++)
             {
-                Assert.That(map[i, 0], Is.EqualTo(MapChip.Wall));
-                Assert.That(map[i, height - 1], Is.EqualTo(MapChip.Wall));
+                Assert.That(map[x, 0], Is.EqualTo(MapChip.Wall));
+                Assert.That(map[x, height - 1], Is.EqualTo(MapChip.Wall));
             }
 
-            for (var j = 1; j < (height - 1); j++)
+            for (var y = 1; y < (height - 1); y++)
             {
-                Assert.That(map[0, j], Is.EqualTo(MapChip.Wall));
-                Assert.That(map[width - 1, j], Is.EqualTo(MapChip.Wall));
+                Assert.That(map[0, y], Is.EqualTo(MapChip.Wall));
+                Assert.That(map[width - 1, y], Is.EqualTo(MapChip.Wall));
             }
         }
 
@@ -121,30 +103,13 @@ namespace RoguelikeExample.Dungeon.Generator
         public void Generate_上り階段と下り階段の間を移動可能であること(int width, int height, int roomCount, int maxRoomSize)
         {
             var map = GenerateMap(width, height, roomCount, maxRoomSize);
-            var (upStairX, upStairY) = GetChipPosition(map, MapChip.UpStair);
-            var (downStairX, downStairY) = GetChipPosition(map, MapChip.DownStair);
+            var mapUtil = new MapUtil(map);
+            var (upStairX, upStairY) = mapUtil.GetUpStairPosition();
+            var (downStairX, downStairY) = mapUtil.GetDownStairPosition();
             var visited = new bool[width, height];
             var pathExists = PathExists(map, visited, upStairX, upStairY, downStairX, downStairY);
 
             Assert.That(pathExists, Is.True);
-        }
-
-        private static (int x, int y) GetChipPosition(MapChip[,] map, MapChip chip)
-        {
-            var width = map.GetLength(0);
-            var height = map.GetLength(1);
-            for (var i = 0; i < width; i++)
-            {
-                for (var j = 0; j < height; j++)
-                {
-                    if (map[i, j] == chip)
-                    {
-                        return (i, j);
-                    }
-                }
-            }
-
-            throw new ArgumentException($"指定されたマップチップが存在しません: {chip}");
         }
 
         private bool PathExists(MapChip[,] map, bool[,] visited, int startX, int startY, int endX, int endY)

@@ -27,9 +27,13 @@ namespace RoguelikeExample.Dungeon.Generator
             SceneManager.SetActiveScene(scene);
 
             var camera = new GameObject("Main Camera").AddComponent<Camera>();
-            var cameraTransform = camera.transform;
-            cameraTransform.position = new Vector3(8, 10, 8);
-            cameraTransform.LookAt(Vector3.zero);
+            camera.transform.position = new Vector3(0, 20, -10);
+            camera.transform.LookAt(Vector3.zero);
+
+            var light = new GameObject("Directional Light").AddComponent<Light>();
+            light.transform.rotation = Quaternion.Euler(new Vector3(50, -30, 0));
+            light.type = LightType.Directional;
+            light.color = Color.white;
         }
 
         [TearDown]
@@ -41,11 +45,11 @@ namespace RoguelikeExample.Dungeon.Generator
         [UnityTest]
         public IEnumerator Generate_マップの通りPrefabが配置されること()
         {
-            var map = new MapChip[,]
+            var map = MapHelper.CreateFromDumpStrings(new[]
             {
-                { MapChip.Wall, MapChip.Room, MapChip.UpStair, }, // 壁、部屋（床）、上り階段
-                { MapChip.Wall, MapChip.Corridor, MapChip.DownStair, }, // 壁、通路（床）、下り階段
-            };
+                "013", // 壁、部屋、上り階段
+                "024", // 壁、通路、下り階段
+            });
 
             var actual = PhysicsGenerator.Generate(map);
 
