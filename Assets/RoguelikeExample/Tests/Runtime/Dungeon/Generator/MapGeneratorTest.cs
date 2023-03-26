@@ -1,8 +1,6 @@
 // Copyright (c) 2023 Koji Hasegawa.
 // This software is released under the MIT License.
 
-using System;
-using System.Text;
 using NUnit.Framework;
 using RoguelikeExample.Random;
 using RoguelikeExample.Utils;
