@@ -1,1 +1,16 @@
-{"allowUnsafeCode":false,"autoReferenced":true,"defineConstraints":[],"excludePlatforms":[],"includePlatforms":[],"name":"RoguelikeExample","noEngineReferences":false,"optionalUnityReferences":[],"overrideReferences":false,"precompiledReferences":[],"references":[],"rootNamespace":""}
+{
+    "name": "RoguelikeExample",
+    "rootNamespace": "",
+    "references": [
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
