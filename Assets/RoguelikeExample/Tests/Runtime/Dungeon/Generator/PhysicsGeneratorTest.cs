@@ -15,7 +15,7 @@ namespace RoguelikeExample.Dungeon.Generator
     ///
     /// - マップ通りに5種類Prefabをロードして配置できていることが確認できればいい
     /// - 個々のPrefabの内容は別のテストで確認する前提で、配置はスクリーンショットを目視確認
-    /// - スクリーンショット撮影のためクリーンなSceneとCameraをセットアップしている
+    /// - スクリーンショット撮影のためにクリーンなSceneとCameraをセットアップしている
     /// </summary>
     [TestFixture]
     public class PhysicsGeneratorTest
@@ -27,7 +27,7 @@ namespace RoguelikeExample.Dungeon.Generator
             SceneManager.SetActiveScene(scene);
 
             var camera = new GameObject("Main Camera").AddComponent<Camera>();
-            camera.transform.position = new Vector3(0, 20, -10);
+            camera.transform.position = new Vector3(0, 10, -5);
             camera.transform.LookAt(Vector3.zero);
 
             var light = new GameObject("Directional Light").AddComponent<Light>();

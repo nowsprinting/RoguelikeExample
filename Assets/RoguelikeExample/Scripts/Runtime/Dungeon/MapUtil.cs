@@ -43,5 +43,10 @@ namespace RoguelikeExample.Dungeon
         {
             return GetChipPosition(MapChip.DownStair);
         }
+
+        public bool IsWall(int x, int y)
+        {
+            return _map[x, y] == MapChip.Wall;
+        }
     }
 }
