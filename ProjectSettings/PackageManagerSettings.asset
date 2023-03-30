@@ -29,6 +29,7 @@ MonoBehaviour:
     m_Name: package.openupm.com
     m_Url: https://package.openupm.com
     m_Scopes:
+    - com.cysharp.unitask
     - com.nowsprinting.create-script-folders-with-tests
     - com.openupm
     m_IsDefault: 0
@@ -42,11 +43,11 @@ MonoBehaviour:
     - org.nuget.nunit.analyzers
     m_IsDefault: 0
     m_Capabilities: 0
-  m_UserSelectedRegistryName: unitynuget-registry.azurewebsites.net
+  m_UserSelectedRegistryName: package.openupm.com
   m_UserAddingNewScopedRegistry: 0
   m_RegistryInfoDraft:
     m_Modified: 0
     m_ErrorMessage: 
-    m_UserModificationsInstanceId: -830
+    m_UserModificationsInstanceId: -828
     m_OriginalInstanceId: -832
   m_LoadAssets: 0
