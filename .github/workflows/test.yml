@@ -52,7 +52,6 @@ jobs:
       - name: Set coverage assembly filters
         run: |
           assemblies=$(find ./Packages -name "*.asmdef" | sed -e s/.*\\//\+/ | sed -e s/\\.asmdef// | sed -e s/^.*\\.Tests//)
-          assemblies+=("+LocalPackageSample*")
           # shellcheck disable=SC2001,SC2048,SC2086
           echo "assembly_filters=+<assets>,$(echo ${assemblies[*]} | sed -e s/\ /,/g),-*.Tests" >> "$GITHUB_ENV"
 
