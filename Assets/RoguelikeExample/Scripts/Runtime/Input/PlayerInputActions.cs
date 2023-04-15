@@ -39,40 +39,13 @@ namespace RoguelikeExample.Input
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""MoveLeftUp"",
-                    ""type"": ""Button"",
-                    ""id"": ""1f6cef03-f06c-45c8-8f91-d655a82d9ae4"",
-                    ""expectedControlType"": ""Button"",
+                    ""name"": ""DiagonalMove"",
+                    ""type"": ""Value"",
+                    ""id"": ""77f9b938-3c9d-42d5-ab01-0dd6601077fd"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""MoveRightUp"",
-                    ""type"": ""Button"",
-                    ""id"": ""6f2c86db-ee0c-44d6-bffb-d47839374721"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""MoveLeftDown"",
-                    ""type"": ""Button"",
-                    ""id"": ""1d69b9f5-07de-49d1-b573-b807d7195da6"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""MoveRightDown"",
-                    ""type"": ""Button"",
-                    ""id"": ""0a4f14f3-b600-4274-b611-56dde59a4209"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Look"",
@@ -334,50 +307,6 @@ namespace RoguelikeExample.Input
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7d3b4fc6-ddf9-4432-9313-08b61f1920d1"",
-                    ""path"": ""<Keyboard>/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""MoveLeftUp"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e7cc6c45-fb7e-44cd-97f3-8eb28b952e7b"",
-                    ""path"": ""<Keyboard>/u"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""MoveRightUp"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""02692298-2162-483f-9111-7f32e985eb28"",
-                    ""path"": ""<Keyboard>/b"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""MoveLeftDown"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ed8ffee5-acf2-452e-9d05-800db9c3f80b"",
-                    ""path"": ""<Keyboard>/n"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""MoveRightDown"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""c9924416-617c-41f0-b9a7-edfa897d2812"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
@@ -397,6 +326,61 @@ namespace RoguelikeExample.Input
                     ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""YUBN"",
+                    ""id"": ""fb9d6d05-9946-42b6-9ac0-9ad34f6699dc"",
+                    ""path"": ""Dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DiagonalMove"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""a99c73bb-b186-42e8-83eb-890c44ce327b"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""DiagonalMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""c1e4b377-30a5-45a0-9ae1-44e1dd81c2e4"",
+                    ""path"": ""<Keyboard>/n"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""DiagonalMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""a7f76aa7-4d89-4d16-a1bf-978af53f7be6"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""DiagonalMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""d6d4a12d-e584-4faf-be50-14feb11e03f2"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""DiagonalMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -983,10 +967,7 @@ namespace RoguelikeExample.Input
             // Player
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
-            m_Player_MoveLeftUp = m_Player.FindAction("MoveLeftUp", throwIfNotFound: true);
-            m_Player_MoveRightUp = m_Player.FindAction("MoveRightUp", throwIfNotFound: true);
-            m_Player_MoveLeftDown = m_Player.FindAction("MoveLeftDown", throwIfNotFound: true);
-            m_Player_MoveRightDown = m_Player.FindAction("MoveRightDown", throwIfNotFound: true);
+            m_Player_DiagonalMove = m_Player.FindAction("DiagonalMove", throwIfNotFound: true);
             m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
             m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
             m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
@@ -1065,10 +1046,7 @@ namespace RoguelikeExample.Input
         private readonly InputActionMap m_Player;
         private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
         private readonly InputAction m_Player_Move;
-        private readonly InputAction m_Player_MoveLeftUp;
-        private readonly InputAction m_Player_MoveRightUp;
-        private readonly InputAction m_Player_MoveLeftDown;
-        private readonly InputAction m_Player_MoveRightDown;
+        private readonly InputAction m_Player_DiagonalMove;
         private readonly InputAction m_Player_Look;
         private readonly InputAction m_Player_Attack;
         private readonly InputAction m_Player_Cancel;
@@ -1078,10 +1056,7 @@ namespace RoguelikeExample.Input
             private @PlayerInputActions m_Wrapper;
             public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Move => m_Wrapper.m_Player_Move;
-            public InputAction @MoveLeftUp => m_Wrapper.m_Player_MoveLeftUp;
-            public InputAction @MoveRightUp => m_Wrapper.m_Player_MoveRightUp;
-            public InputAction @MoveLeftDown => m_Wrapper.m_Player_MoveLeftDown;
-            public InputAction @MoveRightDown => m_Wrapper.m_Player_MoveRightDown;
+            public InputAction @DiagonalMove => m_Wrapper.m_Player_DiagonalMove;
             public InputAction @Look => m_Wrapper.m_Player_Look;
             public InputAction @Attack => m_Wrapper.m_Player_Attack;
             public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
@@ -1098,18 +1073,9 @@ namespace RoguelikeExample.Input
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
-                @MoveLeftUp.started += instance.OnMoveLeftUp;
-                @MoveLeftUp.performed += instance.OnMoveLeftUp;
-                @MoveLeftUp.canceled += instance.OnMoveLeftUp;
-                @MoveRightUp.started += instance.OnMoveRightUp;
-                @MoveRightUp.performed += instance.OnMoveRightUp;
-                @MoveRightUp.canceled += instance.OnMoveRightUp;
-                @MoveLeftDown.started += instance.OnMoveLeftDown;
-                @MoveLeftDown.performed += instance.OnMoveLeftDown;
-                @MoveLeftDown.canceled += instance.OnMoveLeftDown;
-                @MoveRightDown.started += instance.OnMoveRightDown;
-                @MoveRightDown.performed += instance.OnMoveRightDown;
-                @MoveRightDown.canceled += instance.OnMoveRightDown;
+                @DiagonalMove.started += instance.OnDiagonalMove;
+                @DiagonalMove.performed += instance.OnDiagonalMove;
+                @DiagonalMove.canceled += instance.OnDiagonalMove;
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
@@ -1129,18 +1095,9 @@ namespace RoguelikeExample.Input
                 @Move.started -= instance.OnMove;
                 @Move.performed -= instance.OnMove;
                 @Move.canceled -= instance.OnMove;
-                @MoveLeftUp.started -= instance.OnMoveLeftUp;
-                @MoveLeftUp.performed -= instance.OnMoveLeftUp;
-                @MoveLeftUp.canceled -= instance.OnMoveLeftUp;
-                @MoveRightUp.started -= instance.OnMoveRightUp;
-                @MoveRightUp.performed -= instance.OnMoveRightUp;
-                @MoveRightUp.canceled -= instance.OnMoveRightUp;
-                @MoveLeftDown.started -= instance.OnMoveLeftDown;
-                @MoveLeftDown.performed -= instance.OnMoveLeftDown;
-                @MoveLeftDown.canceled -= instance.OnMoveLeftDown;
-                @MoveRightDown.started -= instance.OnMoveRightDown;
-                @MoveRightDown.performed -= instance.OnMoveRightDown;
-                @MoveRightDown.canceled -= instance.OnMoveRightDown;
+                @DiagonalMove.started -= instance.OnDiagonalMove;
+                @DiagonalMove.performed -= instance.OnDiagonalMove;
+                @DiagonalMove.canceled -= instance.OnDiagonalMove;
                 @Look.started -= instance.OnLook;
                 @Look.performed -= instance.OnLook;
                 @Look.canceled -= instance.OnLook;
@@ -1336,10 +1293,7 @@ namespace RoguelikeExample.Input
         public interface IPlayerActions
         {
             void OnMove(InputAction.CallbackContext context);
-            void OnMoveLeftUp(InputAction.CallbackContext context);
-            void OnMoveRightUp(InputAction.CallbackContext context);
-            void OnMoveLeftDown(InputAction.CallbackContext context);
-            void OnMoveRightDown(InputAction.CallbackContext context);
+            void OnDiagonalMove(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
             void OnAttack(InputAction.CallbackContext context);
             void OnCancel(InputAction.CallbackContext context);

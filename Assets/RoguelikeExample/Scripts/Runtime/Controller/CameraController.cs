@@ -6,6 +6,7 @@ using UnityEngine;
 namespace RoguelikeExample.Controller
 {
     [RequireComponent(typeof(Camera))]
+    [DisallowMultipleComponent]
     public class CameraController : MonoBehaviour
     {
         public Transform trackedTarget;

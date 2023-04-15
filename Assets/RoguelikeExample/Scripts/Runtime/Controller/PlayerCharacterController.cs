@@ -11,32 +11,11 @@ namespace RoguelikeExample.Controller
     /// <summary>
     /// Using <c>PlayerInputActions</c>
     /// </summary>
-    public sealed class PlayerCharacterController : MonoBehaviour
+    [DisallowMultipleComponent]
+    public sealed class PlayerCharacterController : CharacterController
     {
-        public MapChip[,] Map { get; set; }
-
         private PlayerInputActions _inputActions;
         private bool _processing;
-
-        /// <summary>
-        /// キャラクターの位置をマップ座標 (column, row) で返す
-        /// </summary>
-        /// <returns>column=3Dのx, row=3Dの-z</returns>
-        public (int column, int row) GetMapLocation()
-        {
-            var position = transform.position;
-            return ((int)position.x, -1 * (int)position.z);
-        }
-
-        /// <summary>
-        /// キャラクターの位置をマップ座標 (column, row) で設定
-        /// </summary>
-        /// <param name="column">0以上の整数</param>
-        /// <param name="row">0以上の整数</param>
-        public void SetPositionFromMapLocation(int column, int row)
-        {
-            transform.position = new Vector3(column, 0, -1 * row);
-        }
 
         private void Awake()
         {
@@ -51,25 +30,49 @@ namespace RoguelikeExample.Controller
 
         private void Update()
         {
-            if (Map == null || _processing)
+            if (_processing)
                 return; // 移動などの処理中は入力を受け付けない
 
+            // hjkl, arrow, stick
             var move = _inputActions.Player.Move.ReadValue<Vector2>().normalized;
             if (move != Vector2.zero)
             {
                 StartCoroutine(Move((int)move.x, (int)move.y));
+                return;
             }
 
-            // TODO: yubn
+            // yubnは反時計回り45°回転して斜め移動として扱う
+            var diagonalMove = _inputActions.Player.DiagonalMove.ReadValue<Vector2>().normalized;
+            if (diagonalMove == Vector2.up)
+            {
+                StartCoroutine(Move(-1, 1));
+                return;
+            }
 
-            // TODO: ダッシュ移動
+            if (diagonalMove == Vector2.right)
+            {
+                StartCoroutine(Move(1, 1));
+                return;
+            }
+
+            if (diagonalMove == Vector2.down)
+            {
+                StartCoroutine(Move(1, -1));
+                return;
+            }
+
+            if (diagonalMove == Vector2.left)
+            {
+                StartCoroutine(Move(-1, -1));
+                return;
+            }
         }
 
         private IEnumerator Move(int x, int y)
         {
-            var mapPosition = GetMapLocation();
-            (int column, int row) dest = (mapPosition.column + x, mapPosition.row + y);
-            if (Map.IsWall(dest.column, dest.row))
+            var location = GetMapLocation();
+            (int column, int row) dest = (location.column + x, location.row - y); // y成分は上が+
+            if (_map.IsWall(dest.column, dest.row))
                 yield break;
 
             _processing = true;

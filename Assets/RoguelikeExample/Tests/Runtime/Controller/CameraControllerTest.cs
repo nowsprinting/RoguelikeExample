@@ -3,6 +3,7 @@
 
 using System.Collections;
 using NUnit.Framework;
+using RoguelikeExample.Dungeon;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
@@ -27,6 +28,10 @@ namespace RoguelikeExample.Controller
         {
             yield return SceneManager.LoadSceneAsync("Dungeon", LoadSceneMode.Single);
 
+            // DungeonManagerは無効化（ダンジョンと敵の生成を抑止）
+            var dungeonManager = Object.FindAnyObjectByType<DungeonManager>();
+            dungeonManager.enabled = false;
+
             _camera = GameObject.Find("Main Camera");
             Assume.That(_camera, Is.Not.Null);
 
@@ -35,7 +40,7 @@ namespace RoguelikeExample.Controller
         }
 
         /// <summary>
-        /// Sceneの設定を検証するテスト
+        /// Sceneのカメラ設定を検証するテスト
         ///
         /// 設定漏れや意図せず書き換わってしまうことを防止できる反面、インスペクタで意図的な変更を行なう都度、テストに反映する必要がある。
         /// 有効なテストかどうかはケースバイケースだが、本例では、本来無くてよいテストです。
