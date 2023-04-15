@@ -37,8 +37,8 @@ namespace RoguelikeExample.Controller
                 "0110", //　壁床床壁
                 "0000", //　壁壁壁壁
             });
-            _playerCharacterController.DungeonMap = new MapUtil(map);
-            _playerCharacterController.SetMapPosition(1, 1);
+            _playerCharacterController.Map = map;
+            _playerCharacterController.SetPositionFromMapLocation(1, 1);
         }
 
         [UnityTest]

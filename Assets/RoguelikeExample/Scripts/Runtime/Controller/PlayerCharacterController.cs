@@ -13,29 +13,29 @@ namespace RoguelikeExample.Controller
     /// </summary>
     public sealed class PlayerCharacterController : MonoBehaviour
     {
+        public MapChip[,] Map { get; set; }
+
         private PlayerInputActions _inputActions;
         private bool _processing;
 
-        public MapUtil DungeonMap { get; set; }
-
         /// <summary>
-        /// キャラクターの位置をマップ座標 (x, y) で返す
+        /// キャラクターの位置をマップ座標 (column, row) で返す
         /// </summary>
-        /// <returns>3Dのx, 3Dの-z</returns>
-        public (int x, int y) GetMapPosition()
+        /// <returns>column=3Dのx, row=3Dの-z</returns>
+        public (int column, int row) GetMapLocation()
         {
             var position = transform.position;
             return ((int)position.x, -1 * (int)position.z);
         }
 
         /// <summary>
-        /// キャラクターの位置をマップ座標 (x, y) で設定
+        /// キャラクターの位置をマップ座標 (column, row) で設定
         /// </summary>
-        /// <param name="x">0以上の整数</param>
-        /// <param name="y">0以上の整数</param>
-        public void SetMapPosition(int x, int y)
+        /// <param name="column">0以上の整数</param>
+        /// <param name="row">0以上の整数</param>
+        public void SetPositionFromMapLocation(int column, int row)
         {
-            transform.position = new Vector3(x, 0, -1 * y);
+            transform.position = new Vector3(column, 0, -1 * row);
         }
 
         private void Awake()
@@ -51,7 +51,7 @@ namespace RoguelikeExample.Controller
 
         private void Update()
         {
-            if (DungeonMap == null || _processing)
+            if (Map == null || _processing)
                 return; // 移動などの処理中は入力を受け付けない
 
             var move = _inputActions.Player.Move.ReadValue<Vector2>().normalized;
@@ -67,9 +67,9 @@ namespace RoguelikeExample.Controller
 
         private IEnumerator Move(int x, int y)
         {
-            var mapPosition = GetMapPosition();
-            (int x, int y) dest = (mapPosition.x + x, mapPosition.y + y);
-            if (DungeonMap.IsWall(dest.x, dest.y))
+            var mapPosition = GetMapLocation();
+            (int column, int row) dest = (mapPosition.column + x, mapPosition.row + y);
+            if (Map.IsWall(dest.column, dest.row))
                 yield break;
 
             _processing = true;
@@ -77,7 +77,7 @@ namespace RoguelikeExample.Controller
             // TODO: 移動アニメーション
             yield return new WaitForSeconds(0.1f);
 
-            SetMapPosition(dest.x, dest.y); // 移動後
+            SetPositionFromMapLocation(dest.column, dest.row); // 移動後
             yield return null;
 
             _processing = false;

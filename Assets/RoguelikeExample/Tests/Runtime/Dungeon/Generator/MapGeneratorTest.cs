@@ -35,7 +35,7 @@ namespace RoguelikeExample.Dungeon.Generator
         private static MapChip[,] GenerateMap(int width, int height, int roomCount, int maxRoomSize)
         {
             var random = new RandomImpl();
-            Debug.Log($"Using {random.ToString()}"); // 再現性を確保するためシード値を出力
+            Debug.Log($"Using {random}"); // 再現性を確保するためシード値を出力
 
             var map = MapGenerator.Generate(width, height, roomCount, maxRoomSize, random);
             Debug.Log(MapHelper.Dump(map)); // マップをテキストで出力
@@ -101,9 +101,8 @@ namespace RoguelikeExample.Dungeon.Generator
         public void Generate_上り階段と下り階段の間を移動可能であること(int width, int height, int roomCount, int maxRoomSize)
         {
             var map = GenerateMap(width, height, roomCount, maxRoomSize);
-            var mapUtil = new MapUtil(map);
-            var (upStairX, upStairY) = mapUtil.GetUpStairPosition();
-            var (downStairX, downStairY) = mapUtil.GetDownStairPosition();
+            var (upStairX, upStairY) = map.GetUpStairPosition();
+            var (downStairX, downStairY) = map.GetDownStairPosition();
             var visited = new bool[width, height];
             var pathExists = PathExists(map, visited, upStairX, upStairY, downStairX, downStairY);
 
