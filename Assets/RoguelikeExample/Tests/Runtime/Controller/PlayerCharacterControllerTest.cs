@@ -162,5 +162,46 @@ namespace RoguelikeExample.Controller
 
             Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
+
+        [Test]
+        public async Task 壁に向かって移動しようとしたときはターン加算されない()
+        {
+            _playerCharacterController.SetPositionFromMapLocation(1, 1);
+
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            _input.Press(keyboard.hKey);
+            await Task.Delay(WaitAfterOperationMillis);
+
+            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((1, 1)));
+            Assert.That(_playerCharacterController._turn, Is.EqualTo(0));
+        }
+
+        [Test]
+        public async Task 移動するとターン加算される()
+        {
+            _playerCharacterController.SetPositionFromMapLocation(1, 1);
+
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            _input.Press(keyboard.lKey);
+            await Task.Delay(1); // Next frame
+            _input.Release(keyboard.lKey);
+            await Task.Delay(WaitAfterOperationMillis);
+
+            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((2, 1)));
+            Assert.That(_playerCharacterController._turn, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task 連続移動は移動しただけターン加算される()
+        {
+            _playerCharacterController.SetPositionFromMapLocation(1, 1);
+
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            _input.Press(keyboard.lKey); // 押しっぱなし
+            await Task.Delay(WaitAfterOperationMillis * 2);
+
+            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((3, 1)));
+            Assert.That(_playerCharacterController._turn, Is.EqualTo(2));
+        }
     }
 }

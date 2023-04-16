@@ -16,6 +16,7 @@ namespace RoguelikeExample.Controller
     {
         private PlayerInputActions _inputActions;
         private bool _processing;
+        internal int _turn;
 
         private void Awake()
         {
@@ -76,6 +77,7 @@ namespace RoguelikeExample.Controller
                 yield break;
 
             _processing = true;
+            _turn++;
 
             // TODO: 移動アニメーション
             yield return new WaitForSeconds(0.1f);
