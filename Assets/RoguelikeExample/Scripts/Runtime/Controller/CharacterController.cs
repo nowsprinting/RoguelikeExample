@@ -2,13 +2,16 @@
 // This software is released under the MIT License.
 
 using RoguelikeExample.Dungeon;
+using RoguelikeExample.Random;
 using UnityEngine;
 
 namespace RoguelikeExample.Controller
 {
+    [DisallowMultipleComponent]
     public class CharacterController : MonoBehaviour
     {
-        internal MapChip[,] _map; // Set by DungeonManager
+        protected IRandom _random;
+        protected MapChip[,] _map;
 
         /// <summary>
         /// キャラクターの位置をマップ座標 (column, row) で返す

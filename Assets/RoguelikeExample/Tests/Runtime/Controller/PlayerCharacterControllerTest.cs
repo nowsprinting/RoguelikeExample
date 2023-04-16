@@ -37,14 +37,17 @@ namespace RoguelikeExample.Controller
             SceneManager.SetActiveScene(scene);
 
             _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
-            _playerCharacterController._map = MapHelper.CreateFromDumpStrings(new[]
-            {
-                "00000", //　壁壁壁壁壁
-                "01110", // 壁床床床壁
-                "01110", //　壁床床床壁
-                "01110", //　壁床床壁
-                "00000", //　壁壁壁壁壁
-            });
+            _playerCharacterController.NewLevel(
+                MapHelper.CreateFromDumpStrings(new[]
+                {
+                    "00000", // 壁壁壁壁壁
+                    "01110", // 壁床床床壁
+                    "01110", // 壁床床床壁
+                    "01110", // 壁床床床壁
+                    "00000", // 壁壁壁壁壁
+                }),
+                (0, 0) // 初期位置は仮。各テストケースで設定される
+            );
         }
 
         [UnityTearDown]

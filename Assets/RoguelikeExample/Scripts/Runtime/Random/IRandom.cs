@@ -9,6 +9,12 @@ namespace RoguelikeExample.Random
     public interface IRandom
     {
         /// <summary>
+        /// Returns a non-negative random integer.
+        /// </summary>
+        /// <returns>Generated random number</returns>
+        int Next();
+
+        /// <summary>
         /// Returns random number that is less than specified max-value.
         /// </summary>
         /// <param name="maxValue">Upper bound of the random number to be generated</param>

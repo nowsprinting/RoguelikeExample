@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "RoguelikeExample",
         "Unity.InputSystem",
-        "Unity.InputSystem.TestFramework"
+        "Unity.InputSystem.TestFramework",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

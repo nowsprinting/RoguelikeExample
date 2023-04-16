@@ -35,6 +35,12 @@ namespace RoguelikeExample.Random
         }
 
         /// <inheritdoc />
+        public int Next()
+        {
+            return _random.Next();
+        }
+
+        /// <inheritdoc />
         public int Next(int maxValue)
         {
             return _random.Next(maxValue);

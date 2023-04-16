@@ -4,19 +4,39 @@
 using System.Collections;
 using RoguelikeExample.Dungeon;
 using RoguelikeExample.Input;
+using RoguelikeExample.Random;
 using UnityEngine;
 
 namespace RoguelikeExample.Controller
 {
     /// <summary>
-    /// Using <c>PlayerInputActions</c>
+    /// プレイヤーキャラクターのコントローラー
     /// </summary>
-    [DisallowMultipleComponent]
     public sealed class PlayerCharacterController : CharacterController
     {
         private PlayerInputActions _inputActions;
         private bool _processing;
         internal int _turn;
+
+        /// <summary>
+        /// インスタンス生成時に <c>DungeonManager</c> から設定される
+        /// </summary>
+        /// <param name="random">このキャラクターが消費する擬似乱数インスタンス</param>
+        public void Initialize(IRandom random)
+        {
+            _random = random;
+        }
+
+        /// <summary>
+        /// 新しいレベルに移動したときに <c>DungeonManager</c> から設定される
+        /// </summary>
+        /// <param name="map">当該レベルのマップ</param>
+        /// <param name="location">キャラクターの初期位置</param>
+        public void NewLevel(MapChip[,] map, (int colum, int row) location)
+        {
+            _map = map;
+            SetPositionFromMapLocation(location.colum, location.row);
+        }
 
         private void Awake()
         {
