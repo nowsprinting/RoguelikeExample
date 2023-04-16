@@ -11,35 +11,25 @@ using UnityEngine.TestTools;
 namespace RoguelikeExample.Dungeon.Generator
 {
     /// <summary>
-    /// ダンジョン3Dオブジェクト生成のテスト
+    /// ダンジョン3Dオブジェクト配置のテスト
     ///
-    /// - マップ通りに5種類のPrefabをロードして配置できていることが確認できればいい
-    /// - 個々のPrefabの内容は別のテストで確認する前提で、配置はスクリーンショットを目視確認
-    /// - スクリーンショット撮影のためにクリーンなSceneとCameraをセットアップしている
+    /// 渡されたマップ通りに5種類のPrefabをロードして配置できていることを確認しています。
+    /// 個々のPrefabの内容は別のテストで確認する前提で、配置はスクリーンショットを目視確認しています。
     /// </summary>
     [TestFixture]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor, RuntimePlatform.LinuxEditor)]
     public class PhysicsGeneratorTest
     {
-        [SetUp]
-        public void SetUp()
+        [UnitySetUp]
+        public IEnumerator SetUp()
         {
-            var scene = SceneManager.CreateScene(nameof(PhysicsGeneratorTest));
-            SceneManager.SetActiveScene(scene);
-
-            var camera = new GameObject("Main Camera").AddComponent<Camera>();
-            camera.transform.position = new Vector3(0, 10, -5);
-            camera.transform.LookAt(Vector3.zero);
-
-            var light = new GameObject("Directional Light").AddComponent<Light>();
-            light.transform.rotation = Quaternion.Euler(new Vector3(50, -30, 0));
-            light.type = LightType.Directional;
-            light.color = Color.white;
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            SceneManager.UnloadSceneAsync(nameof(PhysicsGeneratorTest));
+#if UNITY_EDITOR
+            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(
+                "Assets/RoguelikeExample/Tests/TestScenes/DungeonGeneratorSandbox.unity",
+                new LoadSceneParameters(LoadSceneMode.Single));
+            // Note: カメラとライトが必要なのでCreateSceneでなくサンドボックスを使用しています。
+            //       Scenes in BuildにないSceneなので、EditorSceneManagerでロードしています
+#endif
         }
 
         [UnityTest]
@@ -53,10 +43,10 @@ namespace RoguelikeExample.Dungeon.Generator
 
             var actual = PhysicsGenerator.Generate(map);
 
-            yield return ScreenshotHelper.CaptureScreenshot(); // TODO: ルックが安定したらImageAssertに変更してもいいかも
-
             Assert.That(actual, Is.Not.Null);
             Assert.That(actual.transform.childCount, Is.EqualTo(map.Length));
+
+            yield return ScreenshotHelper.CaptureScreenshot(); // TODO: ルックが安定したらImageAssertに変更
         }
     }
 }

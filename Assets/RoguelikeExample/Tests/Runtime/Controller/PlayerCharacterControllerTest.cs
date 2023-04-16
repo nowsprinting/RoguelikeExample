@@ -14,14 +14,11 @@ namespace RoguelikeExample.Controller
 {
     /// <summary>
     /// プレイヤーキャラクター操作のテスト
+    ///
     /// <c>Unity.InputSystem.TestFramework</c>を使用して入力をシミュレートする例
     /// <see href="https://docs.unity3d.com/Packages/com.unity.inputsystem@1.5/manual/Testing.html"/>
-    ///
-    /// - 使用しているScene（Sandbox.unity）は、Scenes in Buildに登録されていないもの
-    /// - Play Modeテストだが、In Editorでのみ実行する
     /// </summary>
     [TestFixture]
-    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor, RuntimePlatform.LinuxEditor)]
     public class PlayerCharacterControllerTest
     {
         private PlayerCharacterController _playerCharacterController;
@@ -29,19 +26,15 @@ namespace RoguelikeExample.Controller
 
         private const int WaitAfterOperationMillis = 150;
 
-        [UnitySetUp]
-        public IEnumerator SetUp()
+        [SetUp]
+        public void SetUp()
         {
             _input.Setup();
             // Note: プロダクトコードでInputSystemが初期化されるより前に `InputTestFixture.SetUp` を実行する必要がある
-            // Note: `InputTestFixture` はSetUp/TearDownと競合するため使用していない
+            // Note: `InputTestFixture` を継承する方法は、SetUp/TearDownと競合するため使用していない
 
-#if UNITY_EDITOR
-            // Scenes in Buildに登録されていないSceneかつIn Editorでのみ実行するテストのため、EditorSceneManagerでロード
-            yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(
-                "Assets/RoguelikeExample/Scenes/Sandbox.unity",
-                new LoadSceneParameters(LoadSceneMode.Single));
-#endif
+            var scene = SceneManager.CreateScene(nameof(PlayerCharacterControllerTest));
+            SceneManager.SetActiveScene(scene);
 
             _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
             _playerCharacterController._map = MapHelper.CreateFromDumpStrings(new[]
@@ -54,10 +47,12 @@ namespace RoguelikeExample.Controller
             });
         }
 
-        [TearDown]
-        public void TearDown()
+        [UnityTearDown]
+        public IEnumerator TearDown()
         {
             _input.TearDown();
+
+            yield return SceneManager.UnloadSceneAsync(nameof(PlayerCharacterControllerTest));
         }
 
         [TestCase(2, 2, 1, 2)]
