@@ -26,7 +26,7 @@ namespace RoguelikeExample.AI
         /// <param name="targetLocation">プレイヤーキャラクターの座標</param>
         /// <returns>移動先候補の座標。PC座標を指すときには攻撃する</returns>
         public abstract (int column, int row) ThinkAction(
-            ref MapChip[,] map,
+            MapChip[,] map,
             (int column, int row) myLocation,
             (int column, int row) targetLocation);
 

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) 2023 Koji Hasegawa.
 // This software is released under the MIT License.
 
-using System;
 using RoguelikeExample.Entities.ScriptableObjects;
 
 namespace RoguelikeExample.Entities
@@ -9,14 +8,10 @@ namespace RoguelikeExample.Entities
     /// <summary>
     /// 敵個体の持つステータス
     /// </summary>
-    public struct EnemyStatus
+    public class EnemyStatus : CharacterStatus
     {
         public EnemyRace Race { get; private set; }
         public int Level { get; private set; }
-        public int MaxHitPoint { get; private set; }
-        public int HitPoint { get; private set; }
-        public int Defense { get; private set; }
-        public int Attack { get; private set; }
         public int RewardExp { get; private set; }
         public int RewardGold { get; private set; }
 
@@ -36,21 +31,6 @@ namespace RoguelikeExample.Entities
             var rewardScalingFactor = new ScalingFactor(level, 1.5f);
             RewardExp = rewardScalingFactor.Scale(race.rewardExp);
             RewardGold = rewardScalingFactor.Scale(race.rewardGold);
-        }
-
-        private class ScalingFactor
-        {
-            private readonly double _scalingFactor;
-
-            public ScalingFactor(int level, float coefficient)
-            {
-                _scalingFactor = Math.Pow(level, coefficient);
-            }
-
-            public int Scale(int value)
-            {
-                return (int)(_scalingFactor * value);
-            }
         }
     }
 }

@@ -14,7 +14,7 @@ namespace RoguelikeExample.Entities
     /// <c>Ignore</c>属性で無視したり、テスト自体を削除してしまいましょう。
     /// </summary>
     [TestFixture]
-    public class CharacterStatusTest
+    public class EnemyStatusTest
     {
         [Test]
         public void Constructor_各ステータスはレベル補正されて設定される()

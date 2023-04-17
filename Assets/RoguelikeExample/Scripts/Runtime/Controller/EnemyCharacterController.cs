@@ -48,7 +48,7 @@ namespace RoguelikeExample.Controller
         /// <param name="pcLocation">プレイキャラクターのマップ座標</param>
         public void DoAction((int column, int row) pcLocation)
         {
-            var nextLocation = _ai.ThinkAction(ref _map, GetMapLocation(), pcLocation);
+            var nextLocation = _ai.ThinkAction(_map, GetMapLocation(), pcLocation);
 
             if (nextLocation.column == pcLocation.column && nextLocation.row == pcLocation.row)
             {

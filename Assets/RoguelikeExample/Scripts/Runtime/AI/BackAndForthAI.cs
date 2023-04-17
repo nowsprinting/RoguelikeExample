@@ -26,7 +26,7 @@ namespace RoguelikeExample.AI
 
         /// <inheritdoc/>
         public override (int column, int row) ThinkAction(
-            ref MapChip[,] map,
+            MapChip[,] map,
             (int column, int row) myLocation,
             (int column, int row) targetLocation)
         {
@@ -37,7 +37,7 @@ namespace RoguelikeExample.AI
 
             if (_direction == default)
             {
-                _direction = DecideFirstDirection(ref map, myLocation); // 最初の移動方向を決める
+                _direction = DecideFirstDirection(map, myLocation); // 最初の移動方向を決める
             }
 
             if (map.IsWall(myLocation.column + (int)_direction.x, myLocation.row + (int)_direction.y))
@@ -48,7 +48,7 @@ namespace RoguelikeExample.AI
             return (myLocation.column + (int)_direction.x, myLocation.row + (int)_direction.y); // 移動先の座標を返す
         }
 
-        private Vector2 DecideFirstDirection(ref MapChip[,] map, (int column, int row) myLocation)
+        private Vector2 DecideFirstDirection(MapChip[,] map, (int column, int row) myLocation)
         {
             var lotteryBox = new List<Vector2>();
             if (!map.IsWall(myLocation.column - 1, myLocation.row)) lotteryBox.Add(Vector2.left);
