@@ -10,7 +10,7 @@ using UnityEngine;
 namespace RoguelikeExample.AI
 {
     /// <summary>
-    /// 直線的に往復する行動AI
+    /// 直線的に往復する行動AI。接敵したらその場で攻撃する
     ///
     /// 仕様
     ///  - 最初の方向はランダムだが、必ず壁がない方向を選択する

@@ -9,6 +9,10 @@ namespace RoguelikeExample.AI
     /// </summary>
     public enum AIType
     {
-        BackAndForth = 0, // 直線的に往復するAI
+        /// <summary>
+        /// 直線的に往復する行動AI。接敵したらその場で攻撃する
+        /// <see cref="BackAndForthAI"/>
+        /// </summary>
+        BackAndForth = 0,
     }
 }
