@@ -3,6 +3,7 @@
 
 using Cysharp.Threading.Tasks;
 using RoguelikeExample.Dungeon;
+using RoguelikeExample.Entities;
 using RoguelikeExample.Input;
 using RoguelikeExample.Random;
 using UnityEngine;
@@ -19,9 +20,11 @@ namespace RoguelikeExample.Controller
         // 設定されていなくてもエラーにはしないこと。
         // Dungeon.unityでは設定必須なので、<c>DungeonSceneValidator</c>でバリデーションしている
 
+        public PlayerStatus Status { get; private set; } = new PlayerStatus();
+
         private PlayerInputActions _inputActions;
         private bool _processing;
-        internal int _turn;
+        internal int _moveAnimationMillis = 100; // 移動アニメーション時間（テストで上書きするのでconstにしていない）
 
         /// <summary>
         /// インゲーム開始時に <c>DungeonManager</c> から設定される
@@ -96,8 +99,6 @@ namespace RoguelikeExample.Controller
 
         private async UniTask Move(int column, int row)
         {
-            const int MoveAnimationMillis = 100; // 移動アニメーション時間
-
             var location = MapLocation();
             (int column, int row) dest = (location.column + column, location.row - row); // y成分は上が+
 
@@ -111,7 +112,8 @@ namespace RoguelikeExample.Controller
             }
 
             _processing = true;
-            _turn++;
+
+            Status.IncrementTurn();
             NextLocation = dest;
 
             if (enemyManager != null)
@@ -119,11 +121,11 @@ namespace RoguelikeExample.Controller
                 enemyManager.ThinkActionEnemies(this);
             }
 
-            await MoveToNextLocation(MoveAnimationMillis);
+            await MoveToNextLocation(_moveAnimationMillis);
 
             if (enemyManager != null)
             {
-                await enemyManager.DoActionEnemies(MoveAnimationMillis);
+                await enemyManager.DoActionEnemies(_moveAnimationMillis);
             }
 
             _processing = false;

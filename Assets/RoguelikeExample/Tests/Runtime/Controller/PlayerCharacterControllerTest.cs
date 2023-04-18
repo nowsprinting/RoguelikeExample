@@ -3,6 +3,7 @@
 
 using System.Collections;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using NUnit.Framework;
 using RoguelikeExample.Utils;
 using UnityEngine;
@@ -21,10 +22,8 @@ namespace RoguelikeExample.Controller
     [TestFixture]
     public class PlayerCharacterControllerTest
     {
-        private PlayerCharacterController _playerCharacterController;
         private readonly InputTestFixture _input = new InputTestFixture();
-
-        private const int WaitAfterOperationMillis = 110; // <c>PlayerCharacterController</c>の移動アニメーション時間+10ms
+        private PlayerCharacterController _playerCharacterController;
 
         [SetUp]
         public void SetUp()
@@ -37,6 +36,7 @@ namespace RoguelikeExample.Controller
             SceneManager.SetActiveScene(scene);
 
             _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
+            _playerCharacterController._moveAnimationMillis = 0; // 移動アニメーション時間を0に
             _playerCharacterController.NewLevel(
                 MapHelper.CreateFromDumpStrings(new[]
                 {
@@ -66,7 +66,7 @@ namespace RoguelikeExample.Controller
 
             var keyboard = InputSystem.AddDevice<Keyboard>();
             _input.Press(keyboard.hKey);
-            await Task.Delay(WaitAfterOperationMillis);
+            await UniTask.DelayFrame(2); // PCと敵の行動で（アニメーション0でも）2フレーム待つ
 
             Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
@@ -79,7 +79,7 @@ namespace RoguelikeExample.Controller
 
             var keyboard = InputSystem.AddDevice<Keyboard>();
             _input.Press(keyboard.jKey);
-            await Task.Delay(WaitAfterOperationMillis);
+            await UniTask.DelayFrame(2);
 
             Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
@@ -92,7 +92,7 @@ namespace RoguelikeExample.Controller
 
             var keyboard = InputSystem.AddDevice<Keyboard>();
             _input.Press(keyboard.kKey);
-            await Task.Delay(WaitAfterOperationMillis);
+            await UniTask.DelayFrame(2);
 
             Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
@@ -105,7 +105,7 @@ namespace RoguelikeExample.Controller
 
             var keyboard = InputSystem.AddDevice<Keyboard>();
             _input.Press(keyboard.lKey);
-            await Task.Delay(WaitAfterOperationMillis);
+            await UniTask.DelayFrame(2);
 
             Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
@@ -119,7 +119,7 @@ namespace RoguelikeExample.Controller
 
             var keyboard = InputSystem.AddDevice<Keyboard>();
             _input.Press(keyboard.yKey);
-            await Task.Delay(WaitAfterOperationMillis);
+            await UniTask.DelayFrame(2);
 
             Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
@@ -133,7 +133,7 @@ namespace RoguelikeExample.Controller
 
             var keyboard = InputSystem.AddDevice<Keyboard>();
             _input.Press(keyboard.uKey);
-            await Task.Delay(WaitAfterOperationMillis);
+            await UniTask.DelayFrame(2);
 
             Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
@@ -147,7 +147,7 @@ namespace RoguelikeExample.Controller
 
             var keyboard = InputSystem.AddDevice<Keyboard>();
             _input.Press(keyboard.bKey);
-            await Task.Delay(WaitAfterOperationMillis);
+            await UniTask.DelayFrame(2);
 
             Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
@@ -161,7 +161,7 @@ namespace RoguelikeExample.Controller
 
             var keyboard = InputSystem.AddDevice<Keyboard>();
             _input.Press(keyboard.nKey);
-            await Task.Delay(WaitAfterOperationMillis);
+            await UniTask.DelayFrame(2);
 
             Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
@@ -173,10 +173,10 @@ namespace RoguelikeExample.Controller
 
             var keyboard = InputSystem.AddDevice<Keyboard>();
             _input.Press(keyboard.hKey);
-            await Task.Delay(WaitAfterOperationMillis);
+            await UniTask.DelayFrame(2);
 
             Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 1)));
-            Assert.That(_playerCharacterController._turn, Is.EqualTo(0));
+            Assert.That(_playerCharacterController.Status.Turn, Is.EqualTo(0));
         }
 
         [Test]
@@ -186,12 +186,12 @@ namespace RoguelikeExample.Controller
 
             var keyboard = InputSystem.AddDevice<Keyboard>();
             _input.Press(keyboard.lKey);
-            await Task.Delay(1); // Next frame
+            await UniTask.DelayFrame(2);
             _input.Release(keyboard.lKey);
-            await Task.Delay(WaitAfterOperationMillis);
+            await UniTask.DelayFrame(2);
 
             Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((2, 1)));
-            Assert.That(_playerCharacterController._turn, Is.EqualTo(1));
+            Assert.That(_playerCharacterController.Status.Turn, Is.EqualTo(1));
         }
 
         [Test]
@@ -201,10 +201,10 @@ namespace RoguelikeExample.Controller
 
             var keyboard = InputSystem.AddDevice<Keyboard>();
             _input.Press(keyboard.lKey); // 押しっぱなし
-            await Task.Delay(WaitAfterOperationMillis * 2);
+            await UniTask.DelayFrame(4); // 2単位移動するので2x2=4フレーム待つ
 
             Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
-            Assert.That(_playerCharacterController._turn, Is.EqualTo(2));
+            Assert.That(_playerCharacterController.Status.Turn, Is.EqualTo(2));
         }
     }
 }
