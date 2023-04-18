@@ -1,6 +1,7 @@
 // Copyright (c) 2023 Koji Hasegawa.
 // This software is released under the MIT License.
 
+using RoguelikeExample.Controller;
 using UnityEngine;
 
 namespace RoguelikeExample.Dungeon
@@ -17,6 +18,11 @@ namespace RoguelikeExample.Dungeon
     [DisallowMultipleComponent]
     public class DungeonManager : MonoBehaviour
     {
+        [SerializeField, Tooltip("Player Character")]
+        internal PlayerCharacterController playerCharacter;
+        // 設定されていなくてもエラーにはしないこと。
+        // Dungeon.unityでは設定必須なので、<c>DungeonSceneValidator</c>でバリデーションしている
+
         /// <summary>
         /// 現在のレベル
         /// </summary>

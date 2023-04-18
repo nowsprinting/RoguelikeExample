@@ -19,54 +19,53 @@ namespace RoguelikeExample.Editor.Validators
     [TestFixture]
     public class DungeonSceneValidator
     {
-        private const string PlayerCharacterObjectName = "PlayerCharacter";
+        private CameraController _cameraController;
+        private Light _light;
+        private DungeonManager _dungeonManager;
+        private PlayerCharacterController _playerCharacterController;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             EditorSceneManager.OpenScene("Assets/RoguelikeExample/Scenes/Dungeon.unity");
 
-            var dungeonManager = Object.FindAnyObjectByType<DungeonManager>();
-            dungeonManager.enabled = false; // ダンジョンと敵の生成は抑止
+            _cameraController = Object.FindAnyObjectByType<CameraController>();
+            Assume.That(_cameraController, Is.Not.Null);
+
+            _light = Object.FindAnyObjectByType<Light>();
+            Assume.That(_light, Is.Not.Null);
+
+            _dungeonManager = Object.FindAnyObjectByType<DungeonManager>();
+            Assume.That(_dungeonManager, Is.Not.Null);
+            _dungeonManager.enabled = false; // ダンジョンと敵の生成は抑止
+
+            _playerCharacterController = Object.FindAnyObjectByType<PlayerCharacterController>();
+            Assume.That(_playerCharacterController, Is.Not.Null);
         }
 
         [Test]
         public void CameraControllerにPlayerCharacterへの参照がセットされていること()
         {
-            var cameraController = Object.FindAnyObjectByType<CameraController>();
-            Assume.That(cameraController, Is.Not.Null);
-
-            var playerCharacter = GameObject.Find(PlayerCharacterObjectName);
-            Assume.That(playerCharacter, Is.Not.Null);
-
-            Assert.That(cameraController.trackedTarget.gameObject, Is.EqualTo(playerCharacter));
-            // Note: ここで例えば、RelativePositionの設定値まで検証することは推奨しません
+            Assert.That(_cameraController.trackedTarget.gameObject, Is.EqualTo(_playerCharacterController.gameObject));
+            // Note: ここでRelativePositionの設定値まで検証することは推奨しません
         }
 
         [Test]
         public void DirectionalLightが存在すること()
         {
-            var directionalLight = Object.FindAnyObjectByType<Light>();
-            Assume.That(directionalLight, Is.Not.Null);
-
-            Assert.That(directionalLight.type, Is.EqualTo(LightType.Directional));
+            Assert.That(_light.type, Is.EqualTo(LightType.Directional));
         }
 
         [Test]
-        public void DungeonManagerが存在すること()
+        public void DungeonManagerにPlayerCharacterControllerへの参照がセットされていること()
         {
-            var dungeonManager = Object.FindAnyObjectByType<DungeonManager>();
-            Assert.That(dungeonManager, Is.Not.Null);
+            Assert.That(_dungeonManager.playerCharacter, Is.EqualTo(_playerCharacterController));
         }
 
         [Test]
-        public void PlayerCharacterが存在すること()
+        public void PlayerCharacterControllerにDungeonManagerへの参照がセットされていること()
         {
-            var playerCharacter = GameObject.Find(PlayerCharacterObjectName);
-            Assume.That(playerCharacter, Is.Not.Null);
-
-            var playerCharacterController = playerCharacter.GetComponent<PlayerCharacterController>();
-            Assert.That(playerCharacterController, Is.Not.Null, "PlayerCharacterControllerがアタッチされていること");
+            Assert.That(_playerCharacterController.dungeonManager, Is.EqualTo(_dungeonManager));
         }
     }
 }

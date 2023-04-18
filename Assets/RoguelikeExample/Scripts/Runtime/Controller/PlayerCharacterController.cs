@@ -14,6 +14,11 @@ namespace RoguelikeExample.Controller
     /// </summary>
     public sealed class PlayerCharacterController : CharacterController
     {
+        [SerializeField, Tooltip("Dungeon Manager")]
+        internal DungeonManager dungeonManager;
+        // 設定されていなくてもエラーにはしないこと。
+        // Dungeon.unityでは設定必須なので、<c>DungeonSceneValidator</c>でバリデーションしている
+
         private PlayerInputActions _inputActions;
         private bool _processing;
         internal int _turn;
