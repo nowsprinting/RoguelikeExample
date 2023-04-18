@@ -2,7 +2,10 @@
 // This software is released under the MIT License.
 
 using System.Collections;
+using System.Threading.Tasks;
 using NUnit.Framework;
+using RoguelikeExample.AI;
+using RoguelikeExample.Dungeon;
 using RoguelikeExample.Entities.ScriptableObjects;
 using RoguelikeExample.Random;
 using RoguelikeExample.Utils;
@@ -53,6 +56,77 @@ namespace RoguelikeExample.Controller
 
             var textMesh = enemyCharacterController.GetComponent<TextMeshPro>();
             Assert.That(textMesh.text, Is.EqualTo("仇"));
+        }
+
+        [Test]
+        public async Task ThinkAction_移動先座標にプレイヤーキャラクター_移動せず攻撃する()
+        {
+            var enemyRace = ScriptableObject.CreateInstance<EnemyRace>();
+            enemyRace.aiType = AIType.BackAndForth;
+
+            var enemyManager = new GameObject().AddComponent<EnemyManager>();
+            var enemyCharacterController = new GameObject().AddComponent<EnemyCharacterController>();
+            await Task.Delay(1);
+            enemyCharacterController.transform.parent = enemyManager.transform;
+            enemyCharacterController.Initialize(
+                enemyRace,
+                1,
+                new RandomImpl(),
+                MapHelper.CreateFromDumpStrings(new[]
+                {
+                    "0000", // 壁壁壁壁
+                    "0110", // 壁床床壁
+                    "0000", // 壁壁壁壁
+                }),
+                (1, 1)
+            );
+
+            var playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
+            playerCharacterController.SetPositionFromMapLocation(2, 1); // 唯一の移動先
+
+            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
+            Assert.That(enemyCharacterController.NextLocation, Is.EqualTo((1, 1)));
+            // TODO: 攻撃は未実装
+        }
+
+        [Test]
+        public void ThinkAction_移動先座標に別の敵キャラクター_移動しない()
+        {
+            var enemyRace = ScriptableObject.CreateInstance<EnemyRace>();
+            enemyRace.aiType = AIType.BackAndForth;
+
+            var enemyManager = new GameObject().AddComponent<EnemyManager>();
+            var enemyCharacterController = new GameObject().AddComponent<EnemyCharacterController>();
+            enemyCharacterController.transform.parent = enemyManager.transform;
+            enemyCharacterController.Initialize(
+                enemyRace,
+                1,
+                new RandomImpl(),
+                MapHelper.CreateFromDumpStrings(new[]
+                {
+                    "0000", // 壁壁壁壁
+                    "0110", // 壁床床壁
+                    "0000", // 壁壁壁壁
+                }),
+                (1, 1)
+            );
+
+            var existEnemy = new GameObject().AddComponent<EnemyCharacterController>();
+            existEnemy.transform.parent = enemyManager.transform;
+            existEnemy.SetPositionFromMapLocation(2, 1); // 唯一の移動先
+
+            var playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
+            playerCharacterController.SetPositionFromMapLocation(-1, -1); // このテストには影響しない
+
+            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
+            Assert.That(enemyCharacterController.NextLocation, Is.EqualTo((1, 1)));
+        }
+
+        [Ignore("壁に向かって移動しようとするAIが実装されたら追加予定")]
+        [Test]
+        public void ThinkAction_移動先座標が壁_移動しない()
+        {
+            // TODO: AIの実装によっては壁に向かって移動しようとするので、それを回避する実装のテスト
         }
     }
 }

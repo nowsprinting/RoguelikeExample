@@ -12,7 +12,7 @@ namespace RoguelikeExample.Editor.Validators
     /// <summary>
     /// Dungeon.unityに必要なGameObjectの設定を検証する
     ///
-    /// 初期設定の確認ではなく、変更時のミスを早期に検出することが目的です。
+    /// 開発時の確認ではなく、変更時のミスを早期に検出することが目的です。
     /// コンポーネントの設定値の検証まで書いてしまうと、Sceneを変更するたびにテストも修正しなければならなくなります。
     /// 他に影響のある致命的な設定ミスや、逆に気づきにくいミスを検出するに留めるのが理想です。
     /// </summary>
@@ -66,6 +66,13 @@ namespace RoguelikeExample.Editor.Validators
         public void PlayerCharacterControllerにDungeonManagerへの参照がセットされていること()
         {
             Assert.That(_playerCharacterController.dungeonManager, Is.EqualTo(_dungeonManager));
+        }
+
+        [Test]
+        public void EnemyManagerは初期配置されていてはいけない()
+        {
+            var enemyManager = Object.FindAnyObjectByType<EnemyManager>();
+            Assume.That(enemyManager, Is.Null);
         }
     }
 }

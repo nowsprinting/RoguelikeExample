@@ -1,6 +1,7 @@
 // Copyright (c) 2023 Koji Hasegawa.
 // This software is released under the MIT License.
 
+using System;
 using RoguelikeExample.AI;
 using RoguelikeExample.Dungeon;
 using RoguelikeExample.Entities;
@@ -15,11 +16,11 @@ namespace RoguelikeExample.Controller
     /// </summary>
     public class EnemyCharacterController : CharacterController
     {
-        private EnemyStatus _status;
+        public EnemyStatus Status { get; private set; }
         private AbstractAI _ai;
 
         /// <summary>
-        /// インスタンス生成時に <c>DungeonManager</c> から設定される
+        /// インスタンス生成時に <c>EnemyManager</c> から設定される
         /// </summary>
         /// <param name="race">敵種族</param>
         /// <param name="level">敵レベル</param>
@@ -28,7 +29,7 @@ namespace RoguelikeExample.Controller
         /// <param name="location">キャラクターの初期座標</param>
         public void Initialize(EnemyRace race, int level, IRandom random, MapChip[,] map, (int colum, int row) location)
         {
-            _status = new EnemyStatus(race, level);
+            Status = new EnemyStatus(race, level);
             _random = random;
             _ai = AIFactory.CreateAI(race.aiType, new RandomImpl(random.Next()));
             _map = map;
@@ -42,28 +43,33 @@ namespace RoguelikeExample.Controller
         }
 
         /// <summary>
-        /// 自分のターンの行動
+        /// 自分のターンの行動を思考
         /// プレイヤーが1ターン終えるたびに呼ばれる
         /// </summary>
-        /// <param name="pcLocation">プレイキャラクターのマップ座標</param>
-        public void DoAction((int column, int row) pcLocation)
+        /// <param name="enemyManager"></param>
+        /// <param name="playerCharacterController"></param>
+        public void ThinkAction(EnemyManager enemyManager, PlayerCharacterController playerCharacterController)
         {
-            var nextLocation = _ai.ThinkAction(_map, GetMapLocation(), pcLocation);
+            var pcLocation = playerCharacterController.NextLocation;
+            var dist = _ai.ThinkAction(_map, this, playerCharacterController);
 
-            if (nextLocation.column == pcLocation.column && nextLocation.row == pcLocation.row)
+            if (dist == pcLocation)
             {
-                // TODO: 攻撃
+                return; // TODO: 攻撃
             }
 
-            if (_map.IsWall(nextLocation.column, nextLocation.row))
+            if (_map.IsWall(dist.column, dist.row))
             {
                 return; // 移動先が壁なら何もしない
             }
 
-            // TODO: 移動先が敵キャラのときも何もしない。判定ロジックはDungeonManagerに持つ？
+            if (enemyManager.ExistEnemy(dist))
+            {
+                return; // 移動先が敵キャラのときは何もしない
+            }
 
-            // 移動
-            SetPositionFromMapLocation(nextLocation.column, nextLocation.row);
+            // 移動先をセット
+            NextLocation = dist;
         }
     }
 }

@@ -1,6 +1,7 @@
 // Copyright (c) 2023 Koji Hasegawa.
 // This software is released under the MIT License.
 
+using RoguelikeExample.Controller;
 using RoguelikeExample.Dungeon;
 using RoguelikeExample.Random;
 
@@ -11,7 +12,7 @@ namespace RoguelikeExample.AI
     /// </summary>
     public abstract class AbstractAI
     {
-        protected IRandom _random;
+        protected readonly IRandom _random;
 
         protected AbstractAI(IRandom random)
         {
@@ -22,13 +23,13 @@ namespace RoguelikeExample.AI
         /// 敵キャラクターの行動を返す
         /// </summary>
         /// <param name="map">ダンジョンのマップ</param>
-        /// <param name="myLocation">当該キャラの座標</param>
-        /// <param name="targetLocation">プレイヤーキャラクターの座標</param>
+        /// <param name="myself">当該キャラクターインスタンス</param>
+        /// <param name="target">プレイヤーキャラクターインスタンス</param>
         /// <returns>移動先候補の座標。PC座標を指すときには攻撃する</returns>
         public abstract (int column, int row) ThinkAction(
             MapChip[,] map,
-            (int column, int row) myLocation,
-            (int column, int row) targetLocation);
+            EnemyCharacterController myself,
+            PlayerCharacterController target);
 
         /// <summary>
         /// 接敵しているか判定

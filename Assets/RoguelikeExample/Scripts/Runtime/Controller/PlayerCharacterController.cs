@@ -1,7 +1,7 @@
 // Copyright (c) 2023 Koji Hasegawa.
 // This software is released under the MIT License.
 
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using RoguelikeExample.Dungeon;
 using RoguelikeExample.Input;
 using RoguelikeExample.Random;
@@ -24,7 +24,7 @@ namespace RoguelikeExample.Controller
         internal int _turn;
 
         /// <summary>
-        /// インスタンス生成時に <c>DungeonManager</c> から設定される
+        /// インゲーム開始時に <c>DungeonManager</c> から設定される
         /// </summary>
         /// <param name="random">このキャラクターが消費する擬似乱数インスタンス</param>
         public void Initialize(IRandom random)
@@ -63,7 +63,7 @@ namespace RoguelikeExample.Controller
             var move = _inputActions.Player.Move.ReadValue<Vector2>().normalized;
             if (move != Vector2.zero)
             {
-                StartCoroutine(Move((int)move.x, (int)move.y));
+                Move((int)move.x, (int)move.y).Forget();
                 return;
             }
 
@@ -71,46 +71,76 @@ namespace RoguelikeExample.Controller
             var diagonalMove = _inputActions.Player.DiagonalMove.ReadValue<Vector2>().normalized;
             if (diagonalMove == Vector2.up)
             {
-                StartCoroutine(Move(-1, 1));
+                Move(-1, 1).Forget();
                 return;
             }
 
             if (diagonalMove == Vector2.right)
             {
-                StartCoroutine(Move(1, 1));
+                Move(1, 1).Forget();
                 return;
             }
 
             if (diagonalMove == Vector2.down)
             {
-                StartCoroutine(Move(1, -1));
+                Move(1, -1).Forget();
                 return;
             }
 
             if (diagonalMove == Vector2.left)
             {
-                StartCoroutine(Move(-1, -1));
+                Move(-1, -1).Forget();
                 return;
             }
         }
 
-        private IEnumerator Move(int x, int y)
+        private async UniTask Move(int column, int row)
         {
-            var location = GetMapLocation();
-            (int column, int row) dest = (location.column + x, location.row - y); // y成分は上が+
+            const int MoveAnimationMillis = 100; // 移動アニメーション時間
+
+            var location = MapLocation();
+            (int column, int row) dest = (location.column + column, location.row - row); // y成分は上が+
+
             if (_map.IsWall(dest.column, dest.row))
-                yield break;
+                return;
+
+            var enemyManager = EnemyManager();
+            if (enemyManager != null && enemyManager.ExistEnemy(dest) != null)
+            {
+                return; // 移動先に敵がいる場合は移動しない（攻撃はspaceキー）
+            }
 
             _processing = true;
             _turn++;
+            NextLocation = dest;
 
-            // TODO: 移動アニメーション
-            yield return new WaitForSeconds(0.1f);
+            if (enemyManager != null)
+            {
+                enemyManager.ThinkActionEnemies(this);
+            }
 
-            SetPositionFromMapLocation(dest.column, dest.row); // 移動後
-            yield return null;
+            await MoveToNextLocation(MoveAnimationMillis);
+
+            if (enemyManager != null)
+            {
+                await enemyManager.DoActionEnemies(MoveAnimationMillis);
+            }
 
             _processing = false;
+        }
+
+        private EnemyManager EnemyManager()
+        {
+#if !UNITY_INCLUDE_TESTS
+            UnityEngine.Assertions.Assert.IsNotNull(dungeonManager, "DungeonManagerが存在しません"); // テストでは存在しないことを許容
+            // Note: 原則、このようなテストのためのロジックをプロダクトコードに入れるのは避けるべきです
+#endif
+            if (dungeonManager != null)
+            {
+                return dungeonManager.EnemyManager;
+            }
+
+            return null;
         }
     }
 }

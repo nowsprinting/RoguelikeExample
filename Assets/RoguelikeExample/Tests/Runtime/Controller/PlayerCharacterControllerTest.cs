@@ -24,7 +24,7 @@ namespace RoguelikeExample.Controller
         private PlayerCharacterController _playerCharacterController;
         private readonly InputTestFixture _input = new InputTestFixture();
 
-        private const int WaitAfterOperationMillis = 150;
+        private const int WaitAfterOperationMillis = 110; // <c>PlayerCharacterController</c>の移動アニメーション時間+10ms
 
         [SetUp]
         public void SetUp()
@@ -68,7 +68,7 @@ namespace RoguelikeExample.Controller
             _input.Press(keyboard.hKey);
             await Task.Delay(WaitAfterOperationMillis);
 
-            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
+            Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
 
         [TestCase(2, 2, 2, 3)]
@@ -81,7 +81,7 @@ namespace RoguelikeExample.Controller
             _input.Press(keyboard.jKey);
             await Task.Delay(WaitAfterOperationMillis);
 
-            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
+            Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
 
         [TestCase(2, 2, 2, 1)]
@@ -94,7 +94,7 @@ namespace RoguelikeExample.Controller
             _input.Press(keyboard.kKey);
             await Task.Delay(WaitAfterOperationMillis);
 
-            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
+            Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
 
         [TestCase(2, 2, 3, 2)]
@@ -107,7 +107,7 @@ namespace RoguelikeExample.Controller
             _input.Press(keyboard.lKey);
             await Task.Delay(WaitAfterOperationMillis);
 
-            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
+            Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
 
         [TestCase(2, 2, 1, 1)]
@@ -121,7 +121,7 @@ namespace RoguelikeExample.Controller
             _input.Press(keyboard.yKey);
             await Task.Delay(WaitAfterOperationMillis);
 
-            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
+            Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
 
         [TestCase(2, 2, 3, 1)]
@@ -135,7 +135,7 @@ namespace RoguelikeExample.Controller
             _input.Press(keyboard.uKey);
             await Task.Delay(WaitAfterOperationMillis);
 
-            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
+            Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
 
         [TestCase(2, 2, 1, 3)]
@@ -149,7 +149,7 @@ namespace RoguelikeExample.Controller
             _input.Press(keyboard.bKey);
             await Task.Delay(WaitAfterOperationMillis);
 
-            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
+            Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
 
         [TestCase(2, 2, 3, 3)]
@@ -163,7 +163,7 @@ namespace RoguelikeExample.Controller
             _input.Press(keyboard.nKey);
             await Task.Delay(WaitAfterOperationMillis);
 
-            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
+            Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((expectedColumn, expectedRow)));
         }
 
         [Test]
@@ -175,7 +175,7 @@ namespace RoguelikeExample.Controller
             _input.Press(keyboard.hKey);
             await Task.Delay(WaitAfterOperationMillis);
 
-            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((1, 1)));
+            Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 1)));
             Assert.That(_playerCharacterController._turn, Is.EqualTo(0));
         }
 
@@ -190,7 +190,7 @@ namespace RoguelikeExample.Controller
             _input.Release(keyboard.lKey);
             await Task.Delay(WaitAfterOperationMillis);
 
-            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((2, 1)));
+            Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((2, 1)));
             Assert.That(_playerCharacterController._turn, Is.EqualTo(1));
         }
 
@@ -203,7 +203,7 @@ namespace RoguelikeExample.Controller
             _input.Press(keyboard.lKey); // 押しっぱなし
             await Task.Delay(WaitAfterOperationMillis * 2);
 
-            Assert.That(_playerCharacterController.GetMapLocation(), Is.EqualTo((3, 1)));
+            Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
             Assert.That(_playerCharacterController._turn, Is.EqualTo(2));
         }
     }

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using RoguelikeExample.Controller;
 using RoguelikeExample.Dungeon;
 using RoguelikeExample.Random;
 using UnityEngine;
@@ -13,9 +14,9 @@ namespace RoguelikeExample.AI
     /// 直線的に往復する行動AI。接敵したらその場で攻撃する
     ///
     /// 仕様
-    ///  - 最初の方向はランダムだが、必ず壁がない方向を選択する
-    ///  - 以降は毎ターン直進し、壁にあたったら反転する
-    ///  - 接敵したらその場で攻撃する
+    /// - 最初の方向はランダムだが、必ず壁がない方向を選択する
+    /// - 以降は毎ターン直進し、壁にあたったら反転する
+    /// - 接敵したらその場で攻撃する
     /// </summary>
     public class BackAndForthAI : AbstractAI
     {
@@ -27,10 +28,13 @@ namespace RoguelikeExample.AI
         /// <inheritdoc/>
         public override (int column, int row) ThinkAction(
             MapChip[,] map,
-            (int column, int row) myLocation,
-            (int column, int row) targetLocation)
+            EnemyCharacterController myself,
+            PlayerCharacterController target)
         {
-            if (IsEngagement(myLocation, targetLocation))
+            var myLocation = myself.MapLocation();
+            var targetLocation = target.NextLocation;
+
+            if (IsEngagement(myLocation, target.NextLocation))
             {
                 return targetLocation; // 接敵している場合はその場から攻撃する
             }
