@@ -5,6 +5,10 @@ using System.Collections;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using NUnit.Framework;
+using RoguelikeExample.Dungeon;
+using RoguelikeExample.Entities;
+using RoguelikeExample.Entities.ScriptableObjects;
+using RoguelikeExample.Random;
 using RoguelikeExample.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,7 +18,7 @@ using UnityEngine.TestTools;
 namespace RoguelikeExample.Controller
 {
     /// <summary>
-    /// プレイヤーキャラクター操作のテスト
+    /// プレイヤーキャラクター操作・振る舞いのテスト（結合度高め）
     ///
     /// <c>Unity.InputSystem.TestFramework</c>を使用して入力をシミュレートする例
     /// <see href="https://docs.unity3d.com/Packages/com.unity.inputsystem@1.5/manual/Testing.html"/>
@@ -24,6 +28,7 @@ namespace RoguelikeExample.Controller
     {
         private readonly InputTestFixture _input = new InputTestFixture();
         private PlayerCharacterController _playerCharacterController;
+        private EnemyManager _enemyManager;
 
         [SetUp]
         public void SetUp()
@@ -35,8 +40,10 @@ namespace RoguelikeExample.Controller
             var scene = SceneManager.CreateScene(nameof(PlayerCharacterControllerTest));
             SceneManager.SetActiveScene(scene);
 
+            _enemyManager = new GameObject().AddComponent<EnemyManager>();
+
             _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
-            _playerCharacterController._moveAnimationMillis = 0; // 移動アニメーション時間を0に
+            _playerCharacterController._actionAnimationMillis = 0; // 行動アニメーション時間を0に
             _playerCharacterController.NewLevel(
                 MapHelper.CreateFromDumpStrings(new[]
                 {
@@ -46,7 +53,8 @@ namespace RoguelikeExample.Controller
                     "01110", // 壁床床床壁
                     "00000", // 壁壁壁壁壁
                 }),
-                (0, 0) // 初期位置は仮。各テストケースで設定される
+                (0, 0), // 初期位置は仮。各テストケースで設定される
+                _enemyManager
             );
         }
 
@@ -205,6 +213,67 @@ namespace RoguelikeExample.Controller
 
             Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
             Assert.That(_playerCharacterController.Status.Turn, Is.EqualTo(2));
+        }
+
+        [Test]
+        public async Task スペースキーで攻撃_攻撃対象にダメージ()
+        {
+            _playerCharacterController.SetPositionFromMapLocation(1, 1);
+            _playerCharacterController.Status = new PlayerStatus(1, 0, 3);
+            var enemy = CreateEnemy(10, 1, (1, 2));
+
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            _input.Press(keyboard.jKey); // 方向を変えるための空移動
+            await UniTask.DelayFrame(2);
+
+            _input.PressAndRelease(keyboard.spaceKey); // 攻撃
+            await UniTask.DelayFrame(2);
+
+            Assert.That(enemy.Status.HitPoint, Is.EqualTo(10 - (3 - 1))); // HPが2減っている
+        }
+
+        [Test]
+        public async Task スペースキーで攻撃_攻撃対象のヒットポイントが0_敵インスタンスは破棄され報酬を得る()
+        {
+            _playerCharacterController.SetPositionFromMapLocation(1, 1);
+            _playerCharacterController.Status = new PlayerStatus(1, 0, 3);
+            var enemy = CreateEnemy(1, 1, (1, 2), 3, 5);
+
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            _input.Press(keyboard.jKey); // 方向を変えるための空移動
+            await UniTask.DelayFrame(2);
+
+            _input.PressAndRelease(keyboard.spaceKey); // 攻撃
+            await UniTask.DelayFrame(2);
+            await UniTask.DelayFrame(2); // 破壊演出分
+
+            Assert.That(enemy.Status.HitPoint, Is.EqualTo(0), "敵HPは0（オーバーキルでも0）");
+            Assert.That(enemy.Status.IsAlive, Is.False, "敵は破壊された");
+            Assert.That((bool)enemy, Is.False, "敵インスタンスは破棄されている");
+            Assert.That(_playerCharacterController.Status.Exp, Is.EqualTo(3), "経験値");
+            Assert.That(_playerCharacterController.Status.Gold, Is.EqualTo(5), "Gold");
+        }
+
+        private EnemyCharacterController CreateEnemy(int hitPoint, int defence, (int column, int row) location,
+            int rewardExp = 0, int rewardGold = 0)
+        {
+            var enemyRace = ScriptableObject.CreateInstance<EnemyRace>();
+            enemyRace.maxHitPoint = hitPoint;
+            enemyRace.defense = defence;
+            enemyRace.rewardExp = rewardExp;
+            enemyRace.rewardGold = rewardGold;
+
+            var enemyCharacterController = new GameObject().AddComponent<EnemyCharacterController>();
+            enemyCharacterController.transform.parent = _enemyManager.transform;
+            enemyCharacterController.Initialize(
+                enemyRace,
+                1,
+                new RandomImpl(),
+                new MapChip[,] { { new() } },
+                location
+            );
+
+            return enemyCharacterController;
         }
     }
 }

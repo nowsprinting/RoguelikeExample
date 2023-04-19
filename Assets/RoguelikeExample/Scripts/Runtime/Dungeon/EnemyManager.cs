@@ -77,7 +77,8 @@ namespace RoguelikeExample.Dungeon
         {
             foreach (var enemyCharacterController in GetComponentsInChildren<EnemyCharacterController>())
             {
-                enemyCharacterController.ThinkAction(this, playerCharacterController);
+                if ((bool)enemyCharacterController)
+                    enemyCharacterController.ThinkAction(this, playerCharacterController);
             }
         }
 
@@ -87,12 +88,11 @@ namespace RoguelikeExample.Dungeon
         /// <param name="millis">移動アニメーションにかける時間（ミリ秒）</param>
         public async UniTask DoActionEnemies(int millis)
         {
-            var enemies = GetComponentsInChildren<EnemyCharacterController>();
-            var tasks = new UniTask[enemies.Length];
-            for (var i = 0; i < enemies.Length; i++)
+            var tasks = new List<UniTask>();
+            foreach (var enemyCharacterController in GetComponentsInChildren<EnemyCharacterController>())
             {
-                var enemyCharacterController = enemies[i];
-                tasks[i] = enemyCharacterController.MoveToNextLocation(millis);
+                if ((bool)enemyCharacterController)
+                    tasks.Add(enemyCharacterController.MoveToNextLocation(millis));
             }
 
             await UniTask.WhenAll(tasks);
@@ -100,12 +100,12 @@ namespace RoguelikeExample.Dungeon
             // TODO: 攻撃
         }
 
-        private EnemyCharacterController EnemyCharacterController((int column, int row) location)
+        private EnemyCharacterController CreateEnemy((int column, int row) location)
         {
             var race = _enemyRaces[_random.Next(_enemyRaces.Count)];
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
                 "Assets/RoguelikeExample/Prefabs/EnemyCharacter.prefab"); // TODO: ランタイムでAssetDatabase使えない
-            var enemy = Instantiate(prefab, transform); // 自分のは以下に生成
+            var enemy = Instantiate(prefab, transform); // 自分の下に生成
             var enemyCharacterController = enemy.GetComponent<EnemyCharacterController>();
             enemyCharacterController.Initialize(race, _level, _random, _map, location);
 

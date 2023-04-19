@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Koji Hasegawa.
 // This software is released under the MIT License.
 
-using System;
 using RoguelikeExample.AI;
 using RoguelikeExample.Dungeon;
 using RoguelikeExample.Entities;

@@ -17,6 +17,9 @@ using UnityEngine.TestTools;
 
 namespace RoguelikeExample.Controller
 {
+    /// <summary>
+    /// 敵キャラクターの振る舞いのテスト（結合度高め）
+    /// </summary>
     [TestFixture]
     public class EnemyCharacterControllerTest
     {
@@ -66,7 +69,6 @@ namespace RoguelikeExample.Controller
 
             var enemyManager = new GameObject().AddComponent<EnemyManager>();
             var enemyCharacterController = new GameObject().AddComponent<EnemyCharacterController>();
-            await Task.Delay(1);
             enemyCharacterController.transform.parent = enemyManager.transform;
             enemyCharacterController.Initialize(
                 enemyRace,
