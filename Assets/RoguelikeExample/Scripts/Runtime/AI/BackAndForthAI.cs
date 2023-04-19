@@ -20,7 +20,7 @@ namespace RoguelikeExample.AI
     /// </summary>
     public class BackAndForthAI : AbstractAI
     {
-        private Vector2 _direction;
+        private Direction _direction;
 
         /// <inheritdoc/>
         public BackAndForthAI(IRandom random) : base(random) { }
@@ -44,21 +44,21 @@ namespace RoguelikeExample.AI
                 _direction = DecideFirstDirection(map, myLocation); // 最初の移動方向を決める
             }
 
-            if (map.IsWall(myLocation.column + (int)_direction.x, myLocation.row + (int)_direction.y))
+            if (map.IsWall(myLocation.column + _direction.X(), myLocation.row + _direction.Y()))
             {
-                _direction = -_direction; // 移動先が壁なら反転
+                _direction = _direction.TurnBack(); // 移動先が壁なら反転
             }
 
-            return (myLocation.column + (int)_direction.x, myLocation.row + (int)_direction.y); // 移動先の座標を返す
+            return (myLocation.column + _direction.X(), myLocation.row + _direction.Y()); // 移動先の座標を返す
         }
 
-        private Vector2 DecideFirstDirection(MapChip[,] map, (int column, int row) myLocation)
+        private Direction DecideFirstDirection(MapChip[,] map, (int column, int row) myLocation)
         {
-            var lotteryBox = new List<Vector2>();
-            if (!map.IsWall(myLocation.column - 1, myLocation.row)) lotteryBox.Add(Vector2.left);
-            if (!map.IsWall(myLocation.column + 1, myLocation.row)) lotteryBox.Add(Vector2.right);
-            if (!map.IsWall(myLocation.column, myLocation.row - 1)) lotteryBox.Add(Vector2.up);
-            if (!map.IsWall(myLocation.column, myLocation.row + 1)) lotteryBox.Add(Vector2.down);
+            var lotteryBox = new List<Direction>();
+            if (!map.IsWall(myLocation.column - 1, myLocation.row)) lotteryBox.Add(Direction.Left);
+            if (!map.IsWall(myLocation.column + 1, myLocation.row)) lotteryBox.Add(Direction.Right);
+            if (!map.IsWall(myLocation.column, myLocation.row - 1)) lotteryBox.Add(Direction.Up);
+            if (!map.IsWall(myLocation.column, myLocation.row + 1)) lotteryBox.Add(Direction.Down);
 
             if (lotteryBox.Any())
             {
@@ -66,7 +66,7 @@ namespace RoguelikeExample.AI
             }
 
             Debug.LogError("壁に囲まれているので、AIの初期方向を決められません");
-            return Vector2.zero;
+            return Direction.None;
         }
     }
 }

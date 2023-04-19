@@ -28,7 +28,7 @@ namespace RoguelikeExample.Controller
 
         private PlayerInputActions _inputActions;
         private bool _processing;
-        private Vector2 _direction;
+        private Direction _direction;
         internal int _actionAnimationMillis = 100; // 行動アニメーション時間（テストで上書きするのでconstにしていない）
 
         /// <summary>
@@ -72,9 +72,27 @@ namespace RoguelikeExample.Controller
 
             // hjkl, arrow, stick
             var move = _inputActions.Player.Move.ReadValue<Vector2>().normalized;
-            if (move != Vector2.zero)
+            if (move == Vector2.up)
             {
-                Move((int)move.x, (int)move.y);
+                Move(Direction.Up);
+                return;
+            }
+
+            if (move == Vector2.down)
+            {
+                Move(Direction.Down);
+                return;
+            }
+
+            if (move == Vector2.right)
+            {
+                Move(Direction.Right);
+                return;
+            }
+
+            if (move == Vector2.left)
+            {
+                Move(Direction.Left);
                 return;
             }
 
@@ -82,34 +100,34 @@ namespace RoguelikeExample.Controller
             var diagonalMove = _inputActions.Player.DiagonalMove.ReadValue<Vector2>().normalized;
             if (diagonalMove == Vector2.up)
             {
-                Move(-1, 1);
-                return;
-            }
-
-            if (diagonalMove == Vector2.right)
-            {
-                Move(1, 1);
+                Move(Direction.UpLeft);
                 return;
             }
 
             if (diagonalMove == Vector2.down)
             {
-                Move(1, -1);
+                Move(Direction.DownRight);
+                return;
+            }
+
+            if (diagonalMove == Vector2.right)
+            {
+                Move(Direction.UpRight);
                 return;
             }
 
             if (diagonalMove == Vector2.left)
             {
-                Move(-1, -1);
+                Move(Direction.DownLeft);
                 return;
             }
         }
 
-        private void Move(int x, int y)
+        private void Move(Direction direction)
         {
             var location = MapLocation();
-            (int column, int row) dest = (location.column + x, location.row - y); // y成分は上が+
-            _direction = new Vector2(x, y); // 移動できないときも方向だけは反映
+            (int column, int row) dest = (location.column + direction.X(), location.row + direction.Y());
+            _direction = direction; // 移動できないときも方向だけは反映
 
             if (_map.IsWall(dest.column, dest.row))
                 return;
@@ -129,7 +147,7 @@ namespace RoguelikeExample.Controller
             async UniTask Action()
             {
                 var location = MapLocation();
-                var dest = (location.column + (int)_direction.x, location.row - (int)_direction.y); // y成分は上が+
+                var dest = (location.column + _direction.X(), location.row + _direction.Y());
                 var target = _enemyManager.ExistEnemy(dest); // nullでも空振りするため、early returnしない
 
                 var damage = -1;
