@@ -22,6 +22,12 @@ namespace RoguelikeExample.Controller
         // 設定されていなくてもエラーにはしないこと。
         // Dungeon.unityでは設定必須なので、<c>DungeonSceneValidator</c>でバリデーションしている
 
+        [SerializeField, Tooltip("行動アニメーション時間")]
+        internal int actionAnimationMillis = 100;
+
+        [SerializeField, Tooltip("高速移動時アニメーション時間")]
+        internal int runAnimationMillis = 10;
+
         private EnemyManager _enemyManager;
 
         public PlayerStatus Status { get; internal set; } = new PlayerStatus(10, 1, 3);
@@ -29,7 +35,6 @@ namespace RoguelikeExample.Controller
         private PlayerInputActions _inputActions;
         private bool _processing;
         private Direction _direction;
-        internal int _actionAnimationMillis = 100; // 行動アニメーション時間（テストで上書きするのでconstにしていない）
 
         /// <summary>
         /// インゲーム開始時に <c>DungeonManager</c> から設定される
@@ -125,18 +130,57 @@ namespace RoguelikeExample.Controller
 
         private void Move(Direction direction)
         {
+            _direction = direction; // 移動できないときも方向だけは反映するので、early returnしない
+
+            var run = _inputActions.Player.Run.ReadValue<float>() > 0 && !direction.IsDiagonal(); // 高速移動。ループの外で確定させておく
+
+            while (true)
+            {
+                var location = MapLocation();
+                (int column, int row) dest = (location.column + direction.X(), location.row + direction.Y());
+
+                if (_map.IsWall(dest.column, dest.row))
+                    return; // 移動先が壁
+
+                if (_enemyManager.ExistEnemy(dest) != null)
+                    return; // 移動先に敵がいる場合は移動しない（攻撃はspaceキー）
+
+                NextLocation = dest;
+
+                var animationMillis = run ? runAnimationMillis : actionAnimationMillis;
+                DoAction(async () => { await MoveToNextLocation(animationMillis); }, animationMillis).Forget();
+
+                if (!run)
+                    break;
+
+                (run, _direction) = GetNextDirectionIfContinueRun(_direction);
+            }
+        }
+
+        private (bool continueRun, Direction nextDirection) GetNextDirectionIfContinueRun(Direction direction)
+        {
             var location = MapLocation();
             (int column, int row) dest = (location.column + direction.X(), location.row + direction.Y());
-            _direction = direction; // 移動できないときも方向だけは反映
+
+            if (_map.IsUpStair(location.column, location.row) || _map.IsDownStair(location.column, location.row))
+                return (false, direction); // 階段に乗ったら止まる
+
+            if (_map.IsRoom(location.column, location.row) && (
+                    _map.IsCorridor(location.column - 1, location.row) ||
+                    _map.IsCorridor(location.column + 1, location.row) ||
+                    _map.IsCorridor(location.column, location.row - 1) ||
+                    _map.IsCorridor(location.column, location.row + 1)))
+                return (false, direction); // 部屋にいるとき、通路に隣接したら止まる
+
+            if (_map[location.column, location.row] == MapChip.Corridor && _map[dest.column, dest.row] == MapChip.Room)
+                return (false, direction); // 通路から部屋に入る手前で止まる
 
             if (_map.IsWall(dest.column, dest.row))
-                return;
+            {
+                return (false, direction); // TODO: 方向を変える。通路なら何度でもok、部屋では1回だけかつ曲がった先に通路か階段で止まる場合のみ
+            }
 
-            if (_enemyManager.ExistEnemy(dest) != null)
-                return; // 移動先に敵がいる場合は移動しない（攻撃はspaceキー）
-
-            NextLocation = dest;
-            DoAction(async () => { await MoveToNextLocation(_actionAnimationMillis); }).Forget();
+            return (true, direction);
         }
 
         private void Attack(InputAction.CallbackContext context)
@@ -156,7 +200,7 @@ namespace RoguelikeExample.Controller
                     damage = target.Status.Attacked(Status.Attack);
                 }
 
-                await UniTask.Delay(_actionAnimationMillis); // TODO: 攻撃演出
+                await UniTask.Delay(actionAnimationMillis); // TODO: 攻撃演出
 
                 if (target && !target.Status.IsAlive())
                 {
@@ -168,21 +212,22 @@ namespace RoguelikeExample.Controller
                 }
             }
 
-            DoAction(Action).Forget();
+            DoAction(Action, actionAnimationMillis).Forget();
         }
 
         /// <summary>
         /// 敵キャラクター思考 → プレイヤーの行動 → 敵キャラクター行動
         /// </summary>
         /// <param name="action">プレイヤーの行動</param>
-        private async UniTask DoAction(Func<UniTask> action)
+        /// <param name="animationMillis">移動アニメーションにかける時間（ミリ秒）</param>
+        private async UniTask DoAction(Func<UniTask> action, int animationMillis)
         {
             Status.IncrementTurn();
             _processing = true;
 
             _enemyManager.ThinkActionEnemies(this);
             await action();
-            await _enemyManager.DoActionEnemies(_actionAnimationMillis);
+            await _enemyManager.DoActionEnemies(animationMillis);
 
             _processing = false;
         }

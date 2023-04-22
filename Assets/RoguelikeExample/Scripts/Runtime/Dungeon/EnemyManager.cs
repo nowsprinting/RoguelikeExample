@@ -85,14 +85,14 @@ namespace RoguelikeExample.Dungeon
         /// <summary>
         /// 敵キャラクターのターン（行動）
         /// </summary>
-        /// <param name="millis">移動アニメーションにかける時間（ミリ秒）</param>
-        public async UniTask DoActionEnemies(int millis)
+        /// <param name="animationMillis">移動アニメーションにかける時間（ミリ秒）</param>
+        public async UniTask DoActionEnemies(int animationMillis)
         {
             var tasks = new List<UniTask>();
             foreach (var enemyCharacterController in GetComponentsInChildren<EnemyCharacterController>())
             {
                 if ((bool)enemyCharacterController)
-                    tasks.Add(enemyCharacterController.MoveToNextLocation(millis));
+                    tasks.Add(enemyCharacterController.MoveToNextLocation(animationMillis));
             }
 
             await UniTask.WhenAll(tasks);

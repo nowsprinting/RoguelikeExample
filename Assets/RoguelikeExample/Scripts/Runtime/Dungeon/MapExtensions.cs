@@ -7,7 +7,7 @@ namespace RoguelikeExample.Dungeon
 {
     public static class MapExtensions
     {
-        private static (int column, int row) GetChipPosition(MapChip[,] map, MapChip chip)
+        private static (int column, int row) GetChipPosition(this MapChip[,] map, MapChip chip)
         {
             var width = map.GetLength(0);
             var height = map.GetLength(1);
@@ -39,6 +39,26 @@ namespace RoguelikeExample.Dungeon
         public static bool IsWall(this MapChip[,] map, int column, int row)
         {
             return map[column, row] == MapChip.Wall;
+        }
+
+        public static bool IsRoom(this MapChip[,] map, int column, int row)
+        {
+            return map[column, row] == MapChip.Room;
+        }
+
+        public static bool IsCorridor(this MapChip[,] map, int column, int row)
+        {
+            return map[column, row] == MapChip.Corridor;
+        }
+
+        public static bool IsUpStair(this MapChip[,] map, int column, int row)
+        {
+            return map[column, row] == MapChip.UpStair;
+        }
+
+        public static bool IsDownStair(this MapChip[,] map, int column, int row)
+        {
+            return map[column, row] == MapChip.DownStair;
         }
     }
 }

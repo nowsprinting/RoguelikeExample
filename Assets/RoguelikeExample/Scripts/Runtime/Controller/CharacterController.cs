@@ -43,11 +43,11 @@ namespace RoguelikeExample.Controller
         /// <summary>
         /// キャラクターの現在位置を <c>NextLocation</c> に移動
         /// </summary>
-        /// <param name="millis">移動アニメーションにかける時間（ミリ秒）</param>
-        public async UniTask MoveToNextLocation(int millis)
+        /// <param name="animationMillis">移動アニメーションにかける時間（ミリ秒）</param>
+        public async UniTask MoveToNextLocation(int animationMillis)
         {
             transform.position = new Vector3(NextLocation.column, 0, -1 * NextLocation.row);
-            await UniTask.Delay(millis); // TODO: 指定時間かけて移動する
+            await UniTask.Delay(animationMillis); // TODO: 指定時間かけて移動する
         }
     }
 }
