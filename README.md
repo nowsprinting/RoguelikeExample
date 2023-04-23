@@ -28,4 +28,5 @@ stateDiagram-v2
 
     EnemyPopup --> PlayerRun: Runのとき
     PlayerRun --> PlayerAction
+    PlayerRun --> PlayerIdol: Runをキャンセル（行き止まりなど）
 ```

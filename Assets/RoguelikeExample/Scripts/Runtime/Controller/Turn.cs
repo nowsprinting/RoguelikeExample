@@ -3,6 +3,7 @@
 
 using System;
 using Cysharp.Threading.Tasks;
+using UnityEngine.Assertions;
 
 namespace RoguelikeExample.Controller
 {
@@ -61,6 +62,20 @@ namespace RoguelikeExample.Controller
                     throw new ArgumentOutOfRangeException();
             }
 
+            OnPhaseTransition?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 高速移動を止めてIdolに戻る
+        /// 移動先候補がない（行き止まり）もしくは、移動先候補に敵キャラクターがいたときに使用される想定。
+        /// 移動後に呼ばないこと（2回行動になってしまう）
+        /// </summary>
+        public void CanselRun()
+        {
+            Assert.IsTrue(State == TurnState.PlayerRun);
+
+            State = TurnState.PlayerIdol;
+            IsRun = false;
             OnPhaseTransition?.Invoke(this, EventArgs.Empty);
         }
 

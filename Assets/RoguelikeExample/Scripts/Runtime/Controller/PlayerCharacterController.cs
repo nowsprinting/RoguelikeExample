@@ -8,6 +8,7 @@ using RoguelikeExample.Entities;
 using RoguelikeExample.Input;
 using RoguelikeExample.Random;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 
 namespace RoguelikeExample.Controller
@@ -80,7 +81,7 @@ namespace RoguelikeExample.Controller
             switch (((Turn)sender).State)
             {
                 case TurnState.PlayerRun:
-                    ThinkingToRun();
+                    ThinkToRun();
                     break;
                 case TurnState.PlayerAction:
                     DoAction().Forget();
@@ -91,7 +92,9 @@ namespace RoguelikeExample.Controller
         private void Update()
         {
             if (_turn.State != TurnState.PlayerIdol)
+            {
                 return; // PlayerIdol以外は入力を受け付けない
+            }
 
             // hjkl, arrow, stick
             var move = _inputActions.Player.Move.ReadValue<Vector2>().normalized;
@@ -149,7 +152,6 @@ namespace RoguelikeExample.Controller
         private void MoveOperation(Direction direction)
         {
             _direction = direction; // 移動できないときも方向だけは反映するので、early returnしない
-            _turn.IsRun = _inputActions.Player.Run.ReadValue<float>() > 0 && !direction.IsDiagonal(); // 高速移動
 
             var location = MapLocation();
             (int column, int row) dest = (location.column + direction.X(), location.row + direction.Y());
@@ -165,39 +167,7 @@ namespace RoguelikeExample.Controller
             }
 
             NextLocation = dest;
-            _turn.NextPhase().Forget();
-        }
-
-        private void ThinkingToRun()
-        {
-            if (!_turn.IsRun)
-            {
-                _turn.NextPhase().Forget(); // 高速移動中でなければ何もしないでフェーズを送る
-                return;
-            }
-
-            var location = MapLocation();
-            (int column, int row) dest = (location.column + _direction.X(), location.row + _direction.Y());
-
-            if (_map.IsWall(dest.column, dest.row))
-            {
-                // 移動先が壁
-                // TODO: 方向を変える。通路なら何度でもok、部屋では1回だけかつ曲がった先に通路か階段で止まる場合のみ
-
-                _turn.IsRun = false; // 仮
-                _turn.NextPhase().Forget(); // 仮
-                return;
-            }
-
-            if (_enemyManager.ExistEnemy(dest) != null)
-            {
-                // 移動先が敵キャラクター
-                _turn.IsRun = false;
-                _turn.NextPhase().Forget();
-                return;
-            }
-
-            NextLocation = dest;
+            _turn.IsRun = _inputActions.Player.Run.ReadValue<float>() > 0 && !direction.IsDiagonal(); // 次ターンから高速移動
             _turn.NextPhase().Forget();
         }
 
@@ -211,12 +181,103 @@ namespace RoguelikeExample.Controller
             _turn.NextPhase().Forget(); // 空振りでもフェーズを送る
         }
 
+        private void ThinkToRun()
+        {
+            Assert.IsTrue(_turn.IsRun);
+
+            var location = MapLocation();
+            if (IsStopLocation(_map, location))
+            {
+                _turn.CanselRun(); // 現在地が停止条件を満たすとき、高速移動をキャンセルしてプレイヤー操作に戻る
+                return;
+            }
+
+            var newDirection = MovableDirection(_map, location, _direction);
+            if (newDirection == Direction.None)
+            {
+                _turn.CanselRun(); // 移動先がないとき、高速移動をキャンセルしてプレイヤー操作に戻る
+                return;
+            }
+            else if (_map.IsCorridor(location.column, location.row))
+            {
+                _direction = newDirection; // 通路では無制限に方向転換
+            }
+            // TODO: 部屋でも、方向転換した先に通路があるなら1回だけ方向転換させていいのでは
+
+            (int column, int row) dest = (location.column + _direction.X(), location.row + _direction.Y());
+
+            if (_enemyManager.ExistEnemy(dest) != null)
+            {
+                _turn.CanselRun(); // 移動先が敵キャラクターのとき、高速移動をキャンセルしてプレイヤー操作に戻る
+                return;
+            }
+
+            NextLocation = dest;
+            _turn.NextPhase().Forget();
+        }
+
+        private static bool IsStopLocation(MapChip[,] map, (int column, int row) location)
+        {
+            if (map.IsUpStair(location.column, location.row) || map.IsDownStair(location.column, location.row))
+            {
+                return true; // 階段
+            }
+
+            if (map.IsRoom(location.column, location.row) && (
+                    map.IsCorridor(location.column - 1, location.row) ||
+                    map.IsCorridor(location.column + 1, location.row) ||
+                    map.IsCorridor(location.column, location.row - 1) ||
+                    map.IsCorridor(location.column, location.row + 1)))
+            {
+                return true; // 部屋かつ通路に隣接しているとき（通路から部屋に入ったときもこの条件に一致する）
+            }
+
+            if (map.IsCorridor(location.column, location.row) && (CorridorWays(map, location) >= 3))
+            {
+                return true; // 通路の分岐点（三叉路以上）のとき
+            }
+
+            return false;
+        }
+
+        private static int CorridorWays(MapChip[,] map, (int column, int row) location)
+        {
+            var ways = 0;
+            if (map.IsCorridor(location.column - 1, location.row)) ways++;
+            if (map.IsCorridor(location.column + 1, location.row)) ways++;
+            if (map.IsCorridor(location.column, location.row - 1)) ways++;
+            if (map.IsCorridor(location.column, location.row + 1)) ways++;
+            return ways;
+        }
+
+        private static Direction MovableDirection(MapChip[,] map, (int column, int row) location, Direction direction)
+        {
+            // (int column, int row) forward = (location.column + direction.X(), location.row + direction.Y());
+            if (!map.IsWall(location.column + direction.X(), location.row + direction.Y()))
+            {
+                return direction; // 前方に移動可能な場合はそのまま
+            }
+
+            var left = direction.TurnLeft();
+            if (!map.IsWall(location.column + left.X(), location.row + left.Y()))
+            {
+                return left; // 左に方向転換可能
+            }
+
+            var right = direction.TurnRight();
+            if (!map.IsWall(location.column + right.X(), location.row + right.Y()))
+            {
+                return right; // 右に方向転換可能
+            }
+
+            return Direction.None; // 前方、左、右に移動できない
+        }
+
         private async UniTask DoAction()
         {
             if (NextLocation != MapLocation())
             {
                 await MoveToNextLocation(AnimationMillis());
-                JudgeToStopRun(); // 高速移動を止めるか判断
             }
             else
             {
@@ -224,36 +285,6 @@ namespace RoguelikeExample.Controller
             }
 
             _turn.NextPhase().Forget();
-        }
-
-        private void JudgeToStopRun()
-        {
-            var location = MapLocation();
-
-            if (_map.IsUpStair(location.column, location.row) || _map.IsDownStair(location.column, location.row))
-            {
-                _turn.IsRun = false; // 階段に乗ったら止まる
-                return;
-            }
-
-            if (_map.IsRoom(location.column, location.row) && (
-                    _map.IsCorridor(location.column - 1, location.row) ||
-                    _map.IsCorridor(location.column + 1, location.row) ||
-                    _map.IsCorridor(location.column, location.row - 1) ||
-                    _map.IsCorridor(location.column, location.row + 1)))
-            {
-                _turn.IsRun = false; // 部屋にいるとき、通路に隣接したら止まる
-                return;
-            }
-
-            (int column, int row) dest = (location.column + _direction.X(), location.row + _direction.Y());
-
-            if (_map[location.column, location.row] == MapChip.Corridor &&
-                _map[dest.column, dest.row] == MapChip.Room)
-            {
-                _turn.IsRun = false; // 通路から部屋に入る手前で止まる
-                return;
-            }
         }
 
         private async UniTask AttackAction()

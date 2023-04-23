@@ -90,7 +90,7 @@ namespace RoguelikeExample.Controller
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.hKey);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 2)));
             }
@@ -102,7 +102,7 @@ namespace RoguelikeExample.Controller
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.jKey);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((2, 3)));
             }
@@ -114,7 +114,7 @@ namespace RoguelikeExample.Controller
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.kKey);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((2, 1)));
             }
@@ -126,7 +126,7 @@ namespace RoguelikeExample.Controller
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.lKey);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 2)));
             }
@@ -138,7 +138,7 @@ namespace RoguelikeExample.Controller
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.yKey);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 1)));
             }
@@ -150,7 +150,7 @@ namespace RoguelikeExample.Controller
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.uKey);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
             }
@@ -162,7 +162,7 @@ namespace RoguelikeExample.Controller
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.bKey);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 3)));
             }
@@ -174,7 +174,7 @@ namespace RoguelikeExample.Controller
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.nKey);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 3)));
             }
@@ -203,7 +203,7 @@ namespace RoguelikeExample.Controller
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.hKey);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 2)), "移動している");
                 Assert.That(_turn.TurnCount, Is.EqualTo(2), "ターンが加算されている");
@@ -216,8 +216,8 @@ namespace RoguelikeExample.Controller
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.lKey); // 押しっぱなし
-                await WaitForNextPlayerPhase(_turn);
-                await WaitForNextPlayerPhase(_turn); // 2単位連続で移動
+                await WaitForNextPlayerIdol(_turn);
+                await WaitForNextPlayerIdol(_turn); // 2単位連続で移動
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
                 Assert.That(_turn.TurnCount, Is.EqualTo(3));
@@ -230,7 +230,7 @@ namespace RoguelikeExample.Controller
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.PressAndRelease(keyboard.spaceKey); // 攻撃（空振り）
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_turn.TurnCount, Is.EqualTo(2));
             }
@@ -240,15 +240,14 @@ namespace RoguelikeExample.Controller
             {
                 _playerCharacterController.SetPositionFromMapLocation(1, 1);
                 _playerCharacterController.Status = new PlayerStatus(1, 0, 3);
-                var enemy = CreateEnemy((1, 2), 10, 1,
-                    enemyManager: _enemyManager, playerCharacterController: _playerCharacterController);
+                var enemy = CreateEnemy(_enemyManager, _playerCharacterController, (1, 2), 10, 1);
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.jKey); // 方向を変えるための空移動
                 await UniTask.DelayFrame(2); // ターンは消費しない
 
                 _input.PressAndRelease(keyboard.spaceKey); // 攻撃
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(enemy.Status.HitPoint, Is.EqualTo(10 - (3 - 1))); // HPが2減っている
             }
@@ -258,15 +257,14 @@ namespace RoguelikeExample.Controller
             {
                 _playerCharacterController.SetPositionFromMapLocation(1, 1);
                 _playerCharacterController.Status = new PlayerStatus(1, 0, 3);
-                var enemy = CreateEnemy((1, 2), 1, 1, 3, 5,
-                    enemyManager: _enemyManager, playerCharacterController: _playerCharacterController);
+                var enemy = CreateEnemy(_enemyManager, _playerCharacterController, (1, 2), 1, 1, 3, 5);
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.jKey); // 方向を変えるための空移動
                 await UniTask.DelayFrame(2); // ターンは消費しない
 
                 _input.PressAndRelease(keyboard.spaceKey); // 攻撃
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(enemy.Status.HitPoint, Is.EqualTo(0), "敵HPは0"); // オーバーキルだが0になる
                 Assert.That(enemy.Status.IsAlive, Is.False, "対象は破壊された");
@@ -322,7 +320,7 @@ namespace RoguelikeExample.Controller
             }
 
             [Test]
-            public async Task Controlキー同時押し_通路がない_突き当りまで高速移動()
+            public async Task Controlキー同時押し_通路がない部屋_突き当りまで高速移動()
             {
                 _playerCharacterController.NewLevel(
                     MapHelper.CreateFromDumpStrings(new[]
@@ -341,15 +339,13 @@ namespace RoguelikeExample.Controller
 
                 _input.Release(keyboard.lKey); // 離す
                 _input.Release(keyboard.ctrlKey);
-                await WaitForNextPlayerPhase(_turn);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
-                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)), "2単位移動している");
-                Assert.That(_turn.State, Is.EqualTo(TurnState.PlayerIdol), "Runを抜けてPlayerIdolフェーズ");
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
             }
 
             [Test]
-            public async Task Shiftキー同時押し_通路がない_突き当りまで高速移動()
+            public async Task Shiftキー同時押し_通路がない部屋_突き当りまで高速移動()
             {
                 _playerCharacterController.NewLevel(
                     MapHelper.CreateFromDumpStrings(new[]
@@ -368,15 +364,13 @@ namespace RoguelikeExample.Controller
 
                 _input.Release(keyboard.lKey); // 離す
                 _input.Release(keyboard.shiftKey);
-                await WaitForNextPlayerPhase(_turn);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
-                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)), "2単位移動している");
-                Assert.That(_turn.State, Is.EqualTo(TurnState.PlayerIdol), "Runを抜けてPlayerIdolフェーズ");
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
             }
 
             [Test]
-            public async Task Shiftと斜め移動キー同時に押し_斜めには高速移動せず1単位だけ移動()
+            public async Task Shiftと斜め移動キー同時押し_斜めには高速移動せず1単位だけ移動()
             {
                 _playerCharacterController.NewLevel(
                     MapHelper.CreateFromDumpStrings(new[]
@@ -397,14 +391,13 @@ namespace RoguelikeExample.Controller
 
                 _input.Release(keyboard.nKey); // 離す
                 _input.Release(keyboard.shiftKey);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
-                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((2, 2)), "1単位だけ移動している");
-                Assert.That(_turn.State, Is.EqualTo(TurnState.PlayerIdol), "Runを抜けてPlayerIdolフェーズ");
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((2, 2)));
             }
 
             [Test]
-            public async Task 高速移動の途中に上り階段がある_階段で停止()
+            public async Task 高速移動の途中に上り階段_階段で停止()
             {
                 _playerCharacterController.NewLevel(
                     MapHelper.CreateFromDumpStrings(new[]
@@ -423,15 +416,13 @@ namespace RoguelikeExample.Controller
 
                 _input.Release(keyboard.lKey); // 離す
                 _input.Release(keyboard.shiftKey);
-                await WaitForNextPlayerPhase(_turn);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
-                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)), "階段まで移動している");
-                Assert.That(_turn.State, Is.EqualTo(TurnState.PlayerIdol), "Runを抜けてPlayerIdolフェーズ");
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
             }
 
             [Test]
-            public async Task 高速移動の途中に下り階段がある_階段で停止()
+            public async Task 高速移動の途中に下り階段_階段で停止()
             {
                 _playerCharacterController.NewLevel(
                     MapHelper.CreateFromDumpStrings(new[]
@@ -450,59 +441,231 @@ namespace RoguelikeExample.Controller
 
                 _input.Release(keyboard.lKey); // 離す
                 _input.Release(keyboard.shiftKey);
-                await WaitForNextPlayerPhase(_turn);
-                await WaitForNextPlayerPhase(_turn);
+                await WaitForNextPlayerIdol(_turn);
 
-                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)), "階段まで移動している");
-                Assert.That(_turn.State, Is.EqualTo(TurnState.PlayerIdol), "Runを抜けてPlayerIdolフェーズ");
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
             }
 
-            [Ignore("未実装")]
+            [Test]
+            public async Task 部屋で高速移動_左に通路_通路に出る手前で停止()
+            {
+                _playerCharacterController.NewLevel(
+                    MapHelper.CreateFromDumpStrings(new[]
+                    {
+                        "00000", // 壁壁壁壁壁
+                        "21110", // 通床床床壁
+                        "00000", // 壁壁壁壁壁
+                    }),
+                    (3, 1)
+                );
+
+                var keyboard = InputSystem.AddDevice<Keyboard>();
+                _input.Press(keyboard.hKey); // 左
+                _input.Press(keyboard.ctrlKey);
+                await UniTask.DelayFrame(2);
+
+                _input.Release(keyboard.hKey); // 離す
+                _input.Release(keyboard.ctrlKey);
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 1)));
+            }
+
+            [Test]
+            public async Task 部屋で高速移動_右に通路_通路に出る手前で停止()
+            {
+                _playerCharacterController.NewLevel(
+                    MapHelper.CreateFromDumpStrings(new[]
+                    {
+                        "00000", // 壁壁壁壁壁
+                        "01112", // 壁床床床通
+                        "00000", // 壁壁壁壁壁
+                    }),
+                    (1, 1)
+                );
+
+                var keyboard = InputSystem.AddDevice<Keyboard>();
+                _input.Press(keyboard.lKey); // 右
+                _input.Press(keyboard.ctrlKey);
+                await UniTask.DelayFrame(2);
+
+                _input.Release(keyboard.lKey); // 離す
+                _input.Release(keyboard.ctrlKey);
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
+            }
+
+            [Test]
+            public async Task 部屋で高速移動_上に通路_通路に出る手前で停止()
+            {
+                _playerCharacterController.NewLevel(
+                    MapHelper.CreateFromDumpStrings(new[]
+                    {
+                        "000200", // 壁壁壁通壁壁
+                        "011110", // 壁床床床床壁
+                        "000000", // 壁壁壁壁壁壁
+                    }),
+                    (1, 1)
+                );
+
+                var keyboard = InputSystem.AddDevice<Keyboard>();
+                _input.Press(keyboard.lKey); // 右
+                _input.Press(keyboard.ctrlKey);
+                await UniTask.DelayFrame(2);
+
+                _input.Release(keyboard.lKey); // 離す
+                _input.Release(keyboard.ctrlKey);
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
+            }
+
+            [Test]
+            public async Task 部屋で高速移動_下に通路_通路に出る手前で停止()
+            {
+                _playerCharacterController.NewLevel(
+                    MapHelper.CreateFromDumpStrings(new[]
+                    {
+                        "000000", // 壁壁壁壁壁壁
+                        "011110", // 壁床床床床壁
+                        "000200", // 壁壁壁通壁壁
+                    }),
+                    (1, 1)
+                );
+
+                var keyboard = InputSystem.AddDevice<Keyboard>();
+                _input.Press(keyboard.lKey); // 右
+                _input.Press(keyboard.ctrlKey);
+                await UniTask.DelayFrame(2);
+
+                _input.Release(keyboard.lKey); // 離す
+                _input.Release(keyboard.ctrlKey);
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
+            }
+
+            [Test]
+            public async Task 通路で高速移動_部屋に入ったところで停止() // Note: 部屋から通路に出る手前で止まるのと同じロジック
+            {
+                _playerCharacterController.NewLevel(
+                    MapHelper.CreateFromDumpStrings(new[]
+                    {
+                        "00000", // 壁壁壁壁壁
+                        "02220", // 壁通通通壁
+                        "00020", // 壁壁壁通壁
+                        "00010", // 壁壁壁床壁
+                        "00000", // 壁壁壁壁壁
+                    }),
+                    (1, 1)
+                );
+
+                var keyboard = InputSystem.AddDevice<Keyboard>();
+                _input.Press(keyboard.lKey); // 右
+                _input.Press(keyboard.ctrlKey);
+                await UniTask.DelayFrame(2);
+
+                _input.Release(keyboard.lKey); // 離す
+                _input.Release(keyboard.ctrlKey);
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 3)));
+            }
+
+            [Test]
+            public async Task 通路で高速移動_分岐あり_分岐で停止()
+            {
+                _playerCharacterController.NewLevel(
+                    MapHelper.CreateFromDumpStrings(new[]
+                    {
+                        "00000", // 壁壁壁壁壁
+                        "02220", // 壁通通通壁
+                        "00020", // 壁壁壁通壁
+                        "00220", // 壁壁通通壁
+                        "00020", // 壁壁壁通壁
+                    }),
+                    (1, 1)
+                );
+
+                var keyboard = InputSystem.AddDevice<Keyboard>();
+                _input.Press(keyboard.lKey); // 右
+                _input.Press(keyboard.ctrlKey);
+                await UniTask.DelayFrame(2);
+
+                _input.Release(keyboard.lKey); // 離す
+                _input.Release(keyboard.ctrlKey);
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 3)));
+            }
+
             [Test]
             public async Task 高速移動の途中で敵に当たる_敵の手前で停止()
             {
-                Assert.Fail();
+                _playerCharacterController.NewLevel(
+                    MapHelper.CreateFromDumpStrings(new[]
+                    {
+                        "000000", // 壁壁壁壁壁壁
+                        "011110", // 壁床床床床壁
+                        "000000", // 壁壁壁壁壁壁
+                    }),
+                    (1, 1)
+                );
+
+                CreateEnemy(_enemyManager, _playerCharacterController, (4, 1));
+
+                var keyboard = InputSystem.AddDevice<Keyboard>();
+                _input.Press(keyboard.lKey); // 右
+                _input.Press(keyboard.ctrlKey);
+                await UniTask.DelayFrame(2);
+
+                _input.Release(keyboard.lKey); // 離す
+                _input.Release(keyboard.ctrlKey);
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
             }
 
             [Ignore("敵の攻撃が未実装")]
             [Test]
             public async Task 高速移動の途中で敵から攻撃を受ける_その場で停止()
             {
-                Assert.Fail();
-            }
+                _playerCharacterController.NewLevel(
+                    MapHelper.CreateFromDumpStrings(new[]
+                    {
+                        "000000", // 壁壁壁壁壁壁
+                        "011110", // 壁床床床床壁
+                        "000020", // 壁壁壁壁通壁
+                        "000000", // 壁壁壁壁壁壁
+                    }),
+                    (1, 1)
+                );
 
-            [Ignore("未実装")]
-            [Test]
-            public async Task 通路で高速移動_部屋に入る手前で停止()
-            {
-                Assert.Fail();
-            }
+                CreateEnemy(_enemyManager, _playerCharacterController, (4, 2)); // (3, 1) は攻撃範囲
+                // TODO: 移動しないが攻撃はするAIをセットしないとだめ
 
-            [Ignore("未実装")]
-            [Test]
-            public async Task 通路で高速移動_分岐あり_分岐で停止()
-            {
-                Assert.Fail();
-            }
+                var keyboard = InputSystem.AddDevice<Keyboard>();
+                _input.Press(keyboard.lKey); // 右
+                _input.Press(keyboard.ctrlKey);
+                await UniTask.DelayFrame(2);
 
-            [Ignore("未実装")]
-            [Test]
-            public async Task 部屋で高速移動_通路に出る手前で停止()
-            {
-                // TODO: 指定方向の通路を探して、そっちに向かう
+                _input.Release(keyboard.lKey); // 離す
+                _input.Release(keyboard.ctrlKey);
+                await WaitForNextPlayerIdol(_turn);
 
-                Assert.Fail();
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
             }
         }
 
         private static EnemyCharacterController CreateEnemy(
+            EnemyManager enemyManager,
+            PlayerCharacterController playerCharacterController,
             (int column, int row) location,
             int hitPoint = 1,
             int defence = 0,
             int rewardExp = 0,
-            int rewardGold = 0,
-            EnemyManager enemyManager = null,
-            PlayerCharacterController playerCharacterController = null)
+            int rewardGold = 0)
         {
             var enemyRace = ScriptableObject.CreateInstance<EnemyRace>();
             enemyRace.maxHitPoint = hitPoint;
@@ -525,18 +688,18 @@ namespace RoguelikeExample.Controller
             return enemyCharacterController;
         }
 
-        private static async UniTask WaitForNextPlayerPhase(Turn turn)
+        private static async UniTask WaitForNextPlayerIdol(Turn turn)
         {
             bool IsPlayerPhase() => (turn.State <= TurnState.PlayerAction);
 
             // まず、プレイヤーフェイズを抜けるまで待つ
-            while (IsPlayerPhase())
+            while (turn.State <= TurnState.PlayerAction)
             {
                 await UniTask.NextFrame();
             }
 
-            // 次のプレイヤーフェイズまで待つ
-            while (!IsPlayerPhase())
+            // 次のIdolまで待つ
+            while (turn.State != TurnState.PlayerIdol)
             {
                 await UniTask.NextFrame();
             }
