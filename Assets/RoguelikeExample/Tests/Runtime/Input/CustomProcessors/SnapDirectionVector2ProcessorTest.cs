@@ -6,7 +6,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools.Utils;
 
-namespace RoguelikeExample.Input
+namespace RoguelikeExample.Input.CustomProcessors
 {
     public class SnapDirectionVector2ProcessorTest
     {
@@ -46,7 +46,7 @@ namespace RoguelikeExample.Input
         [TestCaseSource(nameof(s_testCases))]
         public void Process_8divisor_Snapped8directions(Vector2 src, Vector2 snapped)
         {
-            var sut = new SnapDirectionVector2Processor { divisor = 8 };
+            var sut = new SnapVector2Processor { divisor = 8 };
             var actual = sut.Process(src, null);
             Assert.That(actual, Is.EqualTo(snapped).Using(Vector2EqualityComparer.Instance));
         }
@@ -54,7 +54,7 @@ namespace RoguelikeExample.Input
         [Test]
         public void Process_underMinVector_returnZero()
         {
-            var sut = new SnapDirectionVector2Processor { deadzoneMin = 0.125f };
+            var sut = new SnapVector2Processor { min = 0.125f };
             var actual = sut.Process(new Vector2(0.05f, 0.05f), null);
             Assert.That(actual, Is.EqualTo(Vector2.zero));
         }

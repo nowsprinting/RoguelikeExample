@@ -63,8 +63,17 @@ namespace RoguelikeExample.Controller
         {
             _inputActions = new PlayerInputActions();
             _inputActions.Player.Attack.performed += AttackOperation;
-            _inputActions.Enable();
             Turn.OnPhaseTransition += HandlePhaseTransition;
+        }
+
+        private void OnEnable()
+        {
+            _inputActions?.Enable();
+        }
+
+        private void OnDisable()
+        {
+            _inputActions?.Disable();
         }
 
         private void OnDestroy()

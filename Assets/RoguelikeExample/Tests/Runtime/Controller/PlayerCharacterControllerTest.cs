@@ -9,6 +9,7 @@ using RoguelikeExample.Dungeon;
 using RoguelikeExample.Entities;
 using RoguelikeExample.Entities.ScriptableObjects;
 using RoguelikeExample.Input;
+using RoguelikeExample.Input.CustomProcessors;
 using RoguelikeExample.Random;
 using RoguelikeExample.Utils;
 using UnityEngine;
@@ -51,7 +52,7 @@ namespace RoguelikeExample.Controller
                 // Note: プロダクトコードでInputSystemが初期化されるより前に `InputTestFixture.SetUp` を実行する必要がある
                 // Note: `InputTestFixture` を継承する書きかたもあるが、SetUp/TearDownと競合するため選択していない
 
-                InputSystem.RegisterProcessor<SnapDirectionVector2Processor>();
+                InputSystem.RegisterProcessor<SnapVector2Processor>();
                 // Note: カスタムInputProcessorを使用しているプロジェクトでは、Setupの後に `RegisterProcessor` で登録する必要がある
 
                 var scene = SceneManager.CreateScene(nameof(PlayerCharacterControllerTest));
@@ -345,7 +346,7 @@ namespace RoguelikeExample.Controller
                 // Note: プロダクトコードでInputSystemが初期化されるより前に `InputTestFixture.SetUp` を実行する必要がある
                 // Note: `InputTestFixture` を継承する書きかたもあるが、SetUp/TearDownと競合するため選択していない
 
-                InputSystem.RegisterProcessor<SnapDirectionVector2Processor>();
+                InputSystem.RegisterProcessor<SnapVector2Processor>();
                 // Note: カスタムInputProcessorを使用しているプロジェクトでは、Setupの後に `RegisterProcessor` で登録する必要がある
 
                 var scene = SceneManager.CreateScene(nameof(PlayerCharacterControllerTest));

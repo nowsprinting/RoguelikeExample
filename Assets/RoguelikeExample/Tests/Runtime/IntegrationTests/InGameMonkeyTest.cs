@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using NUnit.Framework;
 using RoguelikeExample.Controller;
 using RoguelikeExample.Input;
+using RoguelikeExample.Input.CustomProcessors;
 using RoguelikeExample.Random;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -34,7 +35,7 @@ namespace RoguelikeExample.IntegrationTests
             // Note: プロダクトコードでInputSystemが初期化されるより前に `InputTestFixture.SetUp` を実行する必要がある
             // Note: `InputTestFixture` を継承する書きかたもあるが、SetUp/TearDownと競合するため選択していない
 
-            InputSystem.RegisterProcessor<SnapDirectionVector2Processor>();
+            InputSystem.RegisterProcessor<SnapVector2Processor>();
             // Note: カスタムInputProcessorを使用しているプロジェクトでは、Setupの後に `RegisterProcessor` で登録する必要がある
 
             await SceneManager.LoadSceneAsync("Dungeon");
