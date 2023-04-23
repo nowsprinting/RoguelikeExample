@@ -3,6 +3,7 @@
 
 using System;
 using RoguelikeExample.Controller;
+using RoguelikeExample.Dungeon.Generator;
 using RoguelikeExample.Random;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -32,10 +33,20 @@ namespace RoguelikeExample.Dungeon
         // 設定されていなくてもエラーにはしないこと。
         // Dungeon.unityでは設定必須なので、<c>DungeonSceneValidator</c>でバリデーションしている
 
-        [SerializeField, Tooltip("レベル")]
+        [SerializeField, Tooltip("レベル（ゲーム開始レベル）")]
         private int level = 1;
 
-        // TODO: マップ生成に使用するパラメータをSerializeFieldにする
+        [SerializeField, Tooltip("ダンジョンのマップ幅")]
+        private int width = 50;
+
+        [SerializeField, Tooltip("ダンジョンのマップ高さ")]
+        private int height = 30;
+
+        [SerializeField, Tooltip("ダンジョンの最大部屋数")]
+        private int roomCount = 6;
+
+        [SerializeField, Tooltip("最大部屋サイズ")]
+        private int maxRoomSize = 10;
 
         [SerializeField, Tooltip("ルートとなる擬似乱数のシード値（再生モードに入ってから変更しても無効）")]
         private string randomSeed;
@@ -74,8 +85,20 @@ namespace RoguelikeExample.Dungeon
 
         private void NewLevel()
         {
-            // TODO: マップ生成
-            // TODO: enemyManagerとplayerCharacterControllerにマップを渡す
+            _map = MapGenerator.Generate(width, height, roomCount, maxRoomSize, _random);
+            var root = PhysicsGenerator.Generate(_map);
+            root.name = $"Level {level}";
+            root.transform.parent = transform;
+
+            if (enemyManager != null)
+            {
+                enemyManager.NewLevel(level, _map);
+            }
+
+            if (playerCharacterController != null)
+            {
+                playerCharacterController.NewLevel(_map, _map.GetUpStairPosition());
+            }
         }
     }
 }

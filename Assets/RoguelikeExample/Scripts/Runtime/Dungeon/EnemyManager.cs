@@ -25,7 +25,7 @@ namespace RoguelikeExample.Dungeon
     public class EnemyManager : MonoBehaviour
     {
         [SerializeField, Tooltip("敵キャラクターの床面積あたり最大出現数")]
-        internal float maxInstantiateEnemiesPercentageOfFloor = 0.2f;
+        internal float maxInstantiateEnemiesPercentageOfFloor = 0.01f;
 
         // インゲーム開始時に <c>DungeonManager</c> から設定されるもの
         private IRandom _random;
@@ -132,6 +132,8 @@ namespace RoguelikeExample.Dungeon
                 var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
                     "Assets/RoguelikeExample/Prefabs/EnemyCharacter.prefab"); // TODO: ランタイムでAssetDatabaseは使えない
                 var enemyObject = Instantiate(prefab, transform); // 自分の下に配置
+                enemyObject.name = race.name;
+
                 var enemy = enemyObject.GetComponent<EnemyCharacterController>();
                 enemy.Initialize(race, _level, _map, location, _random, this, _playerCharacterController);
             }

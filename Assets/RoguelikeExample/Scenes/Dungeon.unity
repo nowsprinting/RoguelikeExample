@@ -152,8 +152,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd0d0268721445088dce5f4f3b62aad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCharacter: {fileID: 2036456022}
+  enemyManager: {fileID: 1329875190}
+  playerCharacterController: {fileID: 2036456022}
   level: 1
+  width: 50
+  height: 30
+  roomCount: 6
+  maxRoomSize: 10
+  randomSeed: 
 --- !u!4 &451461971
 Transform:
   m_ObjectHideFlags: 0
@@ -399,6 +405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc44e498521e4147bfcdfc4e3c41faab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxInstantiateEnemiesPercentageOfFloor: 0.2
 --- !u!4 &1329875191
 Transform:
   m_ObjectHideFlags: 0
