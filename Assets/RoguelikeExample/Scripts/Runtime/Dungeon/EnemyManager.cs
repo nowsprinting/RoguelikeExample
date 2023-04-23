@@ -70,7 +70,7 @@ namespace RoguelikeExample.Dungeon
                     turnState.NextPhase().Forget();
                     break;
                 case TurnState.EnemyPopup:
-                    // TODO: 敵の数が規定数を下回っているとき、視界の外に敵をランダムに出現させる
+                    RefillEnemies();
                     turnState.NextPhase().Forget();
                     break;
             }
@@ -84,6 +84,15 @@ namespace RoguelikeExample.Dungeon
             }
         }
 
+        private void RefillEnemies()
+        {
+            var enemies = GetComponentsInChildren<EnemyCharacterController>();
+            if (enemies.Length < _floorCount * maxInstantiateEnemiesPercentageOfFloor)
+            {
+                CreateEnemies(1); // 補充は1ターンに1体ずつ
+            }
+        }
+
         /// <summary>
         /// 新しいレベルに移動したときに <c>DungeonManager</c> から設定される
         /// </summary>
@@ -94,23 +103,68 @@ namespace RoguelikeExample.Dungeon
             _level = level;
             _map = map;
             _floorCount = map.Cast<MapChip>().Count(mapChip => mapChip == MapChip.Room || mapChip == MapChip.Corridor);
-
             _enemyRaces = new List<EnemyRace>();
-            // TODO: レベル条件を満たすものを抽出して入れておく
-            // TODO: ランタイムでAssetDatabase使えない
 
-            // TODO: 敵キャラクターの初期配置（無理に最大数出すまで頑張りはしない）
+            foreach (var path in AssetDatabase.FindAssets("t:EnemyRace", new[] { "Assets/RoguelikeExample" })
+                         .Select(AssetDatabase.GUIDToAssetPath))
+            {
+                var race = AssetDatabase.LoadAssetAtPath<EnemyRace>(path); // TODO: ランタイムでAssetDatabaseは使えない
+                if (race.lowestSpawnLevel <= _level && _level <= race.highestSpawnLevel)
+                {
+                    _enemyRaces.Add(race);
+                }
+            }
+
+            CreateEnemies((int)(_floorCount * maxInstantiateEnemiesPercentageOfFloor));
         }
 
-        private EnemyCharacterController CreateEnemy((int column, int row) location)
+        private void CreateEnemies(int count = 1)
         {
-            var race = _enemyRaces[_random.Next(_enemyRaces.Count)];
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
-                "Assets/RoguelikeExample/Prefabs/EnemyCharacter.prefab"); // TODO: ランタイムでAssetDatabase使えない
-            var enemyObject = Instantiate(prefab, transform); // 自分の下に配置
-            var enemy = enemyObject.GetComponent<EnemyCharacterController>();
-            enemy.Initialize(race, _level, _map, location, _random, this, _playerCharacterController);
-            return enemy;
+            for (var i = 0; i < count; i++)
+            {
+                var location = GetPopLocation();
+                if (location.column == -1)
+                {
+                    continue;
+                }
+
+                var race = _enemyRaces[_random.Next(_enemyRaces.Count)];
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                    "Assets/RoguelikeExample/Prefabs/EnemyCharacter.prefab"); // TODO: ランタイムでAssetDatabaseは使えない
+                var enemyObject = Instantiate(prefab, transform); // 自分の下に配置
+                var enemy = enemyObject.GetComponent<EnemyCharacterController>();
+                enemy.Initialize(race, _level, _map, location, _random, this, _playerCharacterController);
+            }
+        }
+
+        private (int column, int row) GetPopLocation()
+        {
+            for (var i = 0; i < 8; i++) // 数回試行する
+            {
+                var column = _random.Next(_map.GetLength(0));
+                var row = _random.Next(_map.GetLength(1));
+
+                if (!(_map.IsRoom(column, row) || _map.IsCorridor(column, row)))
+                {
+                    continue;
+                }
+
+                if (ExistEnemy((column, row)) != null)
+                {
+                    continue;
+                }
+
+                if (_playerCharacterController != null &&
+                    _playerCharacterController.MapLocation().column == column &&
+                    _playerCharacterController.MapLocation().row == row)
+                {
+                    continue;
+                }
+
+                return (column, row);
+            }
+
+            return (-1, -1); // 配置に失敗
         }
 
         /// <summary>

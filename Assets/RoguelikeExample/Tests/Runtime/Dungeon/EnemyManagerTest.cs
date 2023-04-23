@@ -2,6 +2,8 @@
 // This software is released under the MIT License.
 
 using System.Collections;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using NUnit.Framework;
 using RoguelikeExample.Controller;
 using RoguelikeExample.Random;
@@ -12,16 +14,31 @@ using UnityEngine.TestTools;
 
 namespace RoguelikeExample.Dungeon
 {
+    /// <summary>
+    /// 敵キャラクター管理クラスのテスト
+    /// 主に敵インスタンス生成ロジックのテスト
+    /// </summary>
+    [TestFixture, Timeout(5000)]
     public class EnemyManagerTest
     {
-        private const int RepeatCount = 1;
-        // Note: 開発時は繰り返し回数を増やして多数試行、以降はリグレッションテストとして1回だけ実行
+        private PlayerCharacterController _playerCharacterController;
+        private EnemyManager _enemyManager;
+        private Turn _turn;
 
         [SetUp]
         public void SetUp()
         {
             var scene = SceneManager.CreateScene(nameof(EnemyManagerTest));
             SceneManager.SetActiveScene(scene);
+
+            _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
+            _enemyManager = new GameObject().AddComponent<EnemyManager>();
+            _turn = new Turn();
+
+            _enemyManager.Initialize(new RandomImpl(), _playerCharacterController);
+            // Note: NewLevel()を呼ぶまでは敵キャラクターは生成されない
+
+            _playerCharacterController.Initialize(new RandomImpl(), _turn, _enemyManager);
         }
 
         [UnityTearDown]
@@ -30,21 +47,13 @@ namespace RoguelikeExample.Dungeon
             yield return SceneManager.UnloadSceneAsync(nameof(EnemyManagerTest));
         }
 
-        [Ignore("未実装")] // TODO: 未実装のためignore
         [Test]
-        [Repeat(RepeatCount)]
-        public void Initialize_指定レベルの敵インスタンスが生成される([NUnit.Framework.Range(1, 1)] int level)
+        public void NewLevel_指定レベルの敵インスタンスが生成される([NUnit.Framework.Range(1, 1)] int level)
         {
-            var playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
-            playerCharacterController.SetPositionFromMapLocation(-100, -100); // 影響しないところに配置
+            _playerCharacterController.SetPositionFromMapLocation(-100, -100); // 影響しないところに配置
 
-            var enemyManager = new GameObject().AddComponent<EnemyManager>();
-            enemyManager.maxInstantiateEnemiesPercentageOfFloor = 1.0f; // 床1つに対して1体を必ず生成
-            enemyManager.Initialize(
-                new RandomImpl(),
-                playerCharacterController
-            );
-            enemyManager.NewLevel(
+            _enemyManager.maxInstantiateEnemiesPercentageOfFloor = 1.0f; // 床1つに対して1体を必ず生成
+            _enemyManager.NewLevel(
                 1,
                 MapHelper.CreateFromDumpStrings(new[]
                 {
@@ -52,28 +61,24 @@ namespace RoguelikeExample.Dungeon
                 })
             );
 
-            var createdEnemies = enemyManager.GetComponentsInChildren<EnemyCharacterController>();
-            Assert.That(createdEnemies, Has.Length.EqualTo(1), "MaxInstantiateEnemiesPercentageOfFloorに応じて生成");
-            Assert.That(createdEnemies[0].Status.Race.lowestSpawnLevel, Is.LessThanOrEqualTo(level), "出現レベル下限");
-            Assert.That(createdEnemies[0].Status.Race.highestSpawnLevel, Is.GreaterThanOrEqualTo(level), "出現レベル上限");
+            var createdEnemies = _enemyManager.GetComponentsInChildren<EnemyCharacterController>();
+            Assert.That(createdEnemies, Has.Length.EqualTo(1), "1体だけ生成");
+            Assert.That(createdEnemies[0].Status.Race.lowestSpawnLevel, Is.LessThanOrEqualTo(level), "種族のレベル下限");
+            Assert.That(createdEnemies[0].Status.Race.highestSpawnLevel, Is.GreaterThanOrEqualTo(level), "種族のレベル上限");
             Assert.That(createdEnemies[0].Status.Level, Is.EqualTo(level), "敵インスタンスのレベル");
         }
 
-        [Ignore("未実装")] // TODO: 未実装のためignore
         [Test]
-        [Repeat(RepeatCount)]
-        public void Initialize_配置可能な座標に配置される()
+        public void NewLevel_配置可能な座標に敵インスタンスが配置される()
         {
-            var playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
-            playerCharacterController.SetPositionFromMapLocation(2, 0);
+            _playerCharacterController.SetPositionFromMapLocation(2, 0);
 
-            var enemyManager = new GameObject().AddComponent<EnemyManager>();
-            enemyManager.maxInstantiateEnemiesPercentageOfFloor = 0.25f; // 床4つに対して1体だけ生成
-            enemyManager.Initialize(
-                new RandomImpl(),
-                playerCharacterController
-            );
-            enemyManager.NewLevel(
+            var existEnemy = new GameObject().AddComponent<EnemyCharacterController>();
+            existEnemy.SetPositionFromMapLocation(1, 0);
+            existEnemy.transform.parent = _enemyManager.transform;
+
+            _enemyManager.maxInstantiateEnemiesPercentageOfFloor = 0.25f; // 床4つに対して1体だけ生成
+            _enemyManager.NewLevel(
                 1,
                 MapHelper.CreateFromDumpStrings(new[]
                 {
@@ -82,14 +87,72 @@ namespace RoguelikeExample.Dungeon
                 })
             );
 
-            var existEnemy = new GameObject().AddComponent<EnemyCharacterController>();
-            existEnemy.SetPositionFromMapLocation(1, 0);
-            existEnemy.transform.parent = enemyManager.transform;
+            Object.DestroyImmediate(existEnemy.gameObject); // 事前に配置した敵インスタンスは破棄
 
-            var createdEnemies = enemyManager.GetComponentsInChildren<EnemyCharacterController>();
-            Assert.That(createdEnemies, Has.Length.EqualTo(1), "maxInstantiateEnemiesだけ生成");
+            var createdEnemies = _enemyManager.GetComponentsInChildren<EnemyCharacterController>();
+            Assert.That(createdEnemies, Has.Length.EqualTo(1), "1体だけ生成");
             Assert.That(createdEnemies[0].MapLocation().column, Is.InRange(1, 2), "(1,1)か(2,1)にのみ配置される");
             Assert.That(createdEnemies[0].MapLocation().row, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task RefillEnemies_EnemyPopupで敵インスタンスが補充される_1ターンに1体のみ補充される()
+        {
+            _playerCharacterController.SetPositionFromMapLocation(-100, -100); // 影響しないところに配置
+
+            _enemyManager.maxInstantiateEnemiesPercentageOfFloor = 1.0f; // 床1つに対して最大4体生成
+            _enemyManager.NewLevel(
+                1,
+                MapHelper.CreateFromDumpStrings(new[]
+                {
+                    "1111", // 床床床床
+                })
+            );
+
+            foreach (var enemyCharacterController in _enemyManager.GetComponentsInChildren<EnemyCharacterController>())
+            {
+                Object.DestroyImmediate(enemyCharacterController.gameObject); // NewLevelで配置された敵インスタンスは破棄
+            }
+
+            Assume.That(_enemyManager.GetComponentsInChildren<EnemyCharacterController>(), Is.Empty, "敵キャラは0");
+
+            await WaitForNextPlayerIdol(_turn); // EnemyPopupまで進める
+
+            var createdEnemies = _enemyManager.GetComponentsInChildren<EnemyCharacterController>();
+            Assert.That(createdEnemies, Has.Length.EqualTo(1));
+        }
+
+        [Test]
+        public async Task RefillEnemies_EnemyPopupで敵インスタンスが1体ずつ補充される_上限までしか補充されない()
+        {
+            _playerCharacterController.SetPositionFromMapLocation(-100, -100); // 影響しないところに配置
+
+            _enemyManager.maxInstantiateEnemiesPercentageOfFloor = 0.5f; // 床1つに対して最大2体生成
+            _enemyManager.NewLevel(
+                1,
+                MapHelper.CreateFromDumpStrings(new[]
+                {
+                    "000000", // 壁壁壁壁壁壁
+                    "011110", // 壁床床床床壁
+                    "000000", // 壁壁壁壁壁壁
+                    // Note: AIが動くので整合性の取れているマップが必要
+                })
+            );
+
+            foreach (var enemyCharacterController in _enemyManager.GetComponentsInChildren<EnemyCharacterController>())
+            {
+                Object.DestroyImmediate(enemyCharacterController.gameObject); // NewLevelで配置された敵インスタンスは破棄
+            }
+
+            Assume.That(_enemyManager.GetComponentsInChildren<EnemyCharacterController>(), Is.Empty, "敵キャラは0");
+
+            for (var i = 0; i < 10; i++)
+            {
+                await WaitForNextPlayerIdol(_turn); // EnemyPopupを10回
+            }
+
+            var createdEnemies = _enemyManager.GetComponentsInChildren<EnemyCharacterController>();
+            Assert.That(createdEnemies, Has.Length.EqualTo(2));
         }
 
         [Test]
@@ -111,6 +174,26 @@ namespace RoguelikeExample.Dungeon
 
             var actual = enemyManager.ExistEnemy((0, 0));
             Assert.That(actual, Is.EqualTo(existEnemy));
+        }
+
+        private static async UniTask WaitForNextPlayerIdol(Turn turn)
+        {
+            if (turn.State == TurnState.PlayerIdol)
+            {
+                await turn.NextPhase(); // Idolを強制スキップ
+            }
+
+            // まず、プレイヤーフェイズを抜けるまで待つ
+            while (turn.State <= TurnState.PlayerAction)
+            {
+                await UniTask.NextFrame();
+            }
+
+            // 次のIdolまで待つ
+            while (turn.State != TurnState.PlayerIdol)
+            {
+                await UniTask.NextFrame();
+            }
         }
     }
 }

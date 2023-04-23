@@ -690,8 +690,6 @@ namespace RoguelikeExample.Controller
 
         private static async UniTask WaitForNextPlayerIdol(Turn turn)
         {
-            bool IsPlayerPhase() => (turn.State <= TurnState.PlayerAction);
-
             // まず、プレイヤーフェイズを抜けるまで待つ
             while (turn.State <= TurnState.PlayerAction)
             {
