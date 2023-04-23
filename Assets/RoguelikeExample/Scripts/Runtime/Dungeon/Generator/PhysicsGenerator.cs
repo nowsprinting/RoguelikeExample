@@ -42,8 +42,7 @@ namespace RoguelikeExample.Dungeon.Generator
                     break;
                 case MapChip.Room:
                 case MapChip.Corridor:
-                    gameObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
-                    gameObject.transform.localScale = new Vector3(0.1f, 1.0f, 0.1f);
+                    gameObject = new GameObject(); // 床なし（暫定）
                     break;
                 case MapChip.UpStair:
                     gameObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
