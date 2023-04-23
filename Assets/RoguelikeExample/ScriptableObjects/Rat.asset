@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: "\u30E9\u30C3\u30C8"
   description: "\u5927\u304D\u3044\u30CD\u30BA\u30DF"
   displayCharacter: "\u9F20"
+  aiType: 1
   lowestSpawnLevel: 1
   highestSpawnLevel: 2
   maxHitPoint: 2

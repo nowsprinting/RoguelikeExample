@@ -17,87 +17,105 @@ namespace RoguelikeExample.Controller
     /// </summary>
     public sealed class PlayerCharacterController : CharacterController
     {
-        [SerializeField, Tooltip("Dungeon Manager")]
-        internal DungeonManager dungeonManager;
-        // 設定されていなくてもエラーにはしないこと。
-        // Dungeon.unityでは設定必須なので、<c>DungeonSceneValidator</c>でバリデーションしている
-
         [SerializeField, Tooltip("行動アニメーション時間")]
         internal int actionAnimationMillis = 100;
 
         [SerializeField, Tooltip("高速移動時アニメーション時間")]
         internal int runAnimationMillis = 10;
 
-        private EnemyManager _enemyManager;
-
         public PlayerStatus Status { get; internal set; } = new PlayerStatus(10, 1, 3);
 
+        // インゲーム開始時に <c>DungeonManager</c> から設定されるもの（テストでは省略されることもある）
+        private EnemyManager _enemyManager;
+        private Turn _turn; // イベントだけでなく操作受付可否判定などで参照するため保持
+
         private PlayerInputActions _inputActions;
-        private bool _processing;
         private Direction _direction;
 
         /// <summary>
         /// インゲーム開始時に <c>DungeonManager</c> から設定される
         /// </summary>
-        /// <param name="random">このキャラクターが消費する擬似乱数インスタンス</param>
-        public void Initialize(IRandom random)
+        /// <param name="random">このキャラクターが消費する擬似乱数発生器インスタンス</param>
+        /// <param name="turn">行動ターンのステート</param>
+        /// <param name="enemyManager">敵キャラクター管理</param>
+        public void Initialize(IRandom random, Turn turn = null, EnemyManager enemyManager = null)
         {
+            _enemyManager = enemyManager;
             _random = random;
+            _turn = turn;
         }
 
         /// <summary>
         /// 新しいレベルに移動したときに <c>DungeonManager</c> から設定される
         /// </summary>
         /// <param name="map">当該レベルのマップ</param>
-        /// <param name="location">キャラクターの初期位置</param>
-        /// <param name="enemyManager">当該レベルの敵管理</param>
-        public void NewLevel(MapChip[,] map, (int colum, int row) location, EnemyManager enemyManager)
+        /// <param name="startLocation">キャラクターの初期位置</param>
+        public void NewLevel(MapChip[,] map, (int colum, int row) startLocation)
         {
             _map = map;
-            SetPositionFromMapLocation(location.colum, location.row);
-            _enemyManager = enemyManager;
+            SetPositionFromMapLocation(startLocation.colum, startLocation.row);
         }
+
+        /// <summary>
+        /// 行動アニメーション時間（高速移動中かどうかを考慮した値）
+        /// </summary>
+        public int AnimationMillis() => _turn.IsRun ? runAnimationMillis : actionAnimationMillis;
 
         private void Awake()
         {
             _inputActions = new PlayerInputActions();
-            _inputActions.Player.Attack.performed += Attack;
+            _inputActions.Player.Attack.performed += AttackOperation;
             _inputActions.Enable();
+            Turn.OnPhaseTransition += HandlePhaseTransition;
         }
 
         private void OnDestroy()
         {
             _inputActions?.Dispose();
+            Turn.OnPhaseTransition -= HandlePhaseTransition;
+        }
+
+        private void HandlePhaseTransition(object sender, EventArgs _)
+        {
+            switch (((Turn)sender).State)
+            {
+                case TurnState.PlayerRun:
+                    ThinkingToRun();
+                    break;
+                case TurnState.PlayerAction:
+                    DoAction().Forget();
+                    break;
+            }
         }
 
         private void Update()
         {
-            if (_processing)
-                return; // 移動などの処理中は入力を受け付けない
+            if (_turn.State != TurnState.PlayerIdol)
+                return; // PlayerIdol以外は入力を受け付けない
 
             // hjkl, arrow, stick
             var move = _inputActions.Player.Move.ReadValue<Vector2>().normalized;
             if (move == Vector2.up)
             {
-                Move(Direction.Up);
+                MoveOperation(Direction.Up);
                 return;
             }
 
             if (move == Vector2.down)
             {
-                Move(Direction.Down);
+                MoveOperation(Direction.Down);
                 return;
             }
 
             if (move == Vector2.right)
             {
-                Move(Direction.Right);
+                MoveOperation(Direction.Right);
                 return;
             }
 
             if (move == Vector2.left)
             {
-                Move(Direction.Left);
+                MoveOperation(Direction.Left);
                 return;
             }
 
@@ -105,131 +123,162 @@ namespace RoguelikeExample.Controller
             var diagonalMove = _inputActions.Player.DiagonalMove.ReadValue<Vector2>().normalized;
             if (diagonalMove == Vector2.up)
             {
-                Move(Direction.UpLeft);
+                MoveOperation(Direction.UpLeft);
                 return;
             }
 
             if (diagonalMove == Vector2.down)
             {
-                Move(Direction.DownRight);
+                MoveOperation(Direction.DownRight);
                 return;
             }
 
             if (diagonalMove == Vector2.right)
             {
-                Move(Direction.UpRight);
+                MoveOperation(Direction.UpRight);
                 return;
             }
 
             if (diagonalMove == Vector2.left)
             {
-                Move(Direction.DownLeft);
+                MoveOperation(Direction.DownLeft);
                 return;
             }
         }
 
-        private void Move(Direction direction)
+        private void MoveOperation(Direction direction)
         {
             _direction = direction; // 移動できないときも方向だけは反映するので、early returnしない
+            _turn.IsRun = _inputActions.Player.Run.ReadValue<float>() > 0 && !direction.IsDiagonal(); // 高速移動
 
-            var run = _inputActions.Player.Run.ReadValue<float>() > 0 && !direction.IsDiagonal(); // 高速移動。ループの外で確定させておく
-
-            while (true)
-            {
-                var location = MapLocation();
-                (int column, int row) dest = (location.column + direction.X(), location.row + direction.Y());
-
-                if (_map.IsWall(dest.column, dest.row))
-                    return; // 移動先が壁
-
-                if (_enemyManager.ExistEnemy(dest) != null)
-                    return; // 移動先に敵がいる場合は移動しない（攻撃はspaceキー）
-
-                NextLocation = dest;
-
-                var animationMillis = run ? runAnimationMillis : actionAnimationMillis;
-                DoAction(async () => { await MoveToNextLocation(animationMillis); }, animationMillis).Forget();
-
-                if (!run)
-                    break;
-
-                (run, _direction) = GetNextDirectionIfContinueRun(_direction);
-            }
-        }
-
-        private (bool continueRun, Direction nextDirection) GetNextDirectionIfContinueRun(Direction direction)
-        {
             var location = MapLocation();
             (int column, int row) dest = (location.column + direction.X(), location.row + direction.Y());
 
+            if (_map.IsWall(dest.column, dest.row))
+            {
+                return; // 移動先が壁
+            }
+
+            if (_enemyManager.ExistEnemy(dest) != null)
+            {
+                return; // 移動先に敵がいる場合は移動しない（攻撃はspaceキー）
+            }
+
+            NextLocation = dest;
+            _turn.NextPhase().Forget();
+        }
+
+        private void ThinkingToRun()
+        {
+            if (!_turn.IsRun)
+            {
+                _turn.NextPhase().Forget(); // 高速移動中でなければ何もしないでフェーズを送る
+                return;
+            }
+
+            var location = MapLocation();
+            (int column, int row) dest = (location.column + _direction.X(), location.row + _direction.Y());
+
+            if (_map.IsWall(dest.column, dest.row))
+            {
+                // 移動先が壁
+                // TODO: 方向を変える。通路なら何度でもok、部屋では1回だけかつ曲がった先に通路か階段で止まる場合のみ
+
+                _turn.IsRun = false; // 仮
+                _turn.NextPhase().Forget(); // 仮
+                return;
+            }
+
+            if (_enemyManager.ExistEnemy(dest) != null)
+            {
+                // 移動先が敵キャラクター
+                _turn.IsRun = false;
+                _turn.NextPhase().Forget();
+                return;
+            }
+
+            NextLocation = dest;
+            _turn.NextPhase().Forget();
+        }
+
+        private void AttackOperation(InputAction.CallbackContext context)
+        {
+            if (_turn.State != TurnState.PlayerIdol)
+            {
+                return; // PlayerIdol以外は入力を受け付けない
+            }
+
+            _turn.NextPhase().Forget(); // 空振りでもフェーズを送る
+        }
+
+        private async UniTask DoAction()
+        {
+            if (NextLocation != MapLocation())
+            {
+                await MoveToNextLocation(AnimationMillis());
+                JudgeToStopRun(); // 高速移動を止めるか判断
+            }
+            else
+            {
+                await AttackAction();
+            }
+
+            _turn.NextPhase().Forget();
+        }
+
+        private void JudgeToStopRun()
+        {
+            var location = MapLocation();
+
             if (_map.IsUpStair(location.column, location.row) || _map.IsDownStair(location.column, location.row))
-                return (false, direction); // 階段に乗ったら止まる
+            {
+                _turn.IsRun = false; // 階段に乗ったら止まる
+                return;
+            }
 
             if (_map.IsRoom(location.column, location.row) && (
                     _map.IsCorridor(location.column - 1, location.row) ||
                     _map.IsCorridor(location.column + 1, location.row) ||
                     _map.IsCorridor(location.column, location.row - 1) ||
                     _map.IsCorridor(location.column, location.row + 1)))
-                return (false, direction); // 部屋にいるとき、通路に隣接したら止まる
-
-            if (_map[location.column, location.row] == MapChip.Corridor && _map[dest.column, dest.row] == MapChip.Room)
-                return (false, direction); // 通路から部屋に入る手前で止まる
-
-            if (_map.IsWall(dest.column, dest.row))
             {
-                return (false, direction); // TODO: 方向を変える。通路なら何度でもok、部屋では1回だけかつ曲がった先に通路か階段で止まる場合のみ
+                _turn.IsRun = false; // 部屋にいるとき、通路に隣接したら止まる
+                return;
             }
 
-            return (true, direction);
+            (int column, int row) dest = (location.column + _direction.X(), location.row + _direction.Y());
+
+            if (_map[location.column, location.row] == MapChip.Corridor &&
+                _map[dest.column, dest.row] == MapChip.Room)
+            {
+                _turn.IsRun = false; // 通路から部屋に入る手前で止まる
+                return;
+            }
         }
 
-        private void Attack(InputAction.CallbackContext context)
+        private async UniTask AttackAction()
         {
-            if (_processing)
-                return; // 移動などの処理中は入力を受け付けない
+            var location = MapLocation();
+            var dest = (location.column + _direction.X(), location.row + _direction.Y());
+            var target = _enemyManager.ExistEnemy(dest); // nullでも空振りするため、early returnしない
 
-            async UniTask Action()
+            var damage = -1;
+            if (target)
             {
-                var location = MapLocation();
-                var dest = (location.column + _direction.X(), location.row + _direction.Y());
-                var target = _enemyManager.ExistEnemy(dest); // nullでも空振りするため、early returnしない
-
-                var damage = -1;
-                if (target)
-                {
-                    damage = target.Status.Attacked(Status.Attack);
-                }
-
-                await UniTask.Delay(actionAnimationMillis); // TODO: 攻撃演出
-
-                if (target && !target.Status.IsAlive())
-                {
-                    Status.AddExp(target.Status.RewardExp);
-                    Status.AddGold(target.Status.RewardGold);
-
-                    // TODO: 破壊演出（forget）
-                    Destroy(target.gameObject);
-                }
+                damage = target.Status.Attacked(Status.Attack);
             }
 
-            DoAction(Action, actionAnimationMillis).Forget();
-        }
+            await UniTask.Delay(actionAnimationMillis); // TODO: 攻撃演出
 
-        /// <summary>
-        /// 敵キャラクター思考 → プレイヤーの行動 → 敵キャラクター行動
-        /// </summary>
-        /// <param name="action">プレイヤーの行動</param>
-        /// <param name="animationMillis">移動アニメーションにかける時間（ミリ秒）</param>
-        private async UniTask DoAction(Func<UniTask> action, int animationMillis)
-        {
-            Status.IncrementTurn();
-            _processing = true;
+            if (target && !target.Status.IsAlive())
+            {
+                Status.AddExp(target.Status.RewardExp);
+                Status.AddGold(target.Status.RewardGold);
 
-            _enemyManager.ThinkActionEnemies(this);
-            await action();
-            await _enemyManager.DoActionEnemies(animationMillis);
+                // TODO: 破壊演出
 
-            _processing = false;
+                Destroy(target.gameObject);
+            }
         }
     }
 }

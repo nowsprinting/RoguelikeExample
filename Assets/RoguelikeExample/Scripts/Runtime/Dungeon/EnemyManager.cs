@@ -1,6 +1,7 @@
 // Copyright (c) 2023 Koji Hasegawa.
 // This software is released under the MIT License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -14,7 +15,6 @@ namespace RoguelikeExample.Dungeon
 {
     /// <summary>
     /// ダンジョンに出現する敵キャラクターを管理する
-    /// レベル（階層）移動ごとに <c>DungeonManager</c> によって破棄・再生性される
     ///
     /// 責務
     /// - 敵キャラクターの初期配置
@@ -24,25 +24,76 @@ namespace RoguelikeExample.Dungeon
     /// </summary>
     public class EnemyManager : MonoBehaviour
     {
-        private MapChip[,] _map;
-        private int _level;
-        private int _maxInstantiateEnemies;
+        [SerializeField, Tooltip("敵キャラクターの床面積あたり最大出現数")]
+        internal float maxInstantiateEnemiesPercentageOfFloor = 0.2f;
+
+        // インゲーム開始時に <c>DungeonManager</c> から設定されるもの
         private IRandom _random;
+
+        // インゲーム開始時に <c>DungeonManager</c> から設定されるもの（テストでは省略されることもある）
+        private PlayerCharacterController _playerCharacterController;
+
+        // 新しいレベルに移動したときに設定されるもの
+        private int _level;
+        private MapChip[,] _map;
+        private int _floorCount; // 床の数（部屋+通路）
         private List<EnemyRace> _enemyRaces; // このレベルに出現する敵種族のリスト
 
         /// <summary>
-        /// インスタンス生成時に <c>DungeonManager</c> から設定される
+        /// インゲーム開始時に <c>DungeonManager</c> から設定される
         /// </summary>
-        /// <param name="map">当該レベルのマップ</param>
-        /// <param name="level">当該レベル==敵キャラクターのレベル</param>
-        /// <param name="maxInstantiateEnemies">出現する敵キャラクターの最大数</param>
-        /// <param name="random">擬似乱数生成器</param>
-        public void Initialize(MapChip[,] map, int level, int maxInstantiateEnemies, IRandom random)
+        /// <param name="random">擬似乱数生成器インスタンス</param>
+        /// <param name="playerCharacterController">プレイヤーキャラクターのコントローラー</param>
+        public void Initialize(IRandom random, PlayerCharacterController playerCharacterController = null)
         {
-            _map = map;
-            _level = level;
-            _maxInstantiateEnemies = maxInstantiateEnemies;
             _random = random;
+            _playerCharacterController = playerCharacterController;
+        }
+
+        private void Awake()
+        {
+            Turn.OnPhaseTransition += HandlePhaseTransition;
+        }
+
+        private void OnDestroy()
+        {
+            Turn.OnPhaseTransition -= HandlePhaseTransition;
+        }
+
+        private async void HandlePhaseTransition(object sender, EventArgs _)
+        {
+            var turnState = (Turn)sender;
+            switch (turnState.State)
+            {
+                case TurnState.EnemyAction:
+                    await WaitForAllEnemiesAction();
+                    turnState.NextPhase().Forget();
+                    break;
+                case TurnState.EnemyPopup:
+                    // TODO: 敵の数が規定数を下回っているとき、視界の外に敵をランダムに出現させる
+                    turnState.NextPhase().Forget();
+                    break;
+            }
+        }
+
+        private async UniTask WaitForAllEnemiesAction()
+        {
+            while (GetComponentsInChildren<EnemyCharacterController>().Any(x => x.HasIncompleteAction))
+            {
+                await UniTask.NextFrame(); // すべての敵キャラクターが行動を終えるまで待機
+            }
+        }
+
+        /// <summary>
+        /// 新しいレベルに移動したときに <c>DungeonManager</c> から設定される
+        /// </summary>
+        /// <param name="level">当該レベル==敵キャラクターのレベル</param>
+        /// <param name="map">当該レベルのマップ</param>
+        public void NewLevel(int level, MapChip[,] map)
+        {
+            _level = level;
+            _map = map;
+            _floorCount = map.Cast<MapChip>().Count(mapChip => mapChip == MapChip.Room || mapChip == MapChip.Corridor);
 
             _enemyRaces = new List<EnemyRace>();
             // TODO: レベル条件を満たすものを抽出して入れておく
@@ -51,14 +102,20 @@ namespace RoguelikeExample.Dungeon
             // TODO: 敵キャラクターの初期配置（無理に最大数出すまで頑張りはしない）
         }
 
-        private void Update()
+        private EnemyCharacterController CreateEnemy((int column, int row) location)
         {
-            // TODO: 敵の数が規定数を下回っているとき、視界の外に敵をランダムに出現させる
+            var race = _enemyRaces[_random.Next(_enemyRaces.Count)];
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                "Assets/RoguelikeExample/Prefabs/EnemyCharacter.prefab"); // TODO: ランタイムでAssetDatabase使えない
+            var enemyObject = Instantiate(prefab, transform); // 自分の下に配置
+            var enemy = enemyObject.GetComponent<EnemyCharacterController>();
+            enemy.Initialize(race, _level, _map, location, _random, this, _playerCharacterController);
+            return enemy;
         }
 
         /// <summary>
         /// 指定座標にすでに敵キャラクターがいればインスタンスを返す
-        /// なお、現在座標ではなく、当該ターンの移動先座標で判定する
+        /// なお、現在座標ではなく、現在ターンの移動先座標で判定する
         /// </summary>
         /// <param name="location">判定するマップ座標</param>
         /// <returns>ヒットした敵キャラクターインスタンス。存在しない場合はnull</returns>
@@ -66,50 +123,7 @@ namespace RoguelikeExample.Dungeon
         {
             return GetComponentsInChildren<EnemyCharacterController>()
                 .FirstOrDefault(enemyCharacterController => enemyCharacterController.NextLocation == location);
-            // Note: 自分自身を除外していないが、移動しないという結果に変わりはないので許容
-        }
-
-        /// <summary>
-        /// 敵キャラクターのターン（思考）
-        /// </summary>
-        /// <param name="playerCharacterController"></param>
-        public void ThinkActionEnemies(PlayerCharacterController playerCharacterController)
-        {
-            foreach (var enemyCharacterController in GetComponentsInChildren<EnemyCharacterController>())
-            {
-                if ((bool)enemyCharacterController)
-                    enemyCharacterController.ThinkAction(this, playerCharacterController);
-            }
-        }
-
-        /// <summary>
-        /// 敵キャラクターのターン（行動）
-        /// </summary>
-        /// <param name="animationMillis">移動アニメーションにかける時間（ミリ秒）</param>
-        public async UniTask DoActionEnemies(int animationMillis)
-        {
-            var tasks = new List<UniTask>();
-            foreach (var enemyCharacterController in GetComponentsInChildren<EnemyCharacterController>())
-            {
-                if ((bool)enemyCharacterController)
-                    tasks.Add(enemyCharacterController.MoveToNextLocation(animationMillis));
-            }
-
-            await UniTask.WhenAll(tasks);
-
-            // TODO: 攻撃
-        }
-
-        private EnemyCharacterController CreateEnemy((int column, int row) location)
-        {
-            var race = _enemyRaces[_random.Next(_enemyRaces.Count)];
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
-                "Assets/RoguelikeExample/Prefabs/EnemyCharacter.prefab"); // TODO: ランタイムでAssetDatabase使えない
-            var enemy = Instantiate(prefab, transform); // 自分の下に生成
-            var enemyCharacterController = enemy.GetComponent<EnemyCharacterController>();
-            enemyCharacterController.Initialize(race, _level, _random, _map, location);
-
-            return enemyCharacterController;
+            // Note: 呼び出し元を除外していないが、移動しないという結果に変わりはないので許容
         }
     }
 }

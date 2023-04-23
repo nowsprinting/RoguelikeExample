@@ -24,11 +24,20 @@ namespace RoguelikeExample.AI
     [TestFixture]
     public class BackAndForthAITest
     {
+        private EnemyManager _enemyManager;
+        private PlayerCharacterController _playerCharacterController;
+
         [SetUp]
         public void SetUp()
         {
             var scene = SceneManager.CreateScene(nameof(BackAndForthAITest));
             SceneManager.SetActiveScene(scene);
+
+            _enemyManager = new GameObject().AddComponent<EnemyManager>();
+
+            _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
+            _playerCharacterController.actionAnimationMillis = 0; // 行動アニメーション時間を0に
+            _playerCharacterController.Initialize(new RandomImpl(), new Turn(), _enemyManager);
         }
 
         [UnityTearDown]
@@ -47,7 +56,6 @@ namespace RoguelikeExample.AI
             enemyCharacterController.Initialize(
                 enemyRace,
                 1,
-                new RandomImpl(),
                 MapHelper.CreateFromDumpStrings(new[]
                 {
                     "000", // 壁壁壁
@@ -56,31 +64,27 @@ namespace RoguelikeExample.AI
                     "010", // 壁床壁
                     "000", // 壁壁壁
                 }),
-                (1, 1)
+                (1, 1),
+                new RandomImpl(),
+                _enemyManager,
+                _playerCharacterController
             );
 
-            var enemyManager = new GameObject().AddComponent<EnemyManager>();
-            var playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
-            playerCharacterController.SetPositionFromMapLocation(-1, -1); // プレイキャラクターは接敵しない座標
+            _playerCharacterController.SetPositionFromMapLocation(-1, -1); // 接敵しない座標
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((1, 2)), "down");
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((1, 3)), "down");
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((1, 2)), "up (reversed)");
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((1, 1)), "up");
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((1, 2)), "down (reversed)");
         }
 
@@ -94,38 +98,33 @@ namespace RoguelikeExample.AI
             enemyCharacterController.Initialize(
                 enemyRace,
                 1,
-                new RandomImpl(),
                 MapHelper.CreateFromDumpStrings(new[]
                 {
                     "00000", // 壁壁壁壁壁
                     "01110", // 壁床床床壁
                     "00000", // 壁壁壁壁壁
                 }),
-                (1, 1)
+                (1, 1),
+                new RandomImpl(),
+                _enemyManager,
+                _playerCharacterController
             );
 
-            var enemyManager = new GameObject().AddComponent<EnemyManager>();
-            var playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
-            playerCharacterController.SetPositionFromMapLocation(-1, -1); // プレイキャラクターは接敵しない座標
+            _playerCharacterController.SetPositionFromMapLocation(-1, -1); // プレイキャラクターは接敵しない座標
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((2, 1)), "right");
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((3, 1)), "right");
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((2, 1)), "left (reversed)");
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((1, 1)), "left");
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((2, 1)), "right (reversed)");
         }
 
@@ -139,7 +138,6 @@ namespace RoguelikeExample.AI
             enemyCharacterController.Initialize(
                 enemyRace,
                 1,
-                new RandomImpl(),
                 MapHelper.CreateFromDumpStrings(new[]
                 {
                     "000", // 壁壁壁
@@ -148,33 +146,31 @@ namespace RoguelikeExample.AI
                     "010", // 壁床壁
                     "000", // 壁壁壁
                 }),
-                (1, 1)
+                (1, 1),
+                new RandomImpl(),
+                _enemyManager,
+                _playerCharacterController
             );
 
-            var enemyManager = new GameObject().AddComponent<EnemyManager>();
-            var playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
-            playerCharacterController.SetPositionFromMapLocation(0, 4); // プレイキャラクターは左下の壁の中にいる
+            _playerCharacterController.SetPositionFromMapLocation(0, 4); // プレイキャラクターは左下の壁の中にいる
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((1, 2)), "down");
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((1, 3)), "down");
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((1, 3)), "attack (not move)");
-            // Note: 攻撃は未実装なので移動しないことで判断
+            // Note: 敵の攻撃は未実装なので移動しないことで判断
 
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((1, 3)), "attack (not move)");
+            // Note: 敵の攻撃は未実装なので移動しないことで判断
 
-            playerCharacterController.SetPositionFromMapLocation(-1, -1); // 接敵を解消
-            enemyCharacterController.ThinkAction(enemyManager, playerCharacterController);
-            await enemyCharacterController.MoveToNextLocation(0);
+            _playerCharacterController.SetPositionFromMapLocation(-1, -1); // 接敵を解消
+
+            await enemyCharacterController.DoAction();
             Assert.That(enemyCharacterController.MapLocation(), Is.EqualTo((1, 2)), "up (restart move)");
         }
     }

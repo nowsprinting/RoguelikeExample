@@ -9,9 +9,12 @@ using UnityEngine;
 namespace RoguelikeExample.Controller
 {
     [DisallowMultipleComponent]
-    public class CharacterController : MonoBehaviour
+    public abstract class CharacterController : MonoBehaviour
     {
+        // インスタンス生成時に設定されるもの
         protected IRandom _random;
+
+        // 新しいレベルに移動したときに設定されるもの
         protected MapChip[,] _map;
 
         /// <summary>
@@ -34,7 +37,7 @@ namespace RoguelikeExample.Controller
         /// </summary>
         /// <param name="column">0以上の整数</param>
         /// <param name="row">0以上の整数</param>
-        internal void SetPositionFromMapLocation(int column, int row)
+        public void SetPositionFromMapLocation(int column, int row)
         {
             transform.position = new Vector3(column, 0, -1 * row);
             NextLocation = (column, row);
@@ -44,7 +47,7 @@ namespace RoguelikeExample.Controller
         /// キャラクターの現在位置を <c>NextLocation</c> に移動
         /// </summary>
         /// <param name="animationMillis">移動アニメーションにかける時間（ミリ秒）</param>
-        public async UniTask MoveToNextLocation(int animationMillis)
+        protected async UniTask MoveToNextLocation(int animationMillis)
         {
             transform.position = new Vector3(NextLocation.column, 0, -1 * NextLocation.row);
             await UniTask.Delay(animationMillis); // TODO: 指定時間かけて移動する

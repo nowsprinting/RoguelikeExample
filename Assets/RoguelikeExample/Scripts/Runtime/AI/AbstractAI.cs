@@ -26,7 +26,7 @@ namespace RoguelikeExample.AI
         /// <param name="myself">当該キャラクターインスタンス</param>
         /// <param name="target">プレイヤーキャラクターインスタンス</param>
         /// <returns>移動先候補の座標。PC座標を指すときには攻撃する</returns>
-        public abstract (int column, int row) ThinkAction(
+        public abstract (int column, int row) Think(
             MapChip[,] map,
             EnemyCharacterController myself,
             PlayerCharacterController target);

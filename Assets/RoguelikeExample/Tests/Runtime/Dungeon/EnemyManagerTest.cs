@@ -35,19 +35,25 @@ namespace RoguelikeExample.Dungeon
         [Repeat(RepeatCount)]
         public void Initialize_指定レベルの敵インスタンスが生成される([NUnit.Framework.Range(1, 1)] int level)
         {
+            var playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
+            playerCharacterController.SetPositionFromMapLocation(-100, -100); // 影響しないところに配置
+
             var enemyManager = new GameObject().AddComponent<EnemyManager>();
+            enemyManager.maxInstantiateEnemiesPercentageOfFloor = 1.0f; // 床1つに対して1体を必ず生成
             enemyManager.Initialize(
+                new RandomImpl(),
+                playerCharacterController
+            );
+            enemyManager.NewLevel(
+                1,
                 MapHelper.CreateFromDumpStrings(new[]
                 {
                     "1", // 床のみ（必ず配置される）
-                }),
-                1,
-                1,
-                new RandomImpl()
+                })
             );
 
             var createdEnemies = enemyManager.GetComponentsInChildren<EnemyCharacterController>();
-            Assert.That(createdEnemies, Has.Length.EqualTo(1), "maxInstantiateEnemiesだけ生成");
+            Assert.That(createdEnemies, Has.Length.EqualTo(1), "MaxInstantiateEnemiesPercentageOfFloorに応じて生成");
             Assert.That(createdEnemies[0].Status.Race.lowestSpawnLevel, Is.LessThanOrEqualTo(level), "出現レベル下限");
             Assert.That(createdEnemies[0].Status.Race.highestSpawnLevel, Is.GreaterThanOrEqualTo(level), "出現レベル上限");
             Assert.That(createdEnemies[0].Status.Level, Is.EqualTo(level), "敵インスタンスのレベル");
@@ -56,27 +62,29 @@ namespace RoguelikeExample.Dungeon
         [Ignore("未実装")] // TODO: 未実装のためignore
         [Test]
         [Repeat(RepeatCount)]
-        // [Retry(2)] // 抽選結果によっては配置されないときもあるため
         public void Initialize_配置可能な座標に配置される()
         {
+            var playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
+            playerCharacterController.SetPositionFromMapLocation(2, 0);
+
             var enemyManager = new GameObject().AddComponent<EnemyManager>();
+            enemyManager.maxInstantiateEnemiesPercentageOfFloor = 0.25f; // 床4つに対して1体だけ生成
             enemyManager.Initialize(
+                new RandomImpl(),
+                playerCharacterController
+            );
+            enemyManager.NewLevel(
+                1,
                 MapHelper.CreateFromDumpStrings(new[]
                 {
                     "0123", // 壁、部屋、通路、上り階段（このrowの床にはキャラクターを置くため配置されない）
                     "0124", // 壁、部屋、通路、下り階段
-                }),
-                1,
-                1,
-                new RandomImpl()
+                })
             );
 
             var existEnemy = new GameObject().AddComponent<EnemyCharacterController>();
             existEnemy.SetPositionFromMapLocation(1, 0);
             existEnemy.transform.parent = enemyManager.transform;
-
-            var playerCharacter = new GameObject().AddComponent<PlayerCharacterController>();
-            playerCharacter.SetPositionFromMapLocation(2, 0);
 
             var createdEnemies = enemyManager.GetComponentsInChildren<EnemyCharacterController>();
             Assert.That(createdEnemies, Has.Length.EqualTo(1), "maxInstantiateEnemiesだけ生成");

@@ -8,7 +8,6 @@ namespace RoguelikeExample.Entities
         public int Level { get; private set; } = 1;
         public int Exp { get; private set; } = 0;
         public int Gold { get; private set; } = 0;
-        public int Turn { get; private set; } = 0;
 
         public PlayerStatus(int maxHitPoint, int defense, int attack)
         {
@@ -27,11 +26,6 @@ namespace RoguelikeExample.Entities
         public void AddGold(int gold)
         {
             Gold += gold;
-        }
-
-        public void IncrementTurn()
-        {
-            Turn++;
         }
     }
 }

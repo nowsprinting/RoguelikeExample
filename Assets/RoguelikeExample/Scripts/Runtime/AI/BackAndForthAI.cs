@@ -26,7 +26,7 @@ namespace RoguelikeExample.AI
         public BackAndForthAI(IRandom random) : base(random) { }
 
         /// <inheritdoc/>
-        public override (int column, int row) ThinkAction(
+        public override (int column, int row) Think(
             MapChip[,] map,
             EnemyCharacterController myself,
             PlayerCharacterController target)

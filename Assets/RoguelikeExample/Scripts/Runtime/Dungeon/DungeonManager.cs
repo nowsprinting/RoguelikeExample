@@ -1,8 +1,11 @@
 // Copyright (c) 2023 Koji Hasegawa.
 // This software is released under the MIT License.
 
+using System;
 using RoguelikeExample.Controller;
+using RoguelikeExample.Random;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace RoguelikeExample.Dungeon
 {
@@ -18,16 +21,61 @@ namespace RoguelikeExample.Dungeon
     [DisallowMultipleComponent]
     public class DungeonManager : MonoBehaviour
     {
+        [SerializeField, Tooltip("Enemy Manager")]
+        internal EnemyManager enemyManager;
+        // 設定されていなくてもエラーにはしないこと。
+        // Dungeon.unityでは設定必須なので、<c>DungeonSceneValidator</c>でバリデーションしている
+
+        [FormerlySerializedAs("playerCharacter")]
         [SerializeField, Tooltip("Player Character")]
-        internal PlayerCharacterController playerCharacter;
+        internal PlayerCharacterController playerCharacterController;
         // 設定されていなくてもエラーにはしないこと。
         // Dungeon.unityでは設定必須なので、<c>DungeonSceneValidator</c>でバリデーションしている
 
         [SerializeField, Tooltip("レベル")]
         private int level = 1;
 
+        // TODO: マップ生成に使用するパラメータをSerializeFieldにする
+
+        [SerializeField, Tooltip("ルートとなる擬似乱数のシード値（再生モードに入ってから変更しても無効）")]
+        private string randomSeed;
+
+        private IRandom _random; // ルートとなる擬似乱数発生器
+        private readonly Turn _turn = new Turn(); // 行動ターンのステート
+
         private MapChip[,] _map; // 現在のレベルのマップ
 
-        public EnemyManager EnemyManager { get; private set; } // 現在のレベルの敵キャラクター管理
+        private void Start()
+        {
+            if (string.IsNullOrEmpty(randomSeed))
+            {
+                _random = new RandomImpl();
+            }
+            else
+            {
+                var seed = Convert.ToInt32(randomSeed);
+                _random = new RandomImpl(seed);
+            }
+
+            if (enemyManager != null)
+            {
+                IRandom newRandom = new RandomImpl(_random.Next());
+                enemyManager.Initialize(newRandom, playerCharacterController);
+            }
+
+            if (playerCharacterController != null)
+            {
+                IRandom newRandom = new RandomImpl(_random.Next());
+                playerCharacterController.Initialize(newRandom, _turn, enemyManager);
+            }
+
+            NewLevel();
+        }
+
+        private void NewLevel()
+        {
+            // TODO: マップ生成
+            // TODO: enemyManagerとplayerCharacterControllerにマップを渡す
+        }
     }
 }

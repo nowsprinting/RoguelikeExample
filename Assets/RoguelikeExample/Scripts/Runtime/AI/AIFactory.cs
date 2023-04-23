@@ -12,6 +12,8 @@ namespace RoguelikeExample.AI
         {
             switch (aiType)
             {
+                case AIType.None:
+                    return null;
                 case AIType.BackAndForth:
                     return new BackAndForthAI(random);
                 default:
