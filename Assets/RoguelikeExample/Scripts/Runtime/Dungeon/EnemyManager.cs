@@ -27,6 +27,9 @@ namespace RoguelikeExample.Dungeon
         [SerializeField, Tooltip("敵キャラクターの床面積あたり最大出現数")]
         internal float maxInstantiateEnemiesPercentageOfFloor = 0.01f;
 
+        [SerializeField, Tooltip("敵キャラクターのポップ試行回数")]
+        internal int popTrialCount = 5;
+
         // インゲーム開始時に <c>DungeonManager</c> から設定されるもの
         private IRandom _random;
 
@@ -141,7 +144,7 @@ namespace RoguelikeExample.Dungeon
 
         private (int column, int row) GetPopLocation()
         {
-            for (var i = 0; i < 8; i++) // 数回試行する
+            for (var i = 0; i < popTrialCount; i++) // 数回試行する
             {
                 var column = _random.Next(_map.GetLength(0));
                 var row = _random.Next(_map.GetLength(1));

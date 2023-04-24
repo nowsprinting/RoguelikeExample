@@ -36,6 +36,7 @@ namespace RoguelikeExample.Dungeon
             _turn = Turn.GetInstance();
 
             _enemyManager.Initialize(new RandomImpl(), _playerCharacterController);
+            _enemyManager.popTrialCount = 1000; // 試行回数を大幅に増やす
             // Note: NewLevel()を呼ぶまでは敵キャラクターは生成されない
 
             _playerCharacterController.Initialize(new RandomImpl(), _enemyManager);
