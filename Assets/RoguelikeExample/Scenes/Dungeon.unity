@@ -405,7 +405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc44e498521e4147bfcdfc4e3c41faab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxInstantiateEnemiesPercentageOfFloor: 0.2
+  maxInstantiateEnemiesPercentageOfFloor: 0.05
 --- !u!4 &1329875191
 Transform:
   m_ObjectHideFlags: 0
