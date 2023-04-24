@@ -52,8 +52,6 @@ namespace RoguelikeExample.Dungeon
         private string randomSeed;
 
         private IRandom _random; // ルートとなる擬似乱数発生器
-        private readonly Turn _turn = new Turn(); // 行動ターンのステート
-
         private MapChip[,] _map; // 現在のレベルのマップ
 
         private void Start()
@@ -77,7 +75,7 @@ namespace RoguelikeExample.Dungeon
             if (playerCharacterController != null)
             {
                 IRandom newRandom = new RandomImpl(_random.Next());
-                playerCharacterController.Initialize(newRandom, _turn, enemyManager);
+                playerCharacterController.Initialize(newRandom, enemyManager);
             }
 
             NewLevel();

@@ -33,12 +33,12 @@ namespace RoguelikeExample.Dungeon
 
             _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
             _enemyManager = new GameObject().AddComponent<EnemyManager>();
-            _turn = new Turn();
+            _turn = Turn.GetInstance();
 
             _enemyManager.Initialize(new RandomImpl(), _playerCharacterController);
             // Note: NewLevel()を呼ぶまでは敵キャラクターは生成されない
 
-            _playerCharacterController.Initialize(new RandomImpl(), _turn, _enemyManager);
+            _playerCharacterController.Initialize(new RandomImpl(), _enemyManager);
         }
 
         [UnityTearDown]

@@ -55,13 +55,13 @@ namespace RoguelikeExample.Controller
 
                 _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
                 _enemyManager = new GameObject().AddComponent<EnemyManager>();
-                _turn = new Turn();
+                _turn = Turn.GetInstance();
 
                 _enemyManager.Initialize(new RandomImpl(), _playerCharacterController);
                 // Note: NewLevel()を呼ばなければ敵キャラクターは生成されない
 
                 _playerCharacterController.actionAnimationMillis = 0; // 行動アニメーション時間を0に
-                _playerCharacterController.Initialize(new RandomImpl(), _turn, _enemyManager);
+                _playerCharacterController.Initialize(new RandomImpl(), _enemyManager);
                 _playerCharacterController.NewLevel(
                     MapHelper.CreateFromDumpStrings(new[]
                     {
@@ -199,6 +199,8 @@ namespace RoguelikeExample.Controller
             [Test]
             public async Task 移動するとターンが加算される()
             {
+                var beforeTurnCount = _turn.TurnCount;
+
                 _playerCharacterController.SetPositionFromMapLocation(2, 2);
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
@@ -206,12 +208,14 @@ namespace RoguelikeExample.Controller
                 await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 2)), "移動している");
-                Assert.That(_turn.TurnCount, Is.EqualTo(2), "ターンが加算されている");
+                Assert.That(_turn.TurnCount, Is.EqualTo(beforeTurnCount + 1), "ターンが加算されている");
             }
 
             [Test]
             public async Task 連続移動は移動しただけターン加算される()
             {
+                var beforeTurnCount = _turn.TurnCount;
+
                 _playerCharacterController.SetPositionFromMapLocation(1, 1);
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
@@ -220,19 +224,21 @@ namespace RoguelikeExample.Controller
                 await WaitForNextPlayerIdol(_turn); // 2単位連続で移動
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
-                Assert.That(_turn.TurnCount, Is.EqualTo(3));
+                Assert.That(_turn.TurnCount, Is.EqualTo(beforeTurnCount + 2));
             }
 
             [Test]
             public async Task スペースキーで攻撃_空振りでもターンが加算される()
             {
+                var beforeTurnCount = _turn.TurnCount;
+
                 _playerCharacterController.SetPositionFromMapLocation(2, 2);
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.PressAndRelease(keyboard.spaceKey); // 攻撃（空振り）
                 await WaitForNextPlayerIdol(_turn);
 
-                Assert.That(_turn.TurnCount, Is.EqualTo(2));
+                Assert.That(_turn.TurnCount, Is.EqualTo(beforeTurnCount + 1));
             }
 
             [Test]
@@ -301,13 +307,13 @@ namespace RoguelikeExample.Controller
 
                 _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
                 _enemyManager = new GameObject().AddComponent<EnemyManager>();
-                _turn = new Turn();
+                _turn = Turn.GetInstance();
 
                 _enemyManager.Initialize(new RandomImpl(), _playerCharacterController);
                 // Note: NewLevel()を呼ばなければ敵キャラクターは生成されない
 
                 _playerCharacterController.runAnimationMillis = 0; // 高速移動時アニメーション時間を0に
-                _playerCharacterController.Initialize(new RandomImpl(), _turn, _enemyManager);
+                _playerCharacterController.Initialize(new RandomImpl(), _enemyManager);
                 // テストごとにマップが異なるため <c>_playerCharacterController.NewLevel</c> は個々のテストメソッドで実行する
             }
 
@@ -678,7 +684,7 @@ namespace RoguelikeExample.Controller
             enemyCharacterController.Initialize(
                 enemyRace,
                 1,
-                new MapChip[,] { { new() } }, // TODO: mapはnullでもいいのでは？
+                null,
                 location,
                 new RandomImpl(),
                 enemyManager,
