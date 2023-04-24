@@ -10,7 +10,7 @@ namespace RoguelikeExample.AI
     public enum AIType
     {
         /// <summary>
-        /// なにもしないAI
+        /// なにもしないAI（テスト用）
         /// </summary>
         None = 0,
 

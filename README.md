@@ -5,10 +5,10 @@
 
 
 
-## 制限事項
+## 注意事項
 
 - Unityエディターでしか動作しません
-- TextMesh Pro Essentialsをignoreしているので、Playするときにインポートを促すウィンドウが出ます。それに従ってインストールしてください
+- TextMesh Pro Essentialsをトラッキングから外しているので、最初にPlayするときにインポートを促すウィンドウが出ます。それに従ってインストールしてください
 
 
 
@@ -16,8 +16,21 @@
 
 ### キーボード
 
-- hjklyubn：移動（controlもしくはshift同時押しで高速移動）
+- hjklyubn：移動
+- hjkl + controlもしくはshift同時押しで高速移動（a.k.a. Run, Dash）
 - space：攻撃
+
+
+
+## テスト
+
+### カテゴリ
+
+一部のテストには、次の `Category` 属性が定義されています。
+
+- **IgnoreCI** : バッチモードでは動作しないテスト
+- **Integration** : 統合テスト。カバー範囲が広く実行時間もかかるもので、開発中のユニットテスト実行から除外するためにカテゴライズしています
+- **Validation** : アセット・Scene・Prefab・ScriptableObjectなどのバリデーション。失敗したときの通知先が異なる想定でカテゴライズしています
 
 
 
@@ -34,6 +47,6 @@ stateDiagram-v2
     EnemyPopup --> PlayerIdol: Runでない
 
     EnemyPopup --> PlayerRun: Runのとき
-    PlayerRun --> PlayerAction
-    PlayerRun --> PlayerIdol: Runをキャンセル（行き止まりなど）
+    PlayerRun --> PlayerAction : 移動先あり
+    PlayerRun --> PlayerIdol: 移動先なし（Run停止）
 ```

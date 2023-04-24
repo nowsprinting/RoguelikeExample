@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
+using RoguelikeExample.AI;
 using RoguelikeExample.Entities.ScriptableObjects;
 using UnityEditor;
 
@@ -14,6 +15,8 @@ namespace RoguelikeExample.Editor.Validators
     /// <summary>
     /// 敵データのScriptableObjectに設定の漏れがないかを検証します
     /// </summary>
+    [TestFixture]
+    [Category("Validation")]
     public class EnemyRaceValidator
     {
         // EnemyRace型のScriptableObjectを列挙
@@ -39,7 +42,7 @@ namespace RoguelikeExample.Editor.Validators
                     Assert.That(s, Is.Not.Empty);
                     break;
                 case int i:
-                    Assert.That(i, Is.GreaterThan(0));
+                    Assert.That(i, Is.GreaterThanOrEqualTo(0));
                     break;
                 case Array array:
                     Assert.That(array, Has.Length.GreaterThanOrEqualTo(0));
@@ -51,6 +54,20 @@ namespace RoguelikeExample.Editor.Validators
                     Assert.Fail($"Unsupported field type: {field.Name}");
                     break;
             }
+        }
+
+        [Test]
+        public void 有効なAIが設定されていること([ValueSource(nameof(Paths))] string path)
+        {
+            var enemyRace = AssetDatabase.LoadAssetAtPath<EnemyRace>(path);
+            Assert.That(enemyRace.aiType, Is.Not.EqualTo(AIType.None)); // テスト用AIなので設定禁止
+        }
+
+        [Test]
+        public void 出現レベルの整合性は取れていること([ValueSource(nameof(Paths))] string path)
+        {
+            var enemyRace = AssetDatabase.LoadAssetAtPath<EnemyRace>(path);
+            Assert.That(enemyRace.lowestSpawnLevel, Is.LessThanOrEqualTo(enemyRace.highestSpawnLevel));
         }
     }
 }

@@ -18,6 +18,7 @@ namespace RoguelikeExample.Editor.Validators
     /// 他に影響のある致命的な設定ミスや、逆に気づきにくいミスを検出するに留めるのが理想です。
     /// </summary>
     [TestFixture]
+    [Category("Validation")]
     public class DungeonSceneValidator
     {
         private DungeonManager _dungeonManager;
