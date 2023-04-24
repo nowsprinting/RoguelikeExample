@@ -66,6 +66,8 @@ namespace RoguelikeExample.Dungeon
                 _random = new RandomImpl(seed);
             }
 
+            Debug.Log($"Dungeon root random is: {_random}"); // 擬似乱数発生器のシード値をログ出力（再現可能にするため）
+
             if (enemyManager != null)
             {
                 IRandom newRandom = new RandomImpl(_random.Next());
