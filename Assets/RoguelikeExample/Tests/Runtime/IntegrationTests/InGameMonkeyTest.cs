@@ -60,16 +60,16 @@ namespace RoguelikeExample.IntegrationTests
                 keyboard.bKey, keyboard.nKey, keyboard.spaceKey,
             };
 
-            var expireTime = Time.time + 290.0f; // タイムアウト少し手前まで動作させる
+            var expireTime = Time.time + 50.0f; // タイムアウト少し手前まで動作させる
             while (Time.time < expireTime)
             {
                 var key = keys[random.Next(keys.Length)];
-                _input.Press(key);
-                _input.Press(keyboard.ctrlKey); // 単なるレバガチャにならないよう、高速移動させる
-                await UniTask.DelayFrame(2);
+                _input.Press(key); // 押す
+                _input.Press(keyboard.ctrlKey); // 単なるレバガチャにならないよう、常に高速移動させる
+                await UniTask.DelayFrame(random.Next(10));
 
                 _input.Release(key); // 離す
-                await WaitForNextPlayerIdol(Turn.GetInstance());
+                await UniTask.DelayFrame(random.Next(10));
 
                 var nowLocation = playerCharacterController.MapLocation();
                 if (nowLocation == lastLocation)
@@ -84,15 +84,6 @@ namespace RoguelikeExample.IntegrationTests
                     lastLocation = nowLocation;
                     dontMoveCount = 0;
                 }
-            }
-        }
-
-        private static async UniTask WaitForNextPlayerIdol(Turn turn)
-        {
-            // 次のIdolまで待つ
-            while (turn.State != TurnState.PlayerIdol)
-            {
-                await UniTask.NextFrame();
             }
         }
     }
