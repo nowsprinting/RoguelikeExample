@@ -123,6 +123,12 @@ namespace RoguelikeExample.Dungeon
 
         private void CreateEnemies(int count = 1)
         {
+            if (_enemyRaces.Count == 0)
+            {
+                Debug.LogWarning($"Level {_level} に出現できる敵種族が定義されていません");
+                return;
+            }
+
             for (var i = 0; i < count; i++)
             {
                 var location = GetPopLocation();

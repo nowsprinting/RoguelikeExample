@@ -70,6 +70,26 @@ namespace RoguelikeExample.Dungeon
         }
 
         [Test]
+        public void NewLevel_指定レベルにRaceのSOが存在しないとき_敵インスタンスは生成されない()
+        {
+            const int InvalidLevel = -1;
+
+            _playerCharacterController.SetPositionFromMapLocation(-100, -100); // 影響しないところに配置
+
+            _enemyManager.maxInstantiateEnemiesPercentageOfFloor = 1.0f; // 床1つに対して1体を必ず生成
+            _enemyManager.NewLevel(
+                InvalidLevel,
+                MapHelper.CreateFromDumpStrings(new[]
+                {
+                    "1", // 床のみ（必ず配置される）
+                })
+            );
+
+            var createdEnemies = _enemyManager.GetComponentsInChildren<EnemyCharacterController>();
+            Assert.That(createdEnemies, Has.Length.EqualTo(0));
+        }
+
+        [Test]
         public void NewLevel_配置可能な座標に敵インスタンスが配置される()
         {
             _playerCharacterController.SetPositionFromMapLocation(2, 0);
