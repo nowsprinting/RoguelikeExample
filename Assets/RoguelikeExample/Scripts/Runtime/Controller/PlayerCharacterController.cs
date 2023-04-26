@@ -203,7 +203,15 @@ namespace RoguelikeExample.Controller
             {
                 _direction = newDirection; // 通路では無制限に方向転換
             }
-            // TODO: 部屋でも、方向転換した先に通路があるなら1回だけ方向転換させていいのでは
+            else if (_map.IsRoom(location.column, location.row))
+            {
+                if (newDirection != _direction)
+                {
+                    turn.CanselRun(); // 部屋では方向転換しないで、高速移動をキャンセルしてプレイヤー操作に戻る（暫定）
+                    return;
+                }
+                // TODO: 部屋でも、方向転換した先に通路があるなら1回だけ方向転換させていいのでは
+            }
 
             (int column, int row) dest = (location.column + _direction.X(), location.row + _direction.Y());
 
