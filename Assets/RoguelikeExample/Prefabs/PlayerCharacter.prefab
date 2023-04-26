@@ -94,7 +94,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2913188000181652244, guid: 9cbcda4e23f45416ab676a4f58f43a2a, type: 3}
       propertyPath: m_text
-      value: '@'
+      value: "\uFF20"
       objectReference: {fileID: 0}
     - target: {fileID: 2913188000181652245, guid: 9cbcda4e23f45416ab676a4f58f43a2a, type: 3}
       propertyPath: m_Name
@@ -125,3 +125,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8983f336f274400a99df8702877bd640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionAnimationMillis: 100
+  runAnimationMillis: 10
