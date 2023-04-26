@@ -69,3 +69,24 @@ stateDiagram-v2
 
     (any):::Any --> Result: 死亡
 ```
+
+
+
+## 権利表記・ライセンス
+
+Copyright (c) 2023 Koji Hasegawa
+
+MIT License
+
+
+### サードパーティ ライセンス
+
+#### [PixelMplus](https://itouhiro.hatenablog.com/entry/20130602/font)
+
+Copyright (C) 2002-2013 M+ FONTS PROJECT
+
+M+ FONT LICENSE
+
+#### [kgsi/japanese_full.txt](https://gist.github.com/kgsi/ed2f1c5696a2211c1fd1e1e198c96ee4)
+
+ライセンス不明
