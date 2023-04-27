@@ -18,6 +18,7 @@ namespace RoguelikeExample.Dungeon.Generator
     /// </summary>
     [TestFixture]
     [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor, RuntimePlatform.LinuxEditor)]
+    [Category("IgnoreCI")] // スクリーンショット撮影を含むためバッチモードでは動作しない
     public class PhysicsGeneratorTest
     {
         [UnitySetUp]
