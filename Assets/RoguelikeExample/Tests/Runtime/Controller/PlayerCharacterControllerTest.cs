@@ -31,11 +31,11 @@ namespace RoguelikeExample.Controller
         /// 通常の移動と攻撃のテスト
         /// </summary>
         /// <remarks>
-        /// - SetUpが異なるため高速移動のテスト <see cref="Run"/> と分けています
+        /// - SetUpが異なるため高速移動のテスト <see cref="RunTest"/> と分けています
         /// - キーごとにテストメソッドが分かれている（パラメタライズドテストのパラメーターにしていない）のは、<c>InputControl</c>がstaticでないためです
         /// </remarks>
         [TestFixture, Timeout(5000)]
-        public class MoveAndAttack
+        public class MoveAndAttackTest
         {
             private readonly InputTestFixture _input = new InputTestFixture();
 
@@ -284,10 +284,10 @@ namespace RoguelikeExample.Controller
         /// 高速移動のテスト
         /// </summary>
         /// <remarks>
-        /// - SetUpが異なるため通常移動と攻撃のテスト <see cref="MoveAndAttack"/> と分けています
+        /// - SetUpが異なるため通常移動と攻撃のテスト <see cref="MoveAndAttackTest"/> と分けています
         /// </remarks>
         [TestFixture, Timeout(5000)]
-        public class Run
+        public class RunTest
         {
             private readonly InputTestFixture _input = new InputTestFixture();
 
