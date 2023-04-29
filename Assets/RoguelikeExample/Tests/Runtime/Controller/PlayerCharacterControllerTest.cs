@@ -277,6 +277,7 @@ namespace RoguelikeExample.Controller
                 Assert.That((bool)enemy, Is.False, "対象インスタンスは破棄されている");
                 Assert.That(_playerCharacterController.Status.Exp, Is.EqualTo(3), "経験値が加算される");
                 Assert.That(_playerCharacterController.Status.Gold, Is.EqualTo(5), "通貨が加算される");
+                await UniTask.NextFrame(); // オブジェクトの破棄を待つ
             }
         }
 

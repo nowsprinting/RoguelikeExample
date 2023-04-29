@@ -1,6 +1,7 @@
 // Copyright (c) 2023 Koji Hasegawa.
 // This software is released under the MIT License.
 
+using System;
 using NUnit.Framework;
 using RoguelikeExample.Dungeon;
 
@@ -19,7 +20,7 @@ namespace RoguelikeExample.Utils
                 // z=0（奥）、z=-1（手前）
             };
             var actual = MapHelper.Dump(map);
-            Assert.That(actual, Is.EqualTo("013\n024\n"));
+            Assert.That(actual, Is.EqualTo($"013{Environment.NewLine}024{Environment.NewLine}"));
         }
 
         [Test]
