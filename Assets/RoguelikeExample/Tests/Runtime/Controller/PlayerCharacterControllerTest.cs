@@ -232,44 +232,6 @@ namespace RoguelikeExample.Controller
             }
 
             [Test]
-            public async Task ゲームパッド左スティックで移動()
-            {
-                _playerCharacterController.SetPositionFromMapLocation(2, 2);
-
-                var gamepad = InputSystem.AddDevice<Gamepad>();
-                _input.Set(gamepad.leftStick, new Vector2(-0.9f, -0.1f)); // 誤差はスナップされる
-                await WaitForNextPlayerIdol(_turn);
-
-                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 2)));
-            }
-
-            [Test]
-            public async Task ゲームパッド左スティックで斜め移動()
-            {
-                _playerCharacterController.SetPositionFromMapLocation(2, 2);
-
-                var gamepad = InputSystem.AddDevice<Gamepad>();
-                _input.Set(gamepad.leftStick, new Vector2(-0.9f, 0.9f)); // 誤差はスナップされる
-                await WaitForNextPlayerIdol(_turn);
-
-                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 1)));
-            }
-
-            [Test]
-            public async Task ゲームパッドEastボタンで攻撃()
-            {
-                var beforeTurnCount = _turn.TurnCount;
-
-                _playerCharacterController.SetPositionFromMapLocation(2, 2);
-
-                var gamepad = InputSystem.AddDevice<Gamepad>();
-                _input.PressAndRelease(gamepad.buttonEast); // 攻撃（空振り）
-                await WaitForNextPlayerIdol(_turn);
-
-                Assert.That(_turn.TurnCount, Is.EqualTo(beforeTurnCount + 1));
-            }
-
-            [Test]
             public async Task スペースキーで攻撃_攻撃対象にダメージ()
             {
                 _playerCharacterController.SetPositionFromMapLocation(1, 1);
@@ -317,6 +279,44 @@ namespace RoguelikeExample.Controller
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.PressAndRelease(keyboard.spaceKey); // 攻撃（空振り）
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_turn.TurnCount, Is.EqualTo(beforeTurnCount + 1));
+            }
+
+            [Test]
+            public async Task ゲームパッド左スティックで移動()
+            {
+                _playerCharacterController.SetPositionFromMapLocation(2, 2);
+
+                var gamepad = InputSystem.AddDevice<Gamepad>();
+                _input.Set(gamepad.leftStick, new Vector2(-0.9f, -0.1f)); // 誤差はスナップされる
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 2)));
+            }
+
+            [Test]
+            public async Task ゲームパッド左スティックで斜め移動()
+            {
+                _playerCharacterController.SetPositionFromMapLocation(2, 2);
+
+                var gamepad = InputSystem.AddDevice<Gamepad>();
+                _input.Set(gamepad.leftStick, new Vector2(-0.9f, 0.9f)); // 誤差はスナップされる
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 1)));
+            }
+
+            [Test]
+            public async Task ゲームパッドSouthボタンで攻撃()
+            {
+                var beforeTurnCount = _turn.TurnCount;
+
+                _playerCharacterController.SetPositionFromMapLocation(2, 2);
+
+                var gamepad = InputSystem.AddDevice<Gamepad>();
+                _input.PressAndRelease(gamepad.buttonSouth); // 攻撃（空振り）
                 await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_turn.TurnCount, Is.EqualTo(beforeTurnCount + 1));
@@ -710,7 +710,7 @@ namespace RoguelikeExample.Controller
             }
 
             [Test]
-            public async Task ゲームパッドSouthボタン同時押し_通路がない部屋_突き当りまで高速移動()
+            public async Task ゲームパッドEastボタン同時押し_通路がない部屋_突き当りまで高速移動()
             {
                 _playerCharacterController.NewLevel(
                     MapHelper.CreateFromDumpStrings(new[]
@@ -724,11 +724,11 @@ namespace RoguelikeExample.Controller
 
                 var gamepad = InputSystem.AddDevice<Gamepad>();
                 _input.Set(gamepad.leftStick, Vector2.right); // 右
-                _input.Press(gamepad.buttonSouth);
+                _input.Press(gamepad.buttonEast);
                 await UniTask.DelayFrame(2);
 
                 _input.Set(gamepad.leftStick, Vector2.zero); // 離す
-                _input.Release(gamepad.buttonSouth);
+                _input.Release(gamepad.buttonEast);
                 await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
