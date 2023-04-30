@@ -52,7 +52,7 @@ namespace RoguelikeExample.Controller
                 // Note: `InputTestFixture` を継承する書きかたもあるが、SetUp/TearDownと競合するため選択していない
 
                 InputSystem.RegisterProcessor<SnapDirectionVector2Processor>();
-                // Note: カスタムProcessorsを使用しているプロジェクトでは、`Setup` の後に `RegisterProcessor` で登録する必要がある
+                // Note: カスタムInputProcessorを使用しているプロジェクトでは、Setupの後に `RegisterProcessor` で登録する必要がある
 
                 var scene = SceneManager.CreateScene(nameof(PlayerCharacterControllerTest));
                 SceneManager.SetActiveScene(scene);
@@ -290,7 +290,7 @@ namespace RoguelikeExample.Controller
                 _playerCharacterController.SetPositionFromMapLocation(2, 2);
 
                 var gamepad = InputSystem.AddDevice<Gamepad>();
-                _input.Set(gamepad.leftStick, new Vector2(-0.9f, -0.1f)); // 誤差はスナップされる
+                _input.Set(gamepad.leftStick, new Vector2(-0.9f, -0.1f)); // 誤差はSnapDirectionVector2Processorがスナップしてくれる
                 await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 2)));
@@ -302,7 +302,7 @@ namespace RoguelikeExample.Controller
                 _playerCharacterController.SetPositionFromMapLocation(2, 2);
 
                 var gamepad = InputSystem.AddDevice<Gamepad>();
-                _input.Set(gamepad.leftStick, new Vector2(-0.9f, 0.9f)); // 誤差はスナップされる
+                _input.Set(gamepad.leftStick, new Vector2(-0.9f, 0.9f)); // 誤差はSnapDirectionVector2Processorがスナップしてくれる
                 await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 1)));
@@ -346,7 +346,7 @@ namespace RoguelikeExample.Controller
                 // Note: `InputTestFixture` を継承する書きかたもあるが、SetUp/TearDownと競合するため選択していない
 
                 InputSystem.RegisterProcessor<SnapDirectionVector2Processor>();
-                // Note: カスタムProcessorsを使用しているプロジェクトでは、`Setup` の後に `RegisterProcessor` で登録する必要がある
+                // Note: カスタムInputProcessorを使用しているプロジェクトでは、Setupの後に `RegisterProcessor` で登録する必要がある
 
                 var scene = SceneManager.CreateScene(nameof(PlayerCharacterControllerTest));
                 SceneManager.SetActiveScene(scene);
@@ -723,7 +723,7 @@ namespace RoguelikeExample.Controller
                 );
 
                 var gamepad = InputSystem.AddDevice<Gamepad>();
-                _input.Set(gamepad.leftStick, Vector2.right); // 右
+                _input.Set(gamepad.leftStick, Vector2.right); // 左スティックを右に
                 _input.Press(gamepad.buttonEast);
                 await UniTask.DelayFrame(2);
 
