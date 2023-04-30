@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using NUnit.Framework;
 using RoguelikeExample.Controller;
+using RoguelikeExample.Input;
 using RoguelikeExample.Random;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -33,6 +34,9 @@ namespace RoguelikeExample.IntegrationTests
             // Note: プロダクトコードでInputSystemが初期化されるより前に `InputTestFixture.SetUp` を実行する必要がある
             // Note: `InputTestFixture` を継承する書きかたもあるが、SetUp/TearDownと競合するため選択していない
 
+            InputSystem.RegisterProcessor<SnapDirectionVector2Processor>();
+            // Note: カスタムInputProcessorを使用しているプロジェクトでは、Setupの後に `RegisterProcessor` で登録する必要がある
+
             await SceneManager.LoadSceneAsync("Dungeon");
         }
 
@@ -43,7 +47,7 @@ namespace RoguelikeExample.IntegrationTests
         }
 
         [Test]
-        [Timeout(300000)] // 5min（デフォルトは180,0000ms）
+        [Timeout(200000)] // 3min強（デフォルトは180,000ms）
         public async Task インゲームのモンキーテスト()
         {
             var random = new RandomImpl();
@@ -60,12 +64,13 @@ namespace RoguelikeExample.IntegrationTests
                 keyboard.bKey, keyboard.nKey, keyboard.spaceKey,
             };
 
-            var expireTime = Time.time + 50.0f; // タイムアウト少し手前まで動作させる
+            _input.Press(keyboard.ctrlKey); // 単なるレバガチャにならないよう、常に高速移動させる
+
+            var expireTime = Time.time + 180.0f; // タイムアウト少し手前まで動作させる
             while (Time.time < expireTime)
             {
                 var key = keys[random.Next(keys.Length)];
                 _input.Press(key); // 押す
-                _input.Press(keyboard.ctrlKey); // 単なるレバガチャにならないよう、常に高速移動させる
                 await UniTask.DelayFrame(random.Next(10));
 
                 _input.Release(key); // 離す
