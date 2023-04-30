@@ -16,9 +16,15 @@
 
 ### キーボード
 
-- hjklyubn：移動
-- hjkl + controlもしくはshift同時押しで高速移動（a.k.a. Run, Dash）
-- space：攻撃
+- hjklyubnキー：移動
+- hjklキー + controlもしくはshiftキー同時押しで高速移動（a.k.a. Run, Dash）
+- spaceキー：進行方向に攻撃
+
+### ゲームパッド
+
+- 左スティック：移動
+- 左スティック + Southボタン同時押しで高速移動
+- Eastボタン：進行方向に攻撃
 
 
 

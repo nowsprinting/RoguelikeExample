@@ -93,56 +93,20 @@ namespace RoguelikeExample.Controller
                 return; // PlayerIdol以外は入力を受け付けない
             }
 
-            // hjkl, arrow, stick
-            var move = _inputActions.Player.Move.ReadValue<Vector2>().normalized;
-            if (move == Vector2.up)
+            // Move (hjkl, stick)
+            var direction = DirectionExtensions.FromVector2(_inputActions.Player.Move.ReadValue<Vector2>());
+            if (direction != Direction.None)
             {
-                MoveOperation(Direction.Up);
+                MoveOperation(direction);
                 return;
             }
 
-            if (move == Vector2.down)
+            // DiagonalMove（yubn）は反時計回りに45°回転して斜め移動として扱う
+            direction = DirectionExtensions.FromVector2(_inputActions.Player.DiagonalMove.ReadValue<Vector2>())
+                .TurnLeftDiagonal();
+            if (direction != Direction.None)
             {
-                MoveOperation(Direction.Down);
-                return;
-            }
-
-            if (move == Vector2.right)
-            {
-                MoveOperation(Direction.Right);
-                return;
-            }
-
-            if (move == Vector2.left)
-            {
-                MoveOperation(Direction.Left);
-                return;
-            }
-
-            // yubnは反時計回り45°回転して斜め移動として扱う
-            var diagonalMove = _inputActions.Player.DiagonalMove.ReadValue<Vector2>().normalized;
-            if (diagonalMove == Vector2.up)
-            {
-                MoveOperation(Direction.UpLeft);
-                return;
-            }
-
-            if (diagonalMove == Vector2.down)
-            {
-                MoveOperation(Direction.DownRight);
-                return;
-            }
-
-            if (diagonalMove == Vector2.right)
-            {
-                MoveOperation(Direction.UpRight);
-                return;
-            }
-
-            if (diagonalMove == Vector2.left)
-            {
-                MoveOperation(Direction.DownLeft);
-                return;
+                MoveOperation(direction);
             }
         }
 

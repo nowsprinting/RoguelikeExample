@@ -8,6 +8,7 @@ using NUnit.Framework;
 using RoguelikeExample.Dungeon;
 using RoguelikeExample.Entities;
 using RoguelikeExample.Entities.ScriptableObjects;
+using RoguelikeExample.Input;
 using RoguelikeExample.Random;
 using RoguelikeExample.Utils;
 using UnityEngine;
@@ -49,6 +50,9 @@ namespace RoguelikeExample.Controller
                 _input.Setup();
                 // Note: プロダクトコードでInputSystemが初期化されるより前に `InputTestFixture.SetUp` を実行する必要がある
                 // Note: `InputTestFixture` を継承する書きかたもあるが、SetUp/TearDownと競合するため選択していない
+
+                InputSystem.RegisterProcessor<SnapDirectionVector2Processor>();
+                // Note: カスタムProcessorsを使用しているプロジェクトでは、`Setup` の後に `RegisterProcessor` で登録する必要がある
 
                 var scene = SceneManager.CreateScene(nameof(PlayerCharacterControllerTest));
                 SceneManager.SetActiveScene(scene);
@@ -228,14 +232,38 @@ namespace RoguelikeExample.Controller
             }
 
             [Test]
-            public async Task スペースキーで攻撃_空振りでもターンが加算される()
+            public async Task ゲームパッド左スティックで移動()
+            {
+                _playerCharacterController.SetPositionFromMapLocation(2, 2);
+
+                var gamepad = InputSystem.AddDevice<Gamepad>();
+                _input.Set(gamepad.leftStick, new Vector2(-0.9f, -0.1f)); // 誤差はスナップされる
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 2)));
+            }
+
+            [Test]
+            public async Task ゲームパッド左スティックで斜め移動()
+            {
+                _playerCharacterController.SetPositionFromMapLocation(2, 2);
+
+                var gamepad = InputSystem.AddDevice<Gamepad>();
+                _input.Set(gamepad.leftStick, new Vector2(-0.9f, 0.9f)); // 誤差はスナップされる
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 1)));
+            }
+
+            [Test]
+            public async Task ゲームパッドEastボタンで攻撃()
             {
                 var beforeTurnCount = _turn.TurnCount;
 
                 _playerCharacterController.SetPositionFromMapLocation(2, 2);
 
-                var keyboard = InputSystem.AddDevice<Keyboard>();
-                _input.PressAndRelease(keyboard.spaceKey); // 攻撃（空振り）
+                var gamepad = InputSystem.AddDevice<Gamepad>();
+                _input.PressAndRelease(gamepad.buttonEast); // 攻撃（空振り）
                 await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_turn.TurnCount, Is.EqualTo(beforeTurnCount + 1));
@@ -279,6 +307,20 @@ namespace RoguelikeExample.Controller
                 Assert.That(_playerCharacterController.Status.Gold, Is.EqualTo(5), "通貨が加算される");
                 await UniTask.NextFrame(); // オブジェクトの破棄を待つ
             }
+
+            [Test]
+            public async Task スペースキーで攻撃_空振りでもターンが加算される()
+            {
+                var beforeTurnCount = _turn.TurnCount;
+
+                _playerCharacterController.SetPositionFromMapLocation(2, 2);
+
+                var keyboard = InputSystem.AddDevice<Keyboard>();
+                _input.PressAndRelease(keyboard.spaceKey); // 攻撃（空振り）
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_turn.TurnCount, Is.EqualTo(beforeTurnCount + 1));
+            }
         }
 
         /// <summary>
@@ -302,6 +344,9 @@ namespace RoguelikeExample.Controller
                 _input.Setup();
                 // Note: プロダクトコードでInputSystemが初期化されるより前に `InputTestFixture.SetUp` を実行する必要がある
                 // Note: `InputTestFixture` を継承する書きかたもあるが、SetUp/TearDownと競合するため選択していない
+
+                InputSystem.RegisterProcessor<SnapDirectionVector2Processor>();
+                // Note: カスタムProcessorsを使用しているプロジェクトでは、`Setup` の後に `RegisterProcessor` で登録する必要がある
 
                 var scene = SceneManager.CreateScene(nameof(PlayerCharacterControllerTest));
                 SceneManager.SetActiveScene(scene);
@@ -659,6 +704,31 @@ namespace RoguelikeExample.Controller
 
                 _input.Release(keyboard.lKey); // 離す
                 _input.Release(keyboard.ctrlKey);
+                await WaitForNextPlayerIdol(_turn);
+
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
+            }
+
+            [Test]
+            public async Task ゲームパッドSouthボタン同時押し_通路がない部屋_突き当りまで高速移動()
+            {
+                _playerCharacterController.NewLevel(
+                    MapHelper.CreateFromDumpStrings(new[]
+                    {
+                        "00000", // 壁壁壁壁壁
+                        "01110", // 壁床床床壁
+                        "00000", // 壁壁壁壁壁
+                    }),
+                    (1, 1)
+                );
+
+                var gamepad = InputSystem.AddDevice<Gamepad>();
+                _input.Set(gamepad.leftStick, Vector2.right); // 右
+                _input.Press(gamepad.buttonSouth);
+                await UniTask.DelayFrame(2);
+
+                _input.Set(gamepad.leftStick, Vector2.zero); // 離す
+                _input.Release(gamepad.buttonSouth);
                 await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
