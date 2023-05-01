@@ -102,17 +102,8 @@ namespace RoguelikeExample.Controller
                 return; // PlayerIdol以外は入力を受け付けない
             }
 
-            // Move (hjkl, stick)
+            // Move (hjklyubn, stick)
             var direction = DirectionExtensions.FromVector2(_inputActions.Player.Move.ReadValue<Vector2>());
-            if (direction != Direction.None)
-            {
-                MoveOperation(direction);
-                return;
-            }
-
-            // DiagonalMove（yubn）は反時計回りに45°回転して斜め移動として扱う
-            direction = DirectionExtensions.FromVector2(_inputActions.Player.DiagonalMove.ReadValue<Vector2>())
-                .TurnLeftDiagonal();
             if (direction != Direction.None)
             {
                 MoveOperation(direction);

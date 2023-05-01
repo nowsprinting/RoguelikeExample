@@ -39,15 +39,6 @@ namespace RoguelikeExample.Input
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""DiagonalMove"",
-                    ""type"": ""Value"",
-                    ""id"": ""77f9b938-3c9d-42d5-ab01-0dd6601077fd"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""Run"",
                     ""type"": ""Value"",
                     ""id"": ""3441a4a0-59e5-43f8-90ae-b366c2497e94"",
@@ -86,9 +77,9 @@ namespace RoguelikeExample.Input
             ],
             ""bindings"": [
                 {
-                    ""name"": ""hjkl"",
-                    ""id"": ""00ca640b-d935-4593-8157-c05846ea39b3"",
-                    ""path"": ""Dpad"",
+                    ""name"": ""hjklyubn"",
+                    ""id"": ""aa885dd0-1b7f-4cd4-adc7-1c636d614c89"",
+                    ""path"": ""EightDirections"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -98,7 +89,7 @@ namespace RoguelikeExample.Input
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""e2062cb9-1b15-46a2-838c-2f8d72a0bdd9"",
+                    ""id"": ""43763067-15ff-40c6-a624-0ba8af8d0b05"",
                     ""path"": ""<Keyboard>/k"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -108,19 +99,8 @@ namespace RoguelikeExample.Input
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""up"",
-                    ""id"": ""8180e8bd-4097-4f4e-ab88-4523101a6ce9"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""down"",
-                    ""id"": ""320bffee-a40b-4347-ac70-c210eb8bc73a"",
+                    ""id"": ""8cf70e55-8b3c-4a0a-9e52-b47781c6182f"",
                     ""path"": ""<Keyboard>/j"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -130,19 +110,8 @@ namespace RoguelikeExample.Input
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""down"",
-                    ""id"": ""1c5327b5-f71c-4f60-99c7-4e737386f1d1"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""left"",
-                    ""id"": ""d2581a9b-1d11-4566-b27d-b92aff5fabbc"",
+                    ""id"": ""a9510b77-3c6f-4e29-b106-0d18cdad19cd"",
                     ""path"": ""<Keyboard>/h"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -152,19 +121,8 @@ namespace RoguelikeExample.Input
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""left"",
-                    ""id"": ""2e46982e-44cc-431b-9f0b-c11910bf467a"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""right"",
-                    ""id"": ""fcfe95b8-67b9-4526-84b5-5d0bc98d6400"",
+                    ""id"": ""82a75b95-33d1-45a0-b118-118656e8cf38"",
                     ""path"": ""<Keyboard>/l"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -174,9 +132,42 @@ namespace RoguelikeExample.Input
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""right"",
-                    ""id"": ""77bff152-3580-4b21-b6de-dcd0c7e41164"",
-                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""name"": ""upLeft"",
+                    ""id"": ""5837bff0-f246-436d-bf81-2372b2d44c75"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""upRight"",
+                    ""id"": ""0677ee7d-73ee-4f0c-83f7-20da2aee05d0"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""downLeft"",
+                    ""id"": ""e86efdf7-08ca-4a7a-aad4-127696dfed05"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""downRight"",
+                    ""id"": ""bba8bd27-5155-4caa-8cf1-2732108b717d"",
+                    ""path"": ""<Keyboard>/n"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -216,61 +207,6 @@ namespace RoguelikeExample.Input
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""yubn"",
-                    ""id"": ""fb9d6d05-9946-42b6-9ac0-9ad34f6699dc"",
-                    ""path"": ""Dpad"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""DiagonalMove"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""a99c73bb-b186-42e8-83eb-890c44ce327b"",
-                    ""path"": ""<Keyboard>/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""DiagonalMove"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""c1e4b377-30a5-45a0-9ae1-44e1dd81c2e4"",
-                    ""path"": ""<Keyboard>/n"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""DiagonalMove"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""a7f76aa7-4d89-4d16-a1bf-978af53f7be6"",
-                    ""path"": ""<Keyboard>/b"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""DiagonalMove"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""d6d4a12d-e584-4faf-be50-14feb11e03f2"",
-                    ""path"": ""<Keyboard>/u"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""DiagonalMove"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": """",
@@ -934,7 +870,6 @@ namespace RoguelikeExample.Input
             // Player
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
-            m_Player_DiagonalMove = m_Player.FindAction("DiagonalMove", throwIfNotFound: true);
             m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
             m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
             m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
@@ -1013,7 +948,6 @@ namespace RoguelikeExample.Input
         private readonly InputActionMap m_Player;
         private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
         private readonly InputAction m_Player_Move;
-        private readonly InputAction m_Player_DiagonalMove;
         private readonly InputAction m_Player_Run;
         private readonly InputAction m_Player_Cancel;
         private readonly InputAction m_Player_Attack;
@@ -1023,7 +957,6 @@ namespace RoguelikeExample.Input
             private @PlayerInputActions m_Wrapper;
             public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Move => m_Wrapper.m_Player_Move;
-            public InputAction @DiagonalMove => m_Wrapper.m_Player_DiagonalMove;
             public InputAction @Run => m_Wrapper.m_Player_Run;
             public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
             public InputAction @Attack => m_Wrapper.m_Player_Attack;
@@ -1040,9 +973,6 @@ namespace RoguelikeExample.Input
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
-                @DiagonalMove.started += instance.OnDiagonalMove;
-                @DiagonalMove.performed += instance.OnDiagonalMove;
-                @DiagonalMove.canceled += instance.OnDiagonalMove;
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
@@ -1062,9 +992,6 @@ namespace RoguelikeExample.Input
                 @Move.started -= instance.OnMove;
                 @Move.performed -= instance.OnMove;
                 @Move.canceled -= instance.OnMove;
-                @DiagonalMove.started -= instance.OnDiagonalMove;
-                @DiagonalMove.performed -= instance.OnDiagonalMove;
-                @DiagonalMove.canceled -= instance.OnDiagonalMove;
                 @Run.started -= instance.OnRun;
                 @Run.performed -= instance.OnRun;
                 @Run.canceled -= instance.OnRun;
@@ -1260,7 +1187,6 @@ namespace RoguelikeExample.Input
         public interface IPlayerActions
         {
             void OnMove(InputAction.CallbackContext context);
-            void OnDiagonalMove(InputAction.CallbackContext context);
             void OnRun(InputAction.CallbackContext context);
             void OnCancel(InputAction.CallbackContext context);
             void OnAttack(InputAction.CallbackContext context);

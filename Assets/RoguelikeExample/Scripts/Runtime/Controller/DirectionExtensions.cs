@@ -105,27 +105,6 @@ namespace RoguelikeExample.Controller
         }
 
         /// <summary>
-        /// 左に45°回転した方向を返す
-        /// DiagonalMove（yubn）用
-        /// </summary>
-        public static Direction TurnLeftDiagonal(this Direction direction)
-        {
-            return direction switch
-            {
-                Direction.None => Direction.None,
-                Direction.Up => Direction.UpLeft,
-                Direction.Down => Direction.DownRight,
-                Direction.Left => Direction.DownLeft,
-                Direction.Right => Direction.UpRight,
-                Direction.UpLeft => Direction.Left,
-                Direction.UpRight => Direction.Up,
-                Direction.DownLeft => Direction.Down,
-                Direction.DownRight => Direction.Right,
-                _ => throw new ArgumentException($"不正な方向が指定されました: {direction}")
-            };
-        }
-
-        /// <summary>
         /// 斜め方向かどうか
         /// </summary>
         public static bool IsDiagonal(this Direction direction)

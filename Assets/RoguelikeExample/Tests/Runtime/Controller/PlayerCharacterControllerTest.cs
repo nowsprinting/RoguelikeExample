@@ -8,7 +8,7 @@ using NUnit.Framework;
 using RoguelikeExample.Dungeon;
 using RoguelikeExample.Entities;
 using RoguelikeExample.Entities.ScriptableObjects;
-using RoguelikeExample.Input;
+using RoguelikeExample.Input.CustomComposites;
 using RoguelikeExample.Input.CustomProcessors;
 using RoguelikeExample.Random;
 using RoguelikeExample.Utils;
@@ -52,8 +52,9 @@ namespace RoguelikeExample.Controller
                 // Note: プロダクトコードでInputSystemが初期化されるより前に `InputTestFixture.SetUp` を実行する必要がある
                 // Note: `InputTestFixture` を継承する書きかたもあるが、SetUp/TearDownと競合するため選択していない
 
+                InputSystem.RegisterBindingComposite<EightDirectionsComposite>();
                 InputSystem.RegisterProcessor<SnapVector2Processor>();
-                // Note: カスタムInputProcessorを使用しているプロジェクトでは、Setupの後に `RegisterProcessor` で登録する必要がある
+                // Note: カスタムComposite, Interaction, Processorを使用しているプロジェクトでは、Setupの後に再Registerする
 
                 var scene = SceneManager.CreateScene(nameof(PlayerCharacterControllerTest));
                 SceneManager.SetActiveScene(scene);
@@ -346,8 +347,9 @@ namespace RoguelikeExample.Controller
                 // Note: プロダクトコードでInputSystemが初期化されるより前に `InputTestFixture.SetUp` を実行する必要がある
                 // Note: `InputTestFixture` を継承する書きかたもあるが、SetUp/TearDownと競合するため選択していない
 
+                InputSystem.RegisterBindingComposite<EightDirectionsComposite>();
                 InputSystem.RegisterProcessor<SnapVector2Processor>();
-                // Note: カスタムInputProcessorを使用しているプロジェクトでは、Setupの後に `RegisterProcessor` で登録する必要がある
+                // Note: カスタムComposite, Interaction, Processorを使用しているプロジェクトでは、Setupの後に再Registerする
 
                 var scene = SceneManager.CreateScene(nameof(PlayerCharacterControllerTest));
                 SceneManager.SetActiveScene(scene);
