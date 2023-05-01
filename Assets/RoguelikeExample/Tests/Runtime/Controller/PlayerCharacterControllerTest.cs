@@ -205,8 +205,6 @@ namespace RoguelikeExample.Controller
             [Test]
             public async Task 移動するとターンが加算される()
             {
-                var beforeTurnCount = _turn.TurnCount;
-
                 _playerCharacterController.SetPositionFromMapLocation(2, 2);
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
@@ -214,14 +212,12 @@ namespace RoguelikeExample.Controller
                 await WaitForNextPlayerIdol(_turn);
 
                 Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((1, 2)), "移動している");
-                Assert.That(_turn.TurnCount, Is.EqualTo(beforeTurnCount + 1), "ターンが加算されている");
+                Assert.That(_turn.TurnCount, Is.EqualTo(2), "ターンが加算されている");
             }
 
             [Test]
             public async Task 連続移動は移動しただけターン加算される()
             {
-                var beforeTurnCount = _turn.TurnCount;
-
                 _playerCharacterController.SetPositionFromMapLocation(1, 1);
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
@@ -229,8 +225,8 @@ namespace RoguelikeExample.Controller
                 await WaitForNextPlayerIdol(_turn);
                 await WaitForNextPlayerIdol(_turn); // 2単位連続で移動
 
-                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
-                Assert.That(_turn.TurnCount, Is.EqualTo(beforeTurnCount + 2));
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)), "移動している");
+                Assert.That(_turn.TurnCount, Is.EqualTo(3), "ターンが加算されている");
             }
 
             [Test]
@@ -275,15 +271,13 @@ namespace RoguelikeExample.Controller
             [Test]
             public async Task スペースキーで攻撃_空振りでもターンが加算される()
             {
-                var beforeTurnCount = _turn.TurnCount;
-
                 _playerCharacterController.SetPositionFromMapLocation(2, 2);
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.PressAndRelease(keyboard.spaceKey); // 攻撃（空振り）
                 await WaitForNextPlayerIdol(_turn);
 
-                Assert.That(_turn.TurnCount, Is.EqualTo(beforeTurnCount + 1));
+                Assert.That(_turn.TurnCount, Is.EqualTo(2));
             }
 
             [Test]
@@ -313,15 +307,13 @@ namespace RoguelikeExample.Controller
             [Test]
             public async Task ゲームパッドSouthボタンで攻撃()
             {
-                var beforeTurnCount = _turn.TurnCount;
-
                 _playerCharacterController.SetPositionFromMapLocation(2, 2);
 
                 var gamepad = InputSystem.AddDevice<Gamepad>();
                 _input.PressAndRelease(gamepad.buttonSouth); // 攻撃（空振り）
                 await WaitForNextPlayerIdol(_turn);
 
-                Assert.That(_turn.TurnCount, Is.EqualTo(beforeTurnCount + 1));
+                Assert.That(_turn.TurnCount, Is.EqualTo(2));
             }
         }
 
@@ -471,9 +463,10 @@ namespace RoguelikeExample.Controller
 
                 _input.Release(keyboard.lKey); // 離す
                 _input.Release(keyboard.shiftKey);
-                await WaitForNextPlayerIdol(_turn);
+                await WaitForOnStairs(_turn); // 階段ダイアログ表示を待つ
 
-                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)), "階段で停止");
+                Assert.That(_turn.IsRun, Is.False, "Runモードは解除されている");
             }
 
             [Test]
@@ -496,9 +489,10 @@ namespace RoguelikeExample.Controller
 
                 _input.Release(keyboard.lKey); // 離す
                 _input.Release(keyboard.shiftKey);
-                await WaitForNextPlayerIdol(_turn);
+                await WaitForOnStairs(_turn); // 階段ダイアログ表示を待つ
 
-                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)));
+                Assert.That(_playerCharacterController.MapLocation(), Is.EqualTo((3, 1)), "階段で停止");
+                Assert.That(_turn.IsRun, Is.False, "Runモードは解除されている");
             }
 
             [Test]
@@ -780,6 +774,21 @@ namespace RoguelikeExample.Controller
 
             // 次のIdolまで待つ
             while (turn.State != TurnState.PlayerIdol)
+            {
+                await UniTask.NextFrame();
+            }
+        }
+
+        private static async UniTask WaitForOnStairs(Turn turn)
+        {
+            // まず、プレイヤーフェイズを抜けるまで待つ
+            while (turn.State <= TurnState.PlayerAction)
+            {
+                await UniTask.NextFrame();
+            }
+
+            // OnStairsまで待つ
+            while (turn.State != TurnState.OnStairs)
             {
                 await UniTask.NextFrame();
             }

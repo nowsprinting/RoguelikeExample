@@ -26,14 +26,14 @@ namespace RoguelikeExample.Dungeon
             throw new ArgumentException($"指定されたマップチップが存在しません: {chip}");
         }
 
-        public static (int column, int row) GetUpStairPosition(this MapChip[,] map)
+        public static (int column, int row) GetUpStairsPosition(this MapChip[,] map)
         {
-            return GetChipPosition(map, MapChip.UpStair);
+            return GetChipPosition(map, MapChip.UpStairs);
         }
 
-        public static (int column, int row) GetDownStairPosition(this MapChip[,] map)
+        public static (int column, int row) GetDownStairsPosition(this MapChip[,] map)
         {
-            return GetChipPosition(map, MapChip.DownStair);
+            return GetChipPosition(map, MapChip.DownStairs);
         }
 
         public static bool IsWall(this MapChip[,] map, int column, int row)
@@ -51,14 +51,19 @@ namespace RoguelikeExample.Dungeon
             return map[column, row] == MapChip.Corridor;
         }
 
-        public static bool IsUpStair(this MapChip[,] map, int column, int row)
+        public static bool IsUpStairs(this MapChip[,] map, int column, int row)
         {
-            return map[column, row] == MapChip.UpStair;
+            return map[column, row] == MapChip.UpStairs;
         }
 
-        public static bool IsDownStair(this MapChip[,] map, int column, int row)
+        public static bool IsDownStairs(this MapChip[,] map, int column, int row)
         {
-            return map[column, row] == MapChip.DownStair;
+            return map[column, row] == MapChip.DownStairs;
+        }
+
+        public static bool IsStairs(this MapChip[,] map, int column, int row)
+        {
+            return map.IsUpStairs(column, row) || map.IsDownStairs(column, row);
         }
     }
 }

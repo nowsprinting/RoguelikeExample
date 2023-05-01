@@ -15,5 +15,7 @@ namespace RoguelikeExample.Controller
         PlayerAction, // プレイヤー行動実行
         EnemyAction, // 敵思考・行動実行
         EnemyPopup, // 敵キャラクター出現数が不足していたら補充
+        OnStairs, // 階段ダイアログ表示
+        Dead, // 死亡ダイアログ表示
     }
 }

@@ -55,9 +55,15 @@ namespace RoguelikeExample.Controller
                     State = (TurnState)((int)State + 1);
                     break;
                 case TurnState.EnemyPopup:
+                    // TODO: is on stair?
                     State = IsRun ? TurnState.PlayerRun : TurnState.PlayerIdol; // 高速移動中はPlayerIdolをスキップ
                     TurnCount++;
                     break;
+                case TurnState.OnStairs:
+                    State = TurnState.EnemyAction; // 階段キャンセル
+                    break;
+                case TurnState.Dead:
+                    break; // Nextでは遷移しない
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -72,9 +78,21 @@ namespace RoguelikeExample.Controller
         /// </summary>
         public void CanselRun()
         {
-            Assert.IsTrue(State == TurnState.PlayerRun);
+            Assert.IsTrue(State == TurnState.PlayerRun, "CanselRunはPlayerRunのときしか呼ばれない");
 
             State = TurnState.PlayerIdol;
+            IsRun = false;
+            OnPhaseTransition?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 階段の座標に乗ったときに <c>NextPhase</c> のかわりに呼ばれる
+        /// </summary>
+        public void OnStairs()
+        {
+            Assert.IsTrue(State == TurnState.PlayerAction, "OnStairsにはPlayerActionからしか遷移しない");
+
+            State = TurnState.OnStairs;
             IsRun = false;
             OnPhaseTransition?.Invoke(this, EventArgs.Empty);
         }

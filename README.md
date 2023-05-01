@@ -46,6 +46,9 @@
 
 ```mermaid
 stateDiagram-v2
+    classDef UI fill:#226
+    classDef Any fill:#444
+
     [*] --> PlayerIdol
     PlayerIdol --> PlayerAction
     PlayerAction --> EnemyAction
@@ -53,6 +56,14 @@ stateDiagram-v2
     EnemyPopup --> PlayerIdol: Runでない
 
     EnemyPopup --> PlayerRun: Runのとき
-    PlayerRun --> PlayerAction : 移動先あり
-    PlayerRun --> PlayerIdol: 移動先なし（Run停止）
+    PlayerRun --> PlayerAction: 移動先あり
+    PlayerRun --> PlayerIdol: 移動先なし（Run解除）
+
+    PlayerAction --> OnStairs:::UI: 階段にいる
+    OnStairs --> EnemyAction: Cancel
+    OnStairs --> PlayerIdol: New Level
+    OnStairs --> Result:::UI: 地上へ
+    Result --> [*]
+
+    (any):::Any --> Result: 死亡
 ```

@@ -28,6 +28,7 @@ namespace RoguelikeExample.Controller
     {
         private EnemyManager _enemyManager;
         private PlayerCharacterController _playerCharacterController;
+        private Turn _turn;
 
         [SetUp]
         public void SetUp()
@@ -36,10 +37,11 @@ namespace RoguelikeExample.Controller
             SceneManager.SetActiveScene(scene);
 
             _enemyManager = new GameObject().AddComponent<EnemyManager>();
+            _turn = new Turn();
 
             _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
             _playerCharacterController.actionAnimationMillis = 0; // 行動アニメーション時間を0に
-            _playerCharacterController.Initialize(new RandomImpl(), new Turn(), _enemyManager);
+            _playerCharacterController.Initialize(new RandomImpl(), _turn, _enemyManager);
         }
 
         [UnityTearDown]
@@ -67,7 +69,7 @@ namespace RoguelikeExample.Controller
                 }),
                 (0, 0),
                 new RandomImpl(),
-                new Turn()
+                _turn
             );
 
             var textMesh = enemyCharacterController.GetComponent<TextMeshPro>();
@@ -93,7 +95,7 @@ namespace RoguelikeExample.Controller
                 }),
                 (1, 1),
                 new RandomImpl(),
-                new Turn(),
+                _turn,
                 _enemyManager,
                 _playerCharacterController
             );
@@ -124,7 +126,7 @@ namespace RoguelikeExample.Controller
                 }),
                 (1, 1),
                 new RandomImpl(),
-                new Turn(),
+                _turn,
                 _enemyManager,
                 _playerCharacterController
             );

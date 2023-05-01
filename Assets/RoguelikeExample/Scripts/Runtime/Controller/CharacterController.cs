@@ -45,6 +45,15 @@ namespace RoguelikeExample.Controller
         }
 
         /// <summary>
+        /// キャラクターの位置をマップ座標 (column, row) で設定
+        /// </summary>
+        /// <param name="location">(column, row)</param>
+        public void SetPositionFromMapLocation((int column, int row) location)
+        {
+            SetPositionFromMapLocation(location.column, location.row);
+        }
+
+        /// <summary>
         /// キャラクターの現在位置を <c>NextLocation</c> に移動
         /// </summary>
         /// <param name="animationMillis">移動アニメーションにかける時間（ミリ秒）</param>

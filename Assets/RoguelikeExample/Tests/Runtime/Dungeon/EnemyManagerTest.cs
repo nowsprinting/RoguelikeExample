@@ -40,6 +40,13 @@ namespace RoguelikeExample.Dungeon
             // Note: NewLevel()を呼ぶまでは敵キャラクターは生成されない
 
             _playerCharacterController.Initialize(new RandomImpl(), _turn, _enemyManager);
+            _playerCharacterController.NewLevel(
+                MapHelper.CreateFromDumpStrings(new[]
+                {
+                    "000000000000000000000000000000000000000000000000000000000001",
+                }),
+                (59, 0) // 敵配置に影響しないところに配置
+            );
         }
 
         [UnityTearDown]
@@ -51,8 +58,6 @@ namespace RoguelikeExample.Dungeon
         [Test]
         public void NewLevel_指定レベルの敵インスタンスが生成される([NUnit.Framework.Range(1, 1)] int level)
         {
-            _playerCharacterController.SetPositionFromMapLocation(-100, -100); // 影響しないところに配置
-
             _enemyManager.maxInstantiateEnemiesPercentageOfFloor = 1.0f; // 床1つに対して1体を必ず生成
             _enemyManager.NewLevel(
                 1,
@@ -74,8 +79,6 @@ namespace RoguelikeExample.Dungeon
         {
             const int InvalidLevel = -1;
 
-            _playerCharacterController.SetPositionFromMapLocation(-100, -100); // 影響しないところに配置
-
             _enemyManager.maxInstantiateEnemiesPercentageOfFloor = 1.0f; // 床1つに対して1体を必ず生成
             _enemyManager.NewLevel(
                 InvalidLevel,
@@ -92,11 +95,13 @@ namespace RoguelikeExample.Dungeon
         [Test]
         public void NewLevel_配置可能な座標に敵インスタンスが配置される()
         {
-            _playerCharacterController.SetPositionFromMapLocation(2, 0);
-
             var existEnemy = new GameObject().AddComponent<EnemyCharacterController>();
             existEnemy.SetPositionFromMapLocation(1, 0);
             existEnemy.transform.parent = _enemyManager.transform;
+
+            var existEnemy2 = new GameObject().AddComponent<EnemyCharacterController>();
+            existEnemy2.SetPositionFromMapLocation(2, 0);
+            existEnemy2.transform.parent = _enemyManager.transform;
 
             _enemyManager.maxInstantiateEnemiesPercentageOfFloor = 0.25f; // 床4つに対して1体だけ生成
             _enemyManager.NewLevel(
@@ -109,6 +114,7 @@ namespace RoguelikeExample.Dungeon
             );
 
             Object.DestroyImmediate(existEnemy.gameObject); // 事前に配置した敵インスタンスは破棄
+            Object.DestroyImmediate(existEnemy2.gameObject); // 事前に配置した敵インスタンスは破棄
 
             var createdEnemies = _enemyManager.GetComponentsInChildren<EnemyCharacterController>();
             Assert.That(createdEnemies, Has.Length.EqualTo(1), "1体だけ生成");
@@ -119,8 +125,6 @@ namespace RoguelikeExample.Dungeon
         [Test]
         public async Task RefillEnemies_EnemyPopupで敵インスタンスが補充される_1ターンに1体のみ補充される()
         {
-            _playerCharacterController.SetPositionFromMapLocation(-100, -100); // 影響しないところに配置
-
             _enemyManager.maxInstantiateEnemiesPercentageOfFloor = 1.0f; // 床1つに対して最大4体生成
             _enemyManager.NewLevel(
                 1,
@@ -146,8 +150,6 @@ namespace RoguelikeExample.Dungeon
         [Test]
         public async Task RefillEnemies_EnemyPopupで敵インスタンスが1体ずつ補充される_上限までしか補充されない()
         {
-            _playerCharacterController.SetPositionFromMapLocation(-100, -100); // 影響しないところに配置
-
             _enemyManager.maxInstantiateEnemiesPercentageOfFloor = 0.5f; // 床1つに対して最大2体生成
             _enemyManager.NewLevel(
                 1,

@@ -53,10 +53,10 @@ namespace RoguelikeExample.Dungeon.Generator
             }
 
             // 階段を配置する
-            var upStair = rooms[0].GetCanSetStairPoint(map, random);
-            map[upStair.x, upStair.y] = MapChip.UpStair;
-            var downStair = rooms[^1].GetCanSetStairPoint(map, random);
-            map[downStair.x, downStair.y] = MapChip.DownStair;
+            var upStair = rooms[0].GetCanSetStairsPoint(map, random);
+            map[upStair.x, upStair.y] = MapChip.UpStairs;
+            var downStair = rooms[^1].GetCanSetStairsPoint(map, random);
+            map[downStair.x, downStair.y] = MapChip.DownStairs;
 
             return map;
         }
@@ -112,7 +112,7 @@ namespace RoguelikeExample.Dungeon.Generator
                 }
             }
 
-            public (int x, int y) GetCanSetStairPoint(MapChip[,] map, IRandom random)
+            public (int x, int y) GetCanSetStairsPoint(MapChip[,] map, IRandom random)
             {
                 while (true)
                 {

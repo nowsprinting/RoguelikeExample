@@ -105,6 +105,11 @@ namespace RoguelikeExample.Dungeon
         /// <param name="map">当該レベルのマップ</param>
         public void NewLevel(int level, MapChip[,] map)
         {
+            for (var i = 0; i < transform.childCount; i++)
+            {
+                Destroy(transform.GetChild(i).gameObject);
+            }
+
             _level = level;
             _map = map;
             _floorCount = map.Cast<MapChip>().Count(mapChip => mapChip == MapChip.Room || mapChip == MapChip.Corridor);

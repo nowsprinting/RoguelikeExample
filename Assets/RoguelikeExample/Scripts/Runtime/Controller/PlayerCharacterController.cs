@@ -195,11 +195,6 @@ namespace RoguelikeExample.Controller
 
         private static bool IsStopLocation(MapChip[,] map, (int column, int row) location)
         {
-            if (map.IsUpStair(location.column, location.row) || map.IsDownStair(location.column, location.row))
-            {
-                return true; // 階段
-            }
-
             if (map.IsRoom(location.column, location.row) && (
                     map.IsCorridor(location.column - 1, location.row) ||
                     map.IsCorridor(location.column + 1, location.row) ||
@@ -261,14 +256,21 @@ namespace RoguelikeExample.Controller
                 await AttackAction();
             }
 
-            turn.NextPhase().Forget();
+            if (_map.IsStairs(MapLocation().column, MapLocation().row))
+            {
+                turn.OnStairs();
+            }
+            else
+            {
+                turn.NextPhase().Forget();
+            }
         }
 
         private async UniTask AttackAction()
         {
             var location = MapLocation();
             var dest = (location.column + _direction.X(), location.row + _direction.Y());
-            var target = _enemyManager.ExistEnemy(dest); // nullでも空振りするため、early returnしない
+            var target = _enemyManager != null ? _enemyManager.ExistEnemy(dest) : null; // nullでも空振りするため、early returnしない
 
             var damage = -1;
             if (target)

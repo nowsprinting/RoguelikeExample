@@ -71,5 +71,17 @@ namespace RoguelikeExample.Editor.Validators
         {
             Assert.That(_dungeonManager.playerCharacterController, Is.EqualTo(_playerCharacterController));
         }
+
+        [Test]
+        public void DungeonManagerにYesNoDialogへの参照がセットされていること()
+        {
+            Assert.That(_dungeonManager.yesNoDialog, Is.Not.Null);
+        }
+
+        [Test]
+        public void YesNoDialogは非活性であること()
+        {
+            Assert.That(_dungeonManager.yesNoDialog.isActiveAndEnabled, Is.False);
+        }
     }
 }

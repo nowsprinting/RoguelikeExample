@@ -44,10 +44,10 @@ namespace RoguelikeExample.Dungeon.Generator
                 case MapChip.Corridor:
                     gameObject = new GameObject(); // 床なし（暫定）
                     break;
-                case MapChip.UpStair:
+                case MapChip.UpStairs:
                     gameObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     break;
-                case MapChip.DownStair:
+                case MapChip.DownStairs:
                     gameObject = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                     break;
                 default:

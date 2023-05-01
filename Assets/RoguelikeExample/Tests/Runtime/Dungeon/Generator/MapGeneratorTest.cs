@@ -85,10 +85,10 @@ namespace RoguelikeExample.Dungeon.Generator
             {
                 switch (chip)
                 {
-                    case MapChip.UpStair:
+                    case MapChip.UpStairs:
                         upStairCount++;
                         break;
-                    case MapChip.DownStair:
+                    case MapChip.DownStairs:
                         downStairCount++;
                         break;
                 }
@@ -103,8 +103,8 @@ namespace RoguelikeExample.Dungeon.Generator
         public void Generate_上り階段と下り階段の間を移動可能であること(int width, int height, int roomCount, int maxRoomSize)
         {
             var map = GenerateMap(width, height, roomCount, maxRoomSize);
-            var (upStairX, upStairY) = map.GetUpStairPosition();
-            var (downStairX, downStairY) = map.GetDownStairPosition();
+            var (upStairX, upStairY) = map.GetUpStairsPosition();
+            var (downStairX, downStairY) = map.GetDownStairsPosition();
             var visited = new bool[width, height];
             var pathExists = PathExists(map, visited, upStairX, upStairY, downStairX, downStairY);
 

@@ -8,7 +8,7 @@ namespace RoguelikeExample.Dungeon
         Wall = 0, // 壁
         Room, // 部屋
         Corridor, // 通路
-        UpStair, // 上り階段
-        DownStair, // 下り階段
+        UpStairs, // 上り階段
+        DownStairs, // 下り階段
     }
 }
