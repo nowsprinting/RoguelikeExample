@@ -27,7 +27,7 @@ namespace RoguelikeExample.IntegrationTests
         private const string InputTracesPath = "Assets/RoguelikeExample/Tests/TestData/InputTraces";
 
         [TestCase("400", "Gamepad_400.inputtrace")]
-        public async Task インゲームのシナリオテスト_InputTraceを再生_B2に到達すること(string seed, string path)
+        public async Task インゲームのシナリオテスト_InputTraceを再生_地下2階に到達すること(string seed, string path)
         {
             await SceneManager.LoadSceneAsync("Dungeon");
 
@@ -40,8 +40,8 @@ namespace RoguelikeExample.IntegrationTests
             var isFinished = false;
 
             using var replayController = eventTrace.Replay()
-                .OnFinished(() => { isFinished = true; })
-                .PlayAllFramesOneByOne();
+                .OnFinished(() => { isFinished = true; }) // 再生終了したらフラグを立てる
+                .PlayAllFramesOneByOne(); // 記録されたフレームを再現しつつ再生
 
             while (!isFinished)
             {

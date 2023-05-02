@@ -43,7 +43,7 @@ namespace RoguelikeExample.IntegrationTests
             await SceneManager.LoadSceneAsync("Dungeon");
 
             var dungeonManager = Object.FindAnyObjectByType<DungeonManager>();
-            dungeonManager.level = 3; // すぐ地上に出ないように初期レベルを変更
+            dungeonManager.level = 3; // すぐ地上に出ないように開始階を変更
         }
 
         [TearDown]

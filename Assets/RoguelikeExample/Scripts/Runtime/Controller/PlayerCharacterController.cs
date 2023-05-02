@@ -152,19 +152,19 @@ namespace RoguelikeExample.Controller
 
         private void ThinkToRun(Turn turn)
         {
-            Assert.IsTrue(turn.IsRun);
+            Assert.IsTrue(turn.IsRun, "Run状態でしか呼ばれない");
 
             var location = MapLocation();
             if (IsStopLocation(_map, location))
             {
-                turn.CanselRun(); // 現在地が停止条件を満たすとき、高速移動をキャンセルしてプレイヤー操作に戻る
+                turn.CancelRun(); // 現在地が停止条件を満たすとき、高速移動をキャンセルしてプレイヤー操作に戻る
                 return;
             }
 
             var newDirection = MovableDirection(_map, location, _direction);
             if (newDirection == Direction.None)
             {
-                _turn.CanselRun(); // 移動先がないとき、高速移動をキャンセルしてプレイヤー操作に戻る
+                _turn.CancelRun(); // 移動先がないとき、高速移動をキャンセルしてプレイヤー操作に戻る
                 return;
             }
             else if (_map.IsCorridor(location.column, location.row))
@@ -175,7 +175,7 @@ namespace RoguelikeExample.Controller
             {
                 if (newDirection != _direction)
                 {
-                    _turn.CanselRun(); // 部屋では方向転換しないで、高速移動をキャンセルしてプレイヤー操作に戻る（暫定）
+                    _turn.CancelRun(); // 部屋では方向転換しないで、高速移動をキャンセルしてプレイヤー操作に戻る（暫定）
                     return;
                 }
                 // TODO: 部屋でも、方向転換した先に通路があるなら1回だけ方向転換させていいのでは
@@ -185,7 +185,7 @@ namespace RoguelikeExample.Controller
 
             if (_enemyManager.ExistEnemy(dest) != null)
             {
-                _turn.CanselRun(); // 移動先が敵キャラクターのとき、高速移動をキャンセルしてプレイヤー操作に戻る
+                _turn.CancelRun(); // 移動先が敵キャラクターのとき、高速移動をキャンセルしてプレイヤー操作に戻る
                 return;
             }
 

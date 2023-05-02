@@ -76,9 +76,9 @@ namespace RoguelikeExample.Controller
         /// 移動先候補がない（行き止まり）もしくは、移動先候補に敵キャラクターがいたときに使用される想定。
         /// 移動後に呼ばないこと（2回行動になってしまう）
         /// </summary>
-        public void CanselRun()
+        public void CancelRun()
         {
-            Assert.IsTrue(State == TurnState.PlayerRun, "CanselRunはPlayerRunのときしか呼ばれない");
+            Assert.IsTrue(State == TurnState.PlayerRun, "CancelRunはPlayerRunのときしか呼ばれない");
 
             State = TurnState.PlayerIdol;
             IsRun = false;
