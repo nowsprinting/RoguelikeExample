@@ -44,7 +44,7 @@
 
 ## 設計資料
 
-### 行動ターンのステート遷移図
+### インゲーム（行動ターン）のステート遷移図
 
 ```mermaid
 stateDiagram-v2
@@ -68,6 +68,35 @@ stateDiagram-v2
     Result --> [*]
 
     (any):::Any --> Result: 死亡
+```
+
+### アウトゲームの画面遷移図
+
+```mermaid
+stateDiagram-v2
+    [*] --> Title
+
+    Title --> StageSelect: Start
+    StageSelect --> DifficultySelect
+    StageSelect --> Title: Cancel
+    DifficultySelect --> Ready?
+    DifficultySelect --> StageSelect: Cancel
+    Ready? --> DifficultySelect: No
+    Ready? --> InGame: Yes
+    InGame --> Title
+
+    Title --> Ranking
+    Ranking --> Title: Close
+
+    Title --> Option
+    Option --> Title: Close
+
+    Title --> Credit
+    Credit --> Title: Close
+
+    Title --> Exit?
+    Exit? --> Title: No
+    Exit? --> [*]: Yes
 ```
 
 
