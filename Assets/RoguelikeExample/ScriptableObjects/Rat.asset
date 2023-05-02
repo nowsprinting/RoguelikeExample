@@ -17,7 +17,7 @@ MonoBehaviour:
   displayCharacter: "\u9F20"
   aiType: 1
   lowestSpawnLevel: 1
-  highestSpawnLevel: 2
+  highestSpawnLevel: 5
   maxHitPoint: 2
   defense: 1
   attack: 1

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using NUnit.Framework;
 using RoguelikeExample.Controller;
+using RoguelikeExample.Dungeon;
 using RoguelikeExample.Input.CustomComposites;
 using RoguelikeExample.Input.CustomProcessors;
 using RoguelikeExample.Random;
@@ -40,6 +41,9 @@ namespace RoguelikeExample.IntegrationTests
             // Note: カスタムComposite, Interaction, Processorを使用しているプロジェクトでは、Setupの後に再Registerする
 
             await SceneManager.LoadSceneAsync("Dungeon");
+
+            var dungeonManager = Object.FindAnyObjectByType<DungeonManager>();
+            dungeonManager.level = 3; // すぐ地上に出ないように初期レベルを変更
         }
 
         [TearDown]
@@ -49,11 +53,12 @@ namespace RoguelikeExample.IntegrationTests
         }
 
         [Test]
-        [Timeout(200000)] // 3min強（デフォルトは180,000ms）
+        [Timeout(200000)] // タイムアウトを3分強に設定（デフォルトは180,000ms）
         public async Task インゲームのモンキーテスト()
         {
             var random = new RandomImpl();
-            Debug.Log($"Using {random}"); // 擬似乱数発生器のシード値をログ出力（再現可能にするため）
+            Debug.Log($"Using {random}"); // 擬似乱数発生器のシード値を出力（再現可能にするため）
+            // Note: DungeonManagerも同様にシード値を出力しています
 
             var playerCharacterController = Object.FindAnyObjectByType<PlayerCharacterController>();
             var lastLocation = playerCharacterController.MapLocation();
@@ -63,15 +68,15 @@ namespace RoguelikeExample.IntegrationTests
             var keys = new[]
             {
                 keyboard.hKey, keyboard.jKey, keyboard.kKey, keyboard.lKey, keyboard.yKey, keyboard.uKey,
-                keyboard.bKey, keyboard.nKey, keyboard.spaceKey,
+                keyboard.bKey, keyboard.nKey, keyboard.spaceKey, keyboard.escapeKey
             };
 
-            _input.Press(keyboard.ctrlKey); // 単なるレバガチャにならないよう、常に高速移動させる
+            _input.Press(keyboard.ctrlKey); // 単なるレバガチャにならないよう、常に高速移動
 
-            var expireTime = Time.time + 180.0f; // タイムアウト少し手前まで動作させる
+            var expireTime = Time.time + 180.0f; // タイムアウト少し手前まで動作
             while (Time.time < expireTime)
             {
-                var key = keys[random.Next(keys.Length)];
+                var key = keys[random.Next(keys.Length)]; // 操作するキーを抽選
                 _input.Press(key); // 押す
                 await UniTask.DelayFrame(random.Next(10));
 
@@ -83,7 +88,7 @@ namespace RoguelikeExample.IntegrationTests
                 {
                     if (++dontMoveCount > 80)
                     {
-                        Assert.Fail("一定時間プレイヤーキャラクターが移動しない");
+                        Assert.Fail("一定時間プレイヤーキャラクターが移動していない");
                     }
                 }
                 else
