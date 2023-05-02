@@ -256,7 +256,7 @@ namespace RoguelikeExample.Controller
                 await AttackAction();
             }
 
-            if (_map.IsStairs(MapLocation().column, MapLocation().row))
+            if (OnUpStairs() || OnDownStairs())
             {
                 turn.OnStairs();
             }
@@ -264,6 +264,18 @@ namespace RoguelikeExample.Controller
             {
                 turn.NextPhase().Forget();
             }
+        }
+
+        internal bool OnUpStairs()
+        {
+            var location = MapLocation();
+            return _map.IsUpStairs(location.column, location.row);
+        }
+
+        internal bool OnDownStairs()
+        {
+            var location = MapLocation();
+            return _map.IsDownStairs(location.column, location.row);
         }
 
         private async UniTask AttackAction()

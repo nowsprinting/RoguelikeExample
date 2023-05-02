@@ -39,7 +39,7 @@ namespace RoguelikeExample.Dungeon
         // Dungeon.unityでは設定必須なので、<c>DungeonSceneValidator</c>でバリデーションしている
 
         [SerializeField, Tooltip("レベル（ゲーム開始レベル）")]
-        private int level = 1;
+        internal int level = 1;
 
         [SerializeField, Tooltip("ダンジョンのマップ幅")]
         private int width = 50;
@@ -56,19 +56,19 @@ namespace RoguelikeExample.Dungeon
         [SerializeField, Tooltip("ルートとなる擬似乱数のシード値（再生モードに入ってから変更しても無効）")]
         private string randomSeed;
 
-        private IRandom _random; // ルートとなる擬似乱数発生器
-        private readonly Turn _turn = new Turn();
+        internal IRandom Random { get; private set; } // ルートとなる擬似乱数発生器
+        internal Turn Turn { get; private set; } = new Turn(); // 行動ターンのステートマシン
 
         private MapChip[,] _map; // 現在のレベルのマップ
 
         private void Awake()
         {
-            _turn.OnPhaseTransition += HandlePhaseTransition;
+            Turn.OnPhaseTransition += HandlePhaseTransition;
         }
 
         private void OnDestroy()
         {
-            _turn.OnPhaseTransition -= HandlePhaseTransition;
+            Turn.OnPhaseTransition -= HandlePhaseTransition;
         }
 
         private void HandlePhaseTransition(object sender, EventArgs _)
@@ -86,26 +86,26 @@ namespace RoguelikeExample.Dungeon
         {
             if (string.IsNullOrEmpty(randomSeed))
             {
-                _random = new RandomImpl();
+                Random = new RandomImpl();
             }
             else
             {
                 var seed = Convert.ToInt32(randomSeed);
-                _random = new RandomImpl(seed);
+                Random = new RandomImpl(seed);
             }
 
-            Debug.Log($"Dungeon root random is: {_random}"); // 擬似乱数発生器のシード値をログ出力（再現可能にするため）
+            Debug.Log($"Dungeon root random is: {Random}"); // 擬似乱数発生器のシード値をログ出力（再現可能にするため）
 
             if (enemyManager != null)
             {
-                IRandom newRandom = new RandomImpl(_random.Next());
-                enemyManager.Initialize(newRandom, _turn, playerCharacterController);
+                IRandom newRandom = new RandomImpl(Random.Next());
+                enemyManager.Initialize(newRandom, Turn, playerCharacterController);
             }
 
             if (playerCharacterController != null)
             {
-                IRandom newRandom = new RandomImpl(_random.Next());
-                playerCharacterController.Initialize(newRandom, _turn, enemyManager);
+                IRandom newRandom = new RandomImpl(Random.Next());
+                playerCharacterController.Initialize(newRandom, Turn, enemyManager);
             }
 
             NewLevel(StairsDirection.Down);
@@ -118,7 +118,7 @@ namespace RoguelikeExample.Dungeon
                 Destroy(transform.GetChild(i).gameObject);
             }
 
-            _map = MapGenerator.Generate(width, height, roomCount, maxRoomSize, _random);
+            _map = MapGenerator.Generate(width, height, roomCount, maxRoomSize, Random);
             var root = PhysicsGenerator.Generate(_map);
             root.name = $"Level {level}";
             root.transform.parent = transform;
@@ -143,21 +143,21 @@ namespace RoguelikeExample.Dungeon
             if (_map.IsUpStairs(playerLocation.column, playerLocation.row))
             {
                 yesNoDialog.SetMessage(level == 1 ? "Exit dungeon?" : "Go up?");
-                yesNoDialog.SetOnYesButtonClickListener(() => LevelTransition(StairsDirection.Up));
+                yesNoDialog.AddOnYesButtonClickListener(() => LevelTransition(StairsDirection.Up));
             }
             else
             {
                 yesNoDialog.SetMessage("Go down?");
-                yesNoDialog.SetOnYesButtonClickListener(() => LevelTransition(StairsDirection.Down));
+                yesNoDialog.AddOnYesButtonClickListener(() => LevelTransition(StairsDirection.Down));
             }
 
-            yesNoDialog.SetOnNoButtonClickListener(() =>
+            yesNoDialog.AddOnNoButtonClickListener(() =>
             {
-                yesNoDialog.gameObject.SetActive(false);
-                _turn.NextPhase().Forget();
+                yesNoDialog.Hide();
+                Turn.NextPhase().Forget();
             });
 
-            yesNoDialog.gameObject.SetActive(true);
+            yesNoDialog.Show();
         }
 
         private void LevelTransition(StairsDirection stairsDirection)
@@ -170,8 +170,8 @@ namespace RoguelikeExample.Dungeon
 
             NewLevel(stairsDirection);
 
-            yesNoDialog.gameObject.SetActive(false);
-            _turn.Reset();
+            yesNoDialog.Hide();
+            Turn.Reset();
         }
 
         private enum StairsDirection

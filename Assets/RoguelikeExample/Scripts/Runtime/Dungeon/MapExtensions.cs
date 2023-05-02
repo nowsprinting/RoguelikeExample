@@ -60,10 +60,5 @@ namespace RoguelikeExample.Dungeon
         {
             return map[column, row] == MapChip.DownStairs;
         }
-
-        public static bool IsStairs(this MapChip[,] map, int column, int row)
-        {
-            return map.IsUpStairs(column, row) || map.IsDownStairs(column, row);
-        }
     }
 }
