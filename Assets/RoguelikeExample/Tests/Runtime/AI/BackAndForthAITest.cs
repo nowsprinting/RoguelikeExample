@@ -66,6 +66,7 @@ namespace RoguelikeExample.AI
                 }),
                 (1, 1),
                 new RandomImpl(),
+                new Turn(),
                 _enemyManager,
                 _playerCharacterController
             );
@@ -106,6 +107,7 @@ namespace RoguelikeExample.AI
                 }),
                 (1, 1),
                 new RandomImpl(),
+                new Turn(),
                 _enemyManager,
                 _playerCharacterController
             );
@@ -148,6 +150,7 @@ namespace RoguelikeExample.AI
                 }),
                 (1, 1),
                 new RandomImpl(),
+                new Turn(),
                 _enemyManager,
                 _playerCharacterController
             );

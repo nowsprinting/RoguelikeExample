@@ -28,7 +28,6 @@ namespace RoguelikeExample.Controller
 
         // インゲーム開始時に <c>DungeonManager</c> から設定されるもの（テストでは省略されることもある）
         private EnemyManager _enemyManager;
-        private Turn _turn;
 
         private PlayerInputActions _inputActions;
         private Direction _direction;
@@ -44,6 +43,7 @@ namespace RoguelikeExample.Controller
             _enemyManager = enemyManager;
             _random = random;
             _turn = turn;
+            _turn.OnPhaseTransition += HandlePhaseTransition;
         }
 
         /// <summary>
@@ -66,7 +66,6 @@ namespace RoguelikeExample.Controller
         {
             _inputActions = new PlayerInputActions();
             _inputActions.Player.Attack.performed += AttackOperation;
-            Turn.OnPhaseTransition += HandlePhaseTransition;
         }
 
         private void OnEnable()
@@ -82,18 +81,23 @@ namespace RoguelikeExample.Controller
         private void OnDestroy()
         {
             _inputActions?.Dispose();
-            Turn.OnPhaseTransition -= HandlePhaseTransition;
+
+            if (_turn != null)
+            {
+                _turn.OnPhaseTransition -= HandlePhaseTransition;
+            }
         }
 
         private void HandlePhaseTransition(object sender, EventArgs _)
         {
-            switch (((Turn)sender).State)
+            var turn = (Turn)sender;
+            switch (turn.State)
             {
                 case TurnState.PlayerRun:
-                    ThinkToRun();
+                    ThinkToRun(turn);
                     break;
                 case TurnState.PlayerAction:
-                    DoAction().Forget();
+                    DoAction(turn).Forget();
                     break;
             }
         }
@@ -146,14 +150,14 @@ namespace RoguelikeExample.Controller
             _turn.NextPhase().Forget(); // 空振りでもフェーズを送る
         }
 
-        private void ThinkToRun()
+        private void ThinkToRun(Turn turn)
         {
-            Assert.IsTrue(_turn.IsRun);
+            Assert.IsTrue(turn.IsRun);
 
             var location = MapLocation();
             if (IsStopLocation(_map, location))
             {
-                _turn.CanselRun(); // 現在地が停止条件を満たすとき、高速移動をキャンセルしてプレイヤー操作に戻る
+                turn.CanselRun(); // 現在地が停止条件を満たすとき、高速移動をキャンセルしてプレイヤー操作に戻る
                 return;
             }
 
@@ -246,7 +250,7 @@ namespace RoguelikeExample.Controller
             return Direction.None; // 前方、左、右に移動できない
         }
 
-        private async UniTask DoAction()
+        private async UniTask DoAction(Turn turn)
         {
             if (NextLocation != MapLocation())
             {
@@ -257,7 +261,7 @@ namespace RoguelikeExample.Controller
                 await AttackAction();
             }
 
-            _turn.NextPhase().Forget();
+            turn.NextPhase().Forget();
         }
 
         private async UniTask AttackAction()

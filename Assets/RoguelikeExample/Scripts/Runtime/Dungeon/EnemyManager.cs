@@ -32,6 +32,7 @@ namespace RoguelikeExample.Dungeon
 
         // インゲーム開始時に <c>DungeonManager</c> から設定されるもの
         private IRandom _random;
+        private Turn _turn;
 
         // インゲーム開始時に <c>DungeonManager</c> から設定されるもの（テストでは省略されることもある）
         private PlayerCharacterController _playerCharacterController;
@@ -46,21 +47,22 @@ namespace RoguelikeExample.Dungeon
         /// インゲーム開始時に <c>DungeonManager</c> から設定される
         /// </summary>
         /// <param name="random">擬似乱数生成器インスタンス</param>
+        /// <param name="turn">行動ターンのステートマシン（DungeonManagerが生成したインスタンス）</param>
         /// <param name="playerCharacterController">プレイヤーキャラクターのコントローラー</param>
-        public void Initialize(IRandom random, PlayerCharacterController playerCharacterController = null)
+        public void Initialize(IRandom random, Turn turn, PlayerCharacterController playerCharacterController = null)
         {
-            _random = random;
             _playerCharacterController = playerCharacterController;
-        }
-
-        private void Awake()
-        {
-            Turn.OnPhaseTransition += HandlePhaseTransition;
+            _random = random;
+            _turn = turn;
+            _turn.OnPhaseTransition += HandlePhaseTransition;
         }
 
         private void OnDestroy()
         {
-            Turn.OnPhaseTransition -= HandlePhaseTransition;
+            if (_turn != null)
+            {
+                _turn.OnPhaseTransition -= HandlePhaseTransition;
+            }
         }
 
         private async void HandlePhaseTransition(object sender, EventArgs _)
@@ -144,7 +146,7 @@ namespace RoguelikeExample.Dungeon
                 enemyObject.name = race.name;
 
                 var enemy = enemyObject.GetComponent<EnemyCharacterController>();
-                enemy.Initialize(race, _level, _map, location, _random, this, _playerCharacterController);
+                enemy.Initialize(race, _level, _map, location, _random, _turn, this, _playerCharacterController);
             }
         }
 

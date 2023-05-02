@@ -75,7 +75,7 @@ namespace RoguelikeExample.Dungeon
             if (enemyManager != null)
             {
                 IRandom newRandom = new RandomImpl(_random.Next());
-                enemyManager.Initialize(newRandom, playerCharacterController);
+                enemyManager.Initialize(newRandom, _turn, playerCharacterController);
             }
 
             if (playerCharacterController != null)

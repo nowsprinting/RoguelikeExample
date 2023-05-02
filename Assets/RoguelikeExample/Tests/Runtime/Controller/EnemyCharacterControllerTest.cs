@@ -66,7 +66,8 @@ namespace RoguelikeExample.Controller
                     "1", // 床
                 }),
                 (0, 0),
-                new RandomImpl()
+                new RandomImpl(),
+                new Turn()
             );
 
             var textMesh = enemyCharacterController.GetComponent<TextMeshPro>();
@@ -92,6 +93,7 @@ namespace RoguelikeExample.Controller
                 }),
                 (1, 1),
                 new RandomImpl(),
+                new Turn(),
                 _enemyManager,
                 _playerCharacterController
             );
@@ -122,6 +124,7 @@ namespace RoguelikeExample.Controller
                 }),
                 (1, 1),
                 new RandomImpl(),
+                new Turn(),
                 _enemyManager,
                 _playerCharacterController
             );

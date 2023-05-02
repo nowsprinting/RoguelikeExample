@@ -13,6 +13,7 @@ namespace RoguelikeExample.Controller
     {
         // インスタンス生成時に設定されるもの
         protected IRandom _random;
+        protected Turn _turn;
 
         // 新しいレベルに移動したときに設定されるもの
         protected MapChip[,] _map;

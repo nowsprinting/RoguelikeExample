@@ -35,7 +35,7 @@ namespace RoguelikeExample.Controller
         /// <summary>
         /// 行動フェーズ遷移イベント
         /// </summary>
-        public static event EventHandler OnPhaseTransition;
+        public event EventHandler OnPhaseTransition;
 
         /// <summary>
         /// 次のフェーズに遷移

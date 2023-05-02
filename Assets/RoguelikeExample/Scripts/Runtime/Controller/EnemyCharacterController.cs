@@ -33,14 +33,17 @@ namespace RoguelikeExample.Controller
         /// <param name="map">当該レベルのマップ</param>
         /// <param name="location">キャラクターの初期座標</param>
         /// <param name="random">このキャラクターが消費する擬似乱数生成器インスタンス</param>
+        /// <param name="turn">行動ターンのステートマシン（DungeonManagerが生成したインスタンス）</param>
         /// <param name="enemyManager">敵管理（親）</param>
         /// <param name="playerCharacterController">プレイヤーキャラクターのコントローラー</param>
         public void Initialize(EnemyRace race, int level, MapChip[,] map, (int colum, int row) location, IRandom random,
-            EnemyManager enemyManager = null, PlayerCharacterController playerCharacterController = null)
+            Turn turn, EnemyManager enemyManager = null, PlayerCharacterController playerCharacterController = null)
         {
-            _random = random;
             _enemyManager = enemyManager;
             _playerCharacterController = playerCharacterController;
+            _random = random;
+            _turn = turn;
+            _turn.OnPhaseTransition += HandlePhaseTransition;
 
             Status = new EnemyStatus(race, level);
             _ai = AIFactory.CreateAI(race.aiType, new RandomImpl(random.Next()));
@@ -54,14 +57,12 @@ namespace RoguelikeExample.Controller
             }
         }
 
-        private void Awake()
-        {
-            Turn.OnPhaseTransition += HandlePhaseTransition;
-        }
-
         private void OnDestroy()
         {
-            Turn.OnPhaseTransition -= HandlePhaseTransition;
+            if (_turn != null)
+            {
+                _turn.OnPhaseTransition -= HandlePhaseTransition;
+            }
         }
 
         private void HandlePhaseTransition(object sender, EventArgs _)

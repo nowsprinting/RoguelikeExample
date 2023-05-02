@@ -63,7 +63,7 @@ namespace RoguelikeExample.Controller
                 _enemyManager = new GameObject().AddComponent<EnemyManager>();
                 _turn = new Turn();
 
-                _enemyManager.Initialize(new RandomImpl(), _playerCharacterController);
+                _enemyManager.Initialize(new RandomImpl(), _turn, _playerCharacterController);
                 // Note: NewLevel()を呼ばなければ敵キャラクターは生成されない
 
                 _playerCharacterController.actionAnimationMillis = 0; // 行動アニメーション時間を0に
@@ -238,7 +238,7 @@ namespace RoguelikeExample.Controller
             {
                 _playerCharacterController.SetPositionFromMapLocation(1, 1);
                 _playerCharacterController.Status = new PlayerStatus(1, 0, 3);
-                var enemy = CreateEnemy(_enemyManager, _playerCharacterController, (1, 2), 10, 1);
+                var enemy = CreateEnemy(_turn, _enemyManager, _playerCharacterController, (1, 2), 10, 1);
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.jKey); // 方向を変えるための空移動
@@ -255,7 +255,7 @@ namespace RoguelikeExample.Controller
             {
                 _playerCharacterController.SetPositionFromMapLocation(1, 1);
                 _playerCharacterController.Status = new PlayerStatus(1, 0, 3);
-                var enemy = CreateEnemy(_enemyManager, _playerCharacterController, (1, 2), 1, 1, 3, 5);
+                var enemy = CreateEnemy(_turn, _enemyManager, _playerCharacterController, (1, 2), 1, 1, 3, 5);
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.jKey); // 方向を変えるための空移動
@@ -358,7 +358,7 @@ namespace RoguelikeExample.Controller
                 _enemyManager = new GameObject().AddComponent<EnemyManager>();
                 _turn = new Turn();
 
-                _enemyManager.Initialize(new RandomImpl(), _playerCharacterController);
+                _enemyManager.Initialize(new RandomImpl(), _turn, _playerCharacterController);
                 // Note: NewLevel()を呼ばなければ敵キャラクターは生成されない
 
                 _playerCharacterController.runAnimationMillis = 0; // 高速移動時アニメーション時間を0に
@@ -668,7 +668,7 @@ namespace RoguelikeExample.Controller
                     (1, 1)
                 );
 
-                CreateEnemy(_enemyManager, _playerCharacterController, (4, 1));
+                CreateEnemy(_turn, _enemyManager, _playerCharacterController, (4, 1));
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
                 _input.Press(keyboard.lKey); // 右
@@ -697,7 +697,7 @@ namespace RoguelikeExample.Controller
                     (1, 1)
                 );
 
-                CreateEnemy(_enemyManager, _playerCharacterController, (4, 2)); // (3, 1) は攻撃範囲
+                CreateEnemy(_turn, _enemyManager, _playerCharacterController, (4, 2)); // (3, 1) は攻撃範囲
                 // TODO: 移動しないが攻撃はするAIをセットしないとだめ
 
                 var keyboard = InputSystem.AddDevice<Keyboard>();
@@ -739,6 +739,7 @@ namespace RoguelikeExample.Controller
         }
 
         private static EnemyCharacterController CreateEnemy(
+            Turn turn,
             EnemyManager enemyManager,
             PlayerCharacterController playerCharacterController,
             (int column, int row) location,
@@ -761,6 +762,7 @@ namespace RoguelikeExample.Controller
                 null,
                 location,
                 new RandomImpl(),
+                turn,
                 enemyManager,
                 playerCharacterController
             );
