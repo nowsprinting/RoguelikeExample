@@ -54,7 +54,7 @@ namespace RoguelikeExample.Dungeon
         private int maxRoomSize = 10;
 
         [SerializeField, Tooltip("ルートとなる擬似乱数のシード値（再生モードに入ってから変更しても無効）")]
-        private string randomSeed;
+        internal string randomSeed;
 
         internal IRandom Random { get; private set; } // ルートとなる擬似乱数発生器
         internal Turn Turn { get; private set; } = new Turn(); // 行動ターンのステートマシン
