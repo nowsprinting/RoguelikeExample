@@ -523,7 +523,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8575054873061951831, guid: 77cb5b8bb37594c18a986df594bdcdbd, type: 3}
       propertyPath: m_text
-      value: NO
+      value: "\u3044\u3044\u3048"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -812,7 +812,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa34447569b5a42ec95114734c72d1ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -876,7 +876,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1015425240
@@ -1029,6 +1029,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4562719646195847503, guid: 8873341d308b64e36a00a871e479fec5, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -747811228394265241, guid: aa34447569b5a42ec95114734c72d1ee, type: 2}
     - target: {fileID: 8330798327702997289, guid: 8873341d308b64e36a00a871e479fec5, type: 3}
       propertyPath: dungeonManager
       value: 
@@ -1189,7 +1193,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2397348266913123668, guid: 67aa2cda4f5ce4c88a76737aebb96cfb, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 400
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 2397348266913123668, guid: 67aa2cda4f5ce4c88a76737aebb96cfb, type: 3}
       propertyPath: m_SizeDelta.y
@@ -1246,6 +1250,22 @@ PrefabInstance:
     - target: {fileID: 4878565399250766209, guid: 67aa2cda4f5ce4c88a76737aebb96cfb, type: 3}
       propertyPath: m_Name
       value: Background
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461028052426579982, guid: 67aa2cda4f5ce4c88a76737aebb96cfb, type: 3}
+      propertyPath: m_Color.a
+      value: 0.72156864
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461028052426579982, guid: 67aa2cda4f5ce4c88a76737aebb96cfb, type: 3}
+      propertyPath: m_Color.b
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461028052426579982, guid: 67aa2cda4f5ce4c88a76737aebb96cfb, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461028052426579982, guid: 67aa2cda4f5ce4c88a76737aebb96cfb, type: 3}
+      propertyPath: m_Color.r
+      value: 0.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1350,7 +1370,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8575054873061951831, guid: 77cb5b8bb37594c18a986df594bdcdbd, type: 3}
       propertyPath: m_text
-      value: YES
+      value: "\u306F\u3044"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

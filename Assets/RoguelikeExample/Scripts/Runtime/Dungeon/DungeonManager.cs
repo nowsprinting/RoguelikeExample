@@ -142,12 +142,12 @@ namespace RoguelikeExample.Dungeon
             var playerLocation = playerCharacterController.MapLocation();
             if (_map.IsUpStairs(playerLocation.column, playerLocation.row))
             {
-                yesNoDialog.SetMessage(level == 1 ? "Exit dungeon?" : "Go up?");
+                yesNoDialog.SetMessage(level == 1 ? "ダンジョンを脱出しますか？" : "階段を上りますか？");
                 yesNoDialog.AddOnYesButtonClickListener(() => LevelTransition(StairsDirection.Up));
             }
             else
             {
-                yesNoDialog.SetMessage("Go down?");
+                yesNoDialog.SetMessage("階段を下りますか？");
                 yesNoDialog.AddOnYesButtonClickListener(() => LevelTransition(StairsDirection.Down));
             }
 
