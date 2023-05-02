@@ -28,6 +28,7 @@ namespace RoguelikeExample.Controller
 
         // インゲーム開始時に <c>DungeonManager</c> から設定されるもの（テストでは省略されることもある）
         private EnemyManager _enemyManager;
+        private Turn _turn;
 
         private PlayerInputActions _inputActions;
         private Direction _direction;
@@ -36,11 +37,13 @@ namespace RoguelikeExample.Controller
         /// インゲーム開始時に <c>DungeonManager</c> から設定される
         /// </summary>
         /// <param name="random">このキャラクターが消費する擬似乱数発生器インスタンス</param>
+        /// <param name="turn">行動ターンのステートマシン（DungeonManagerが生成したインスタンス）</param>
         /// <param name="enemyManager">敵キャラクター管理</param>
-        public void Initialize(IRandom random, EnemyManager enemyManager = null)
+        public void Initialize(IRandom random, Turn turn, EnemyManager enemyManager = null)
         {
             _enemyManager = enemyManager;
             _random = random;
+            _turn = turn;
         }
 
         /// <summary>
@@ -57,7 +60,7 @@ namespace RoguelikeExample.Controller
         /// <summary>
         /// 行動アニメーション時間（高速移動中かどうかを考慮した値）
         /// </summary>
-        public int AnimationMillis() => Turn.GetInstance().IsRun ? runAnimationMillis : actionAnimationMillis;
+        public int AnimationMillis() => _turn.IsRun ? runAnimationMillis : actionAnimationMillis;
 
         private void Awake()
         {
@@ -97,7 +100,7 @@ namespace RoguelikeExample.Controller
 
         private void Update()
         {
-            if (Turn.GetInstance().State != TurnState.PlayerIdol)
+            if (_turn.State != TurnState.PlayerIdol)
             {
                 return; // PlayerIdol以外は入力を受け付けない
             }
@@ -129,38 +132,35 @@ namespace RoguelikeExample.Controller
 
             NextLocation = dest;
 
-            var turn = Turn.GetInstance();
-            turn.IsRun = _inputActions.Player.Run.ReadValue<float>() > 0 && !direction.IsDiagonal(); // 次ターンから高速移動
-            turn.NextPhase().Forget();
+            _turn.IsRun = _inputActions.Player.Run.ReadValue<float>() > 0 && !direction.IsDiagonal(); // 次ターンから高速移動
+            _turn.NextPhase().Forget();
         }
 
         private void AttackOperation(InputAction.CallbackContext context)
         {
-            var turn = Turn.GetInstance();
-            if (turn.State != TurnState.PlayerIdol)
+            if (_turn.State != TurnState.PlayerIdol)
             {
                 return; // PlayerIdol以外は入力を受け付けない
             }
 
-            turn.NextPhase().Forget(); // 空振りでもフェーズを送る
+            _turn.NextPhase().Forget(); // 空振りでもフェーズを送る
         }
 
         private void ThinkToRun()
         {
-            var turn = Turn.GetInstance();
-            Assert.IsTrue(turn.IsRun);
+            Assert.IsTrue(_turn.IsRun);
 
             var location = MapLocation();
             if (IsStopLocation(_map, location))
             {
-                turn.CanselRun(); // 現在地が停止条件を満たすとき、高速移動をキャンセルしてプレイヤー操作に戻る
+                _turn.CanselRun(); // 現在地が停止条件を満たすとき、高速移動をキャンセルしてプレイヤー操作に戻る
                 return;
             }
 
             var newDirection = MovableDirection(_map, location, _direction);
             if (newDirection == Direction.None)
             {
-                turn.CanselRun(); // 移動先がないとき、高速移動をキャンセルしてプレイヤー操作に戻る
+                _turn.CanselRun(); // 移動先がないとき、高速移動をキャンセルしてプレイヤー操作に戻る
                 return;
             }
             else if (_map.IsCorridor(location.column, location.row))
@@ -171,7 +171,7 @@ namespace RoguelikeExample.Controller
             {
                 if (newDirection != _direction)
                 {
-                    turn.CanselRun(); // 部屋では方向転換しないで、高速移動をキャンセルしてプレイヤー操作に戻る（暫定）
+                    _turn.CanselRun(); // 部屋では方向転換しないで、高速移動をキャンセルしてプレイヤー操作に戻る（暫定）
                     return;
                 }
                 // TODO: 部屋でも、方向転換した先に通路があるなら1回だけ方向転換させていいのでは
@@ -181,12 +181,12 @@ namespace RoguelikeExample.Controller
 
             if (_enemyManager.ExistEnemy(dest) != null)
             {
-                turn.CanselRun(); // 移動先が敵キャラクターのとき、高速移動をキャンセルしてプレイヤー操作に戻る
+                _turn.CanselRun(); // 移動先が敵キャラクターのとき、高速移動をキャンセルしてプレイヤー操作に戻る
                 return;
             }
 
             NextLocation = dest;
-            turn.NextPhase().Forget();
+            _turn.NextPhase().Forget();
         }
 
         private static bool IsStopLocation(MapChip[,] map, (int column, int row) location)
@@ -257,7 +257,7 @@ namespace RoguelikeExample.Controller
                 await AttackAction();
             }
 
-            Turn.GetInstance().NextPhase().Forget();
+            _turn.NextPhase().Forget();
         }
 
         private async UniTask AttackAction()

@@ -61,13 +61,13 @@ namespace RoguelikeExample.Controller
 
                 _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
                 _enemyManager = new GameObject().AddComponent<EnemyManager>();
-                _turn = Turn.GetInstance();
+                _turn = new Turn();
 
                 _enemyManager.Initialize(new RandomImpl(), _playerCharacterController);
                 // Note: NewLevel()を呼ばなければ敵キャラクターは生成されない
 
                 _playerCharacterController.actionAnimationMillis = 0; // 行動アニメーション時間を0に
-                _playerCharacterController.Initialize(new RandomImpl(), _enemyManager);
+                _playerCharacterController.Initialize(new RandomImpl(), _turn, _enemyManager);
                 _playerCharacterController.NewLevel(
                     MapHelper.CreateFromDumpStrings(new[]
                     {
@@ -356,13 +356,13 @@ namespace RoguelikeExample.Controller
 
                 _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
                 _enemyManager = new GameObject().AddComponent<EnemyManager>();
-                _turn = Turn.GetInstance();
+                _turn = new Turn();
 
                 _enemyManager.Initialize(new RandomImpl(), _playerCharacterController);
                 // Note: NewLevel()を呼ばなければ敵キャラクターは生成されない
 
                 _playerCharacterController.runAnimationMillis = 0; // 高速移動時アニメーション時間を0に
-                _playerCharacterController.Initialize(new RandomImpl(), _enemyManager);
+                _playerCharacterController.Initialize(new RandomImpl(), _turn, _enemyManager);
                 // テストごとにマップが異なるため <c>_playerCharacterController.NewLevel</c> は個々のテストメソッドで実行する
             }
 

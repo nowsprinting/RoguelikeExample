@@ -39,7 +39,7 @@ namespace RoguelikeExample.Controller
 
             _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
             _playerCharacterController.actionAnimationMillis = 0; // 行動アニメーション時間を0に
-            _playerCharacterController.Initialize(new RandomImpl(), _enemyManager);
+            _playerCharacterController.Initialize(new RandomImpl(), new Turn(), _enemyManager);
         }
 
         [UnityTearDown]

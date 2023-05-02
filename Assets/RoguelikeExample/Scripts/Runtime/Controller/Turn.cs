@@ -32,24 +32,6 @@ namespace RoguelikeExample.Controller
         /// </summary>
         public bool IsRun { get; set; }
 
-        private static Turn s_instance;
-
-        /// <summary>
-        /// シングルトンのインスタンス取得
-        /// </summary>
-        /// <returns></returns>
-        public static Turn GetInstance()
-        {
-            return s_instance ?? (s_instance = new Turn());
-        }
-
-        /// <summary>
-        /// デフォルトコンストラクタは利用禁止（シングルトンを使う）
-        /// </summary>
-        private Turn()
-        {
-        }
-
         /// <summary>
         /// 行動フェーズ遷移イベント
         /// </summary>

@@ -65,16 +65,16 @@ namespace RoguelikeExample.Dungeon
 
         private async void HandlePhaseTransition(object sender, EventArgs _)
         {
-            var turnState = (Turn)sender;
-            switch (turnState.State)
+            var turn = (Turn)sender;
+            switch (turn.State)
             {
                 case TurnState.EnemyAction:
                     await WaitForAllEnemiesAction();
-                    turnState.NextPhase().Forget();
+                    turn.NextPhase().Forget();
                     break;
                 case TurnState.EnemyPopup:
                     RefillEnemies();
-                    turnState.NextPhase().Forget();
+                    turn.NextPhase().Forget();
                     break;
             }
         }
