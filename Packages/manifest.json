@@ -47,7 +47,8 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0"
+    "com.unity.modules.xr": "1.0.0",
+    "com.nowsprinting.test-helper.monkey": "0.1.2"
   },
   "scopedRegistries": [
     {
@@ -56,6 +57,7 @@
       "scopes": [
         "com.cysharp.unitask",
         "com.nowsprinting.create-script-folders-with-tests",
+        "com.nowsprinting.test-helper.monkey",
         "com.openupm"
       ]
     },
