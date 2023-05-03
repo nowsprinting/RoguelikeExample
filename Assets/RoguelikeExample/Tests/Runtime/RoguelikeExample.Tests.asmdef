@@ -9,7 +9,9 @@
         "Unity.InputSystem.TestFramework",
         "Unity.TextMeshPro",
         "UniTask",
-        "TestHelper.Monkey"
+        "TestHelper.Monkey",
+        "Unity.AutomatedQA",
+        "Unity.AutomatedQA.TestTools"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
