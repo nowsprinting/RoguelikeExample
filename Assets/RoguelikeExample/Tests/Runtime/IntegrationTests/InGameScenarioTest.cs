@@ -26,8 +26,8 @@ namespace RoguelikeExample.IntegrationTests
     {
         private const string InputTracesPath = "Assets/RoguelikeExample/Tests/TestData/InputTraces";
 
-        [TestCase("400", "Gamepad_400.inputtrace")]
-        public async Task インゲームのシナリオテスト_InputTraceを再生_地下2階に到達すること(string seed, string path)
+        [TestCase("Gamepad_400.inputtrace", "400")]
+        public async Task インゲームのシナリオテスト_InputTraceを再生_地下2階に到達すること(string path, string seed)
         {
             await SceneManager.LoadSceneAsync("Dungeon");
 

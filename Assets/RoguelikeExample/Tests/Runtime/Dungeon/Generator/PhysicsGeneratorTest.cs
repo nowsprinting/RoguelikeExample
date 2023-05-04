@@ -26,7 +26,7 @@ namespace RoguelikeExample.Dungeon.Generator
         {
 #if UNITY_EDITOR
             yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(
-                "Assets/RoguelikeExample/Tests/TestScenes/DungeonGeneratorSandbox.unity",
+                "Assets/RoguelikeExample/Tests/TestData/Scenes/DungeonGeneratorSandbox.unity",
                 new LoadSceneParameters(LoadSceneMode.Single));
             // Note: カメラとライトが必要なのでCreateSceneでなくサンドボックスを使用しています。
             //       Scenes in BuildにないSceneなので、EditorSceneManagerでロードしています
