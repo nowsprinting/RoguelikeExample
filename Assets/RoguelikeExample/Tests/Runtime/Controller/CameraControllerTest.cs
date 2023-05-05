@@ -21,14 +21,14 @@ namespace RoguelikeExample.Controller
         [SetUp]
         public void SetUp()
         {
-            var scene = SceneManager.CreateScene(nameof(CameraControllerTest));
+            var scene = SceneManager.CreateScene(TestContext.CurrentContext.Test.ClassName);
             SceneManager.SetActiveScene(scene);
         }
 
         [UnityTearDown]
         public IEnumerator TearDown()
         {
-            yield return SceneManager.UnloadSceneAsync(nameof(CameraControllerTest));
+            yield return SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
         }
 
         [UnityTest]

@@ -56,7 +56,7 @@ namespace RoguelikeExample.Controller
                 InputSystem.RegisterProcessor<SnapVector2Processor>();
                 // Note: カスタムComposite, Interaction, Processorを使用しているプロジェクトでは、Setupの後に再Registerする
 
-                var scene = SceneManager.CreateScene(nameof(PlayerCharacterControllerTest));
+                var scene = SceneManager.CreateScene(TestContext.CurrentContext.Test.ClassName);
                 SceneManager.SetActiveScene(scene);
 
                 _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
@@ -86,7 +86,7 @@ namespace RoguelikeExample.Controller
             {
                 _input.TearDown();
 
-                yield return SceneManager.UnloadSceneAsync(nameof(PlayerCharacterControllerTest));
+                yield return SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
             }
 
             [Test]
@@ -343,7 +343,7 @@ namespace RoguelikeExample.Controller
                 InputSystem.RegisterProcessor<SnapVector2Processor>();
                 // Note: カスタムComposite, Interaction, Processorを使用しているプロジェクトでは、Setupの後に再Registerする
 
-                var scene = SceneManager.CreateScene(nameof(PlayerCharacterControllerTest));
+                var scene = SceneManager.CreateScene(TestContext.CurrentContext.Test.ClassName);
                 SceneManager.SetActiveScene(scene);
 
                 _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
@@ -363,7 +363,7 @@ namespace RoguelikeExample.Controller
             {
                 _input.TearDown();
 
-                yield return SceneManager.UnloadSceneAsync(nameof(PlayerCharacterControllerTest));
+                yield return SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
             }
 
             [Test]

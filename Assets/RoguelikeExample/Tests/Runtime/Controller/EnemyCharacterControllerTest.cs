@@ -33,7 +33,7 @@ namespace RoguelikeExample.Controller
         [SetUp]
         public void SetUp()
         {
-            var scene = SceneManager.CreateScene(nameof(EnemyCharacterControllerTest));
+            var scene = SceneManager.CreateScene(TestContext.CurrentContext.Test.ClassName);
             SceneManager.SetActiveScene(scene);
 
             _enemyManager = new GameObject().AddComponent<EnemyManager>();
@@ -47,7 +47,7 @@ namespace RoguelikeExample.Controller
         [UnityTearDown]
         public IEnumerator TearDown()
         {
-            yield return SceneManager.UnloadSceneAsync(nameof(EnemyCharacterControllerTest));
+            yield return SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
         }
 
         [Test]

@@ -30,7 +30,7 @@ namespace RoguelikeExample.AI
         [SetUp]
         public void SetUp()
         {
-            var scene = SceneManager.CreateScene(nameof(BackAndForthAITest));
+            var scene = SceneManager.CreateScene(TestContext.CurrentContext.Test.ClassName);
             SceneManager.SetActiveScene(scene);
 
             _enemyManager = new GameObject().AddComponent<EnemyManager>();
@@ -43,7 +43,7 @@ namespace RoguelikeExample.AI
         [UnityTearDown]
         public IEnumerator TearDown()
         {
-            yield return SceneManager.UnloadSceneAsync(nameof(BackAndForthAITest));
+            yield return SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
         }
 
         [Test]

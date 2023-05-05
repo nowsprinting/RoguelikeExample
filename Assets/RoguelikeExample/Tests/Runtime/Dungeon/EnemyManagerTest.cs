@@ -28,7 +28,7 @@ namespace RoguelikeExample.Dungeon
         [SetUp]
         public void SetUp()
         {
-            var scene = SceneManager.CreateScene(nameof(EnemyManagerTest));
+            var scene = SceneManager.CreateScene(TestContext.CurrentContext.Test.ClassName);
             SceneManager.SetActiveScene(scene);
 
             _playerCharacterController = new GameObject().AddComponent<PlayerCharacterController>();
@@ -52,7 +52,7 @@ namespace RoguelikeExample.Dungeon
         [UnityTearDown]
         public IEnumerator TearDown()
         {
-            yield return SceneManager.UnloadSceneAsync(nameof(EnemyManagerTest));
+            yield return SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
         }
 
         [Test]
