@@ -2,6 +2,7 @@
 // This software is released under the MIT License.
 
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using NUnit.Framework;
@@ -9,6 +10,9 @@ using RoguelikeExample.Dungeon;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace RoguelikeExample.IntegrationTests
 {
@@ -18,7 +22,6 @@ namespace RoguelikeExample.IntegrationTests
     /// <c>InputEventTrace</c>による操作再生のコードは、Input SystemパッケージのInput Recorderを参考にしています。
     /// またレコードデータはInput Recorderで記録したものです。
     /// 記録時は "Record Frames" のみonにしています。
-    /// Gamepadで記録したデータは安定して再生できていますが、Keyboardで記録したデータは不安定です。
     /// </summary>
     [TestFixture]
     [Category("Integration")]
@@ -26,7 +29,13 @@ namespace RoguelikeExample.IntegrationTests
     {
         private const string InputTracesPath = "Assets/RoguelikeExample/Tests/TestData/InputTraces";
 
-        [TestCase("Gamepad_400.inputtrace", "400")]
+        [SetUp]
+        public void SetUp()
+        {
+            FocusGameView(); // KeyboardのときはGameViewにフォーカスを移さないと安定しない。Gamepadでは問題ない
+        }
+
+        [TestCase("Keyboard_400.inputtrace", "400")]
         public async Task インゲームのシナリオテスト_InputTraceを再生_地下2階に到達すること(string path, string seed)
         {
             await SceneManager.LoadSceneAsync("Dungeon");
@@ -49,6 +58,15 @@ namespace RoguelikeExample.IntegrationTests
             }
 
             Assert.That(dungeonManager.level, Is.EqualTo(2));
+        }
+
+        private static void FocusGameView()
+        {
+#if UNITY_EDITOR
+            var assembly = Assembly.Load("UnityEditor.dll");
+            var gameView = assembly.GetType("UnityEditor.GameView");
+            EditorWindow.FocusWindowIfItsOpen(gameView);
+#endif
         }
     }
 }
