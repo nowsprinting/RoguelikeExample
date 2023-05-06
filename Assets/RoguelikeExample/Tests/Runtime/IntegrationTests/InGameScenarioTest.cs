@@ -29,15 +29,11 @@ namespace RoguelikeExample.IntegrationTests
     {
         private const string InputTracesPath = "Assets/RoguelikeExample/Tests/TestData/InputTraces";
 
-        [SetUp]
-        public void SetUp()
-        {
-            FocusGameView(); // KeyboardのときはGameViewにフォーカスを移さないと安定しない。Gamepadでは問題ない
-        }
-
         [TestCase("Keyboard_400.inputtrace", "400")]
         public async Task インゲームのシナリオテスト_InputTraceを再生_地下2階に到達すること(string path, string seed)
         {
+            FocusGameView(); // キーボード・マウス操作ではGameビューにフォーカスを移さないと動作しない
+
             await SceneManager.LoadSceneAsync("Dungeon");
 
             var dungeonManager = Object.FindAnyObjectByType<DungeonManager>();
