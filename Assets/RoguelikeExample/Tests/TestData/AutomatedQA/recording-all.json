@@ -1,0 +1,873 @@
+{
+    "entryScene": "Title",
+    "recordingType": 0,
+    "recordedAspectRatio": {
+        "x": 493.0,
+        "y": 1528.0
+    },
+    "recordedResolution": {
+        "x": 6016.0,
+        "y": 3384.0
+    },
+    "recordings": [],
+    "touchData": [
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 5.330803394317627,
+            "position": {
+                "x": 0.5109223127365112,
+                "y": 0.48777174949645998
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Ranking",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Title",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.11249999701976776,
+                "y": -0.30000001192092898
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.13747549057006837,
+            "position": {
+                "x": 0.5109223127365112,
+                "y": 0.48777174949645998
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Ranking",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Title",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.11249999701976776,
+                "y": -0.30000001192092898
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 1.3372573852539063,
+            "position": {
+                "x": 0.49332523345947268,
+                "y": 0.20244565606117249
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Close",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Ranking",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": -0.06875000149011612,
+                "y": 0.03333333507180214
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.1306009292602539,
+            "position": {
+                "x": 0.49332523345947268,
+                "y": 0.20244565606117249
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Close",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Ranking",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": -0.06875000149011612,
+                "y": 0.03333333507180214
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 0.7767372131347656,
+            "position": {
+                "x": 0.5315533876419067,
+                "y": 0.42798912525177
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Option",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Title",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.32499998807907107,
+                "y": -0.10000000149011612
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.11890363693237305,
+            "position": {
+                "x": 0.5315533876419067,
+                "y": 0.42798912525177
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Option",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Title",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.32499998807907107,
+                "y": -0.10000000149011612
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 0.8116183280944824,
+            "position": {
+                "x": 0.5351941585540772,
+                "y": 0.21059782803058625
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Close",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Option",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.36250001192092898,
+                "y": 0.23333333432674409
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.0867767333984375,
+            "position": {
+                "x": 0.5351941585540772,
+                "y": 0.21059782803058625
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Close",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Option",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.36250001192092898,
+                "y": 0.23333333432674409
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 0.9377346038818359,
+            "position": {
+                "x": 0.5266990065574646,
+                "y": 0.35597825050354006
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Credit",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Title",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.2750000059604645,
+                "y": -0.20000000298023225
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.12285709381103516,
+            "position": {
+                "x": 0.5266990065574646,
+                "y": 0.35597825050354006
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Credit",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Title",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.2750000059604645,
+                "y": -0.20000000298023225
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 0.9100809097290039,
+            "position": {
+                "x": 0.5084951519966126,
+                "y": 0.22010870277881623
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Close",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Credit",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.08749999850988388,
+                "y": 0.46666666865348818
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.12509727478027345,
+            "position": {
+                "x": 0.5084951519966126,
+                "y": 0.22010870277881623
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Close",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Credit",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.08749999850988388,
+                "y": 0.46666666865348818
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 0.8243465423583984,
+            "position": {
+                "x": 0.5078883767127991,
+                "y": 0.28260868787765505
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Exit",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Title",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.08124999701976776,
+                "y": -0.3333333432674408
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.10376358032226563,
+            "position": {
+                "x": 0.5078883767127991,
+                "y": 0.28260868787765505
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Exit",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Title",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.08124999701976776,
+                "y": -0.3333333432674408
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 1.1193113327026368,
+            "position": {
+                "x": 0.521237850189209,
+                "y": 0.49320653080940249
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "No",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Exit",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.21875,
+                "y": -0.1666666716337204
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.124267578125,
+            "position": {
+                "x": 0.521237850189209,
+                "y": 0.49320653080940249
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "No",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Exit",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.21875,
+                "y": -0.1666666716337204
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 0.9922008514404297,
+            "position": {
+                "x": 0.5139563083648682,
+                "y": 0.5665760636329651
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Start",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Title",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.14374999701976777,
+                "y": -0.03333333507180214
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.0845479965209961,
+            "position": {
+                "x": 0.5139563083648682,
+                "y": 0.5665760636329651
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Start",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Title",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.14374999701976777,
+                "y": -0.03333333507180214
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 2.448911666870117,
+            "position": {
+                "x": 0.5078883767127991,
+                "y": 0.5067934989929199
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Cave",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/StageSelect",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.08124999701976776,
+                "y": 0.1666666716337204
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.09540367126464844,
+            "position": {
+                "x": 0.5078883767127991,
+                "y": 0.5067934989929199
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Cave",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/StageSelect",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.08124999701976776,
+                "y": 0.1666666716337204
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 1.2845954895019532,
+            "position": {
+                "x": 0.5103155374526978,
+                "y": 0.33016303181648257
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Cancel",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/DifficultySelect",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.10625000298023224,
+                "y": -0.1666666716337204
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.13361167907714845,
+            "position": {
+                "x": 0.5103155374526978,
+                "y": 0.33016303181648257
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Cancel",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/DifficultySelect",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.10625000298023224,
+                "y": -0.1666666716337204
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 0.9192981719970703,
+            "position": {
+                "x": 0.5163834691047669,
+                "y": 0.5584239363670349
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Dungeon",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/StageSelect",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.16875000298023225,
+                "y": -0.23333333432674409
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.10483741760253906,
+            "position": {
+                "x": 0.5163834691047669,
+                "y": 0.5584239363670349
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Dungeon",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/StageSelect",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.16875000298023225,
+                "y": -0.23333333432674409
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 1.6128005981445313,
+            "position": {
+                "x": 0.5145630836486816,
+                "y": 0.57201087474823
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Hard",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/DifficultySelect",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.15000000596046449,
+                "y": 0.10000000149011612
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.12322425842285156,
+            "position": {
+                "x": 0.5145630836486816,
+                "y": 0.57201087474823
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Hard",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/DifficultySelect",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.15000000596046449,
+                "y": 0.10000000149011612
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 1.0056400299072266,
+            "position": {
+                "x": 0.5273058414459229,
+                "y": 0.49184781312942507
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "No",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Ready",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.28125,
+                "y": -0.20000000298023225
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.0948028564453125,
+            "position": {
+                "x": 0.5273058414459229,
+                "y": 0.49184781312942507
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "No",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Ready",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.28125,
+                "y": -0.20000000298023225
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 1.2966766357421876,
+            "position": {
+                "x": 0.5285193920135498,
+                "y": 0.41983696818351748
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Easy",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/DifficultySelect",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.29374998807907107,
+                "y": -0.30000001192092898
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.09190940856933594,
+            "position": {
+                "x": 0.5285193920135498,
+                "y": 0.41983696818351748
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Easy",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/DifficultySelect",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.29374998807907107,
+                "y": -0.30000001192092898
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 1,
+            "timeDelta": 1.2128238677978516,
+            "position": {
+                "x": 0.5224514603614807,
+                "y": 0.570652186870575
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Yes",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Ready",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.23125000298023225,
+                "y": 0.06666667014360428
+            }
+        },
+        {
+            "pointerId": -1,
+            "eventType": 2,
+            "timeDelta": 0.13556289672851563,
+            "position": {
+                "x": 0.5224514603614807,
+                "y": 0.570652186870575
+            },
+            "positional": false,
+            "scene": "Title",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "Yes",
+            "objectTag": "Untagged",
+            "objectHierarchy": "Canvas/Ready",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.23125000298023225,
+                "y": 0.06666667014360428
+            }
+        },
+        {
+            "pointerId": 0,
+            "eventType": 0,
+            "timeDelta": 1.6690044403076172,
+            "position": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "positional": false,
+            "scene": "Dungeon",
+            "button": 0,
+            "waitSignal": "",
+            "emitSignal": "playbackComplete",
+            "keyCode": "",
+            "inputText": "",
+            "inputDuration": 0.0,
+            "objectName": "",
+            "objectTag": "",
+            "objectHierarchy": "",
+            "objectIndex": 0,
+            "querySelector": "",
+            "objectOffset": {
+                "x": 0.0,
+                "y": 0.0
+            }
+        }
+    ]
+}
