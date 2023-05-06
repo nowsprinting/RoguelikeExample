@@ -48,7 +48,7 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0",
-    "com.nowsprinting.test-helper.monkey": "0.1.2",
+    "com.nowsprinting.test-helper.monkey": "0.2.0",
     "com.unity.automated-testing": "0.8.1-preview.2"
   },
   "scopedRegistries": [
