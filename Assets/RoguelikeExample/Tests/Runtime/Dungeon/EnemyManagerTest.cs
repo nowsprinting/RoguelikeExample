@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Koji Hasegawa.
 // This software is released under the MIT License.
 
-using System.Collections;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using NUnit.Framework;
@@ -10,7 +9,6 @@ using RoguelikeExample.Random;
 using RoguelikeExample.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.TestTools;
 
 namespace RoguelikeExample.Dungeon
 {
@@ -49,10 +47,11 @@ namespace RoguelikeExample.Dungeon
             );
         }
 
-        [UnityTearDown]
-        public IEnumerator TearDown()
+        [TearDown]
+        public async Task TearDown()
         {
-            yield return SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
+            await Task.Delay(100); // オブジェクトの破棄を待つ
+            await SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
         }
 
         [Test]

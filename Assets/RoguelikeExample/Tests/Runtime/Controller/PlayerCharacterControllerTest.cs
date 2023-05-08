@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Koji Hasegawa.
 // This software is released under the MIT License.
 
-using System.Collections;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using NUnit.Framework;
@@ -15,7 +14,6 @@ using RoguelikeExample.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.TestTools;
 
 namespace RoguelikeExample.Controller
 {
@@ -81,12 +79,12 @@ namespace RoguelikeExample.Controller
                 );
             }
 
-            [UnityTearDown]
-            public IEnumerator TearDown()
+            [TearDown]
+            public async Task TearDown()
             {
                 _input.TearDown();
-
-                yield return SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
+                await Task.Delay(100); // オブジェクトの破棄を待つ
+                await SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
             }
 
             [Test]
@@ -265,7 +263,6 @@ namespace RoguelikeExample.Controller
                 Assert.That((bool)enemy, Is.False, "対象インスタンスは破棄されている");
                 Assert.That(_playerCharacterController.Status.Exp, Is.EqualTo(3), "経験値が加算される");
                 Assert.That(_playerCharacterController.Status.Gold, Is.EqualTo(5), "通貨が加算される");
-                await UniTask.NextFrame(); // オブジェクトの破棄を待つ
             }
 
             [Test]
@@ -358,12 +355,12 @@ namespace RoguelikeExample.Controller
                 // テストごとにマップが異なるため <c>_playerCharacterController.NewLevel</c> は個々のテストメソッドで実行する
             }
 
-            [UnityTearDown]
-            public IEnumerator TearDown()
+            [TearDown]
+            public async Task TearDown()
             {
                 _input.TearDown();
-
-                yield return SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
+                await Task.Delay(100); // オブジェクトの破棄を待つ
+                await SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
             }
 
             [Test]
