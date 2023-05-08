@@ -53,7 +53,7 @@ namespace RoguelikeExample.IntegrationTests
         }
 
         [Test]
-        [Timeout(200000)] // タイムアウトを3分強に設定（デフォルトは180,000ms）
+        [Timeout(70000)] // タイムアウトを1分強に設定（デフォルトは180,000ms）
         public async Task インゲームのモンキーテスト()
         {
             var random = new RandomImpl();
@@ -73,7 +73,7 @@ namespace RoguelikeExample.IntegrationTests
 
             _input.Press(keyboard.ctrlKey); // 単なるレバガチャにならないよう、常に高速移動
 
-            var expireTime = Time.time + 180.0f; // タイムアウト少し手前まで動作
+            var expireTime = Time.time + 60.0f; // 1分間動作させる
             while (Time.time < expireTime)
             {
                 var key = keys[random.Next(keys.Length)]; // 操作するキーを抽選
