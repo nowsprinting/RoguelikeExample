@@ -32,7 +32,15 @@ namespace RoguelikeExample.IntegrationTests
         [TestCase("Keyboard_400.inputtrace", "400")]
         public async Task インゲームのシナリオテスト_InputTraceを再生_地下2階に到達すること(string path, string seed)
         {
-            FocusGameView(); // キーボード・マウス操作ではGameビューにフォーカスを移さないと動作しない
+#if UNITY_EDITOR
+            // キーボード・マウス操作ではGameビューにフォーカスを移さないと動作しない
+            var assembly = Assembly.Load("UnityEditor.dll");
+            var gameView = assembly.GetType("UnityEditor.GameView");
+            EditorWindow.FocusWindowIfItsOpen(gameView);
+#endif
+            // フレームレートをキャプチャ環境に合わせる（Updateで入力を処理しているとき必要）
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = 60;
 
             await SceneManager.LoadSceneAsync("Dungeon");
 
@@ -54,15 +62,6 @@ namespace RoguelikeExample.IntegrationTests
             }
 
             Assert.That(dungeonManager.level, Is.EqualTo(2));
-        }
-
-        private static void FocusGameView()
-        {
-#if UNITY_EDITOR
-            var assembly = Assembly.Load("UnityEditor.dll");
-            var gameView = assembly.GetType("UnityEditor.GameView");
-            EditorWindow.FocusWindowIfItsOpen(gameView);
-#endif
         }
     }
 }
