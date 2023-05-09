@@ -54,7 +54,9 @@ namespace RoguelikeExample.IntegrationTests
 
             using var replayController = eventTrace.Replay()
                 .OnFinished(() => { isFinished = true; }) // 再生終了したらフラグを立てる
-                .PlayAllFramesOneByOne(); // 記録されたフレームを再現しつつ再生
+                .PlayAllEventsAccordingToTimestamps(); // タイムスタンプ基準で再生
+            // Note: スペックの異なるマシンで再生する場合、PlayAllEventsAccordingToTimestampsを使用するほうが安定します。
+            // 同一マシンでキャプチャ・プレイバックするのであれば、フレームに忠実に再生するPlayAllFramesOneByOneでも再生できます。
 
             while (!isFinished)
             {
