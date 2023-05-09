@@ -24,6 +24,10 @@ namespace RoguelikeExample.IntegrationTests
     /// - RecordedTestSuite基底クラスおよびRecordedTest属性は使用せず、テストメソッド内でSceneロードを行なうことで、擬似乱数シード値を固定可能に
     /// - Test Report に名前付きでレポートを残すようにReportingManager.CurrentTestNameを設定
     /// </summary>
+    /// <remarks>
+    /// なお、再生時にGameビューからボタンが見切れているとテストは失敗します。
+    /// サンプルでは<c>CanvasScaler</c>によって常に全てのボタンが表示されるようになっています。
+    /// </remarks>
     [TestFixture]
     [Category("Integration")]
     public class OutGameScenarioParameterizedTest : AutomatedTestSuite

@@ -17,6 +17,10 @@ namespace RoguelikeExample.IntegrationTests
     /// Test Generation機能で *Simple Test* を選択して生成されるコードをベースにしています。
     /// 再生完了後、インゲームに遷移していることを検証するアサーションを追加しています。
     /// </summary>
+    /// <remarks>
+    /// なお、再生時にGameビューからボタンが見切れているとテストは失敗します。
+    /// サンプルでは<c>CanvasScaler</c>によって常に全てのボタンが表示されるようになっています。
+    /// </remarks>
     [TestFixture]
     [Category("Integration")]
     public class OutGameScenarioTest : RecordedTestSuite
