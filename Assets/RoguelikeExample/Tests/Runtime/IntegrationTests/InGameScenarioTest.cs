@@ -45,7 +45,7 @@ namespace RoguelikeExample.IntegrationTests
             await SceneManager.LoadSceneAsync("Dungeon");
 
             var dungeonManager = Object.FindAnyObjectByType<DungeonManager>();
-            dungeonManager.randomSeed = seed; // 乱数シードを固定
+            dungeonManager.randomSeed = seed; // 擬似乱数シードを固定
 
             using var eventTrace = new InputEventTrace();
             eventTrace.ReadFrom(Path.GetFullPath(Path.Combine(InputTracesPath, path)));
