@@ -20,7 +20,7 @@ namespace RoguelikeExample.IntegrationTests
     ///
     /// 一定時間でたらめな操作をします。
     /// テスト失敗と判断されるのは次の2パターン
-    /// - ログにエラー（プロダクトコードに仕込んだ UnityEngine.Assertions.Assert を含む）が出力されたとき
+    /// - ログにエラー（プロダクトコードに仕込んだ <c>UnityEngine.Assertions.Assert</c> を含む）が出力されたとき
     /// - 一定時間プレイヤーキャラクターが移動しないとき
     /// </summary>
     [TestFixture]

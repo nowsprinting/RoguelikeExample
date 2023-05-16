@@ -19,9 +19,9 @@ namespace RoguelikeExample.IntegrationTests
     /// <summary>
     /// インゲームのシナリオテスト（統合テスト）
     ///
-    /// <c>InputEventTrace</c>による操作再生のコードは、Input SystemパッケージのInput Recorderを参考にしています。
-    /// またレコードデータはInput Recorderで記録したものです。
-    /// 記録時は "Record Frames" のみonにしています。
+    /// <c>InputEventTrace</c>による操作再生のコードは、Input Systemパッケージの *Input Recorder* サンプルを参考にしています。
+    /// またレコードデータは *Input Recorder* で記録したものです。
+    /// 記録時は *Record Frames* のみonにしています。
     /// </summary>
     [TestFixture]
     [Category("Integration")]
