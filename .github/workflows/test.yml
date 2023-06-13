@@ -30,9 +30,9 @@ jobs:
       fail-fast: false
       matrix:
         unityVersion: # Available versions see: https://game.ci/docs/docker/versions
-          - 2022.2.12f1
+          - 2022.3.1f1
         include:
-          - unityVersion: 2022.2.12f1
+          - unityVersion: 2022.3.1f1
             octocov: true
 
     steps:
