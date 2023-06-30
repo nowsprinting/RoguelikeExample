@@ -9,13 +9,13 @@ on:
       - master
     paths-ignore:
       - '**.md'
-      - '.github/'
+      - '.github/**'
       - '!.github/workflows/test.yml'
   pull_request:
     types: [ opened, synchronize, reopened ]  # Same as default
     paths-ignore:
       - '**.md'
-      - '.github/'
+      - '.github/**'
       - '!.github/workflows/test.yml'
 
 concurrency:
@@ -30,9 +30,10 @@ jobs:
       fail-fast: false
       matrix:
         unityVersion: # Available versions see: https://game.ci/docs/docker/versions
-          - 2022.3.1f1
+          - 2022.3.4f1
+          - 2023.1.2f1
         include:
-          - unityVersion: 2022.3.1f1
+          - unityVersion: 2022.3.4f1
             octocov: true
 
     steps:
