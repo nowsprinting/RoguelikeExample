@@ -2,19 +2,21 @@
 # This software is released under the MIT License.
 
 name: Acquire activation file
+run-name: ${{ github.workflow }} for ${{ github.event.inputs.unityVersion }}
 
 on:
   workflow_dispatch:
     inputs:
       unityVersion:
-        description: 'Unity version'
+        description: 'Unity version (e.g., 2023.1.0f1)'
         required: true
 
-permissions: write-all
 jobs:
   activation:
     name: Request manual activation file 🔑
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       # Request manual activation file
