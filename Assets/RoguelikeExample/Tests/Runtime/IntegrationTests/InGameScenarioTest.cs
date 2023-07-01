@@ -9,6 +9,7 @@ using RoguelikeExample.Dungeon;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
 #if UNITY_EDITOR
 using System.Reflection;
 using UnityEditor;
@@ -23,8 +24,13 @@ namespace RoguelikeExample.IntegrationTests
     /// またレコードデータは *Input Recorder* で記録したものです。
     /// 記録時は *Record Frames* のみonにしています。
     /// </summary>
+    /// <remarks>
+    /// Linuxでの再生時、以下のエラーが発生するため、実行対象から除外しています。詳細は未調査だが、おそらく接続されているデバイスの差異。
+    /// `Unhandled log message: '[Exception] ArgumentException: State format KEYS from event does not match state format MOUS of device Mouse:/Mouse Parameter name: eventPtr'. Use UnityEngine.TestTools.LogAssert.Expect`
+    /// </remarks>
     [TestFixture]
     [Category("Integration")]
+    [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor)]
     public class InGameScenarioTest
     {
         private const string InputTracesPath = "Assets/RoguelikeExample/Tests/TestData/InputTraces";
