@@ -30,7 +30,7 @@ namespace RoguelikeExample.IntegrationTests
     /// </remarks>
     [TestFixture]
     [Category("Integration")]
-    public class OutGameScenarioParameterizedTest : AutomatedTestSuite
+    public class OutGameScenarioTestParameterized : AutomatedTestSuite
     {
         [UnitySetUp]
         public override IEnumerator Setup()

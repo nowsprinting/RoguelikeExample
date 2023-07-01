@@ -2,7 +2,6 @@
 // This software is released under the MIT License.
 
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using NUnit.Framework;
@@ -11,6 +10,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
+using System.Reflection;
 using UnityEditor;
 #endif
 
