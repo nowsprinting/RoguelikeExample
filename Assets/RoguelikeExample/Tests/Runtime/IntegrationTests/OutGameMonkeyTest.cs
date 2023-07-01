@@ -4,10 +4,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
 using NUnit.Framework;
 using TestHelper.Monkey;
 using UnityEngine.SceneManagement;
+#if UNITY_2023_1_OR_NEWER
+using UnityEngine;
+#else
+using Cysharp.Threading.Tasks;
+#endif
 
 namespace RoguelikeExample.IntegrationTests
 {
