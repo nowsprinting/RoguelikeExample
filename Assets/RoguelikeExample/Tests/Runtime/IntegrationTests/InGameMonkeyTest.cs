@@ -39,11 +39,6 @@ namespace RoguelikeExample.IntegrationTests
             InputSystem.RegisterBindingComposite<EightDirectionsComposite>();
             InputSystem.RegisterProcessor<SnapVector2Processor>();
             // Note: カスタムComposite, Interaction, Processorを使用しているプロジェクトでは、Setupの後に再Registerする
-
-            await SceneManager.LoadSceneAsync("Dungeon");
-
-            var dungeonManager = Object.FindAnyObjectByType<DungeonManager>();
-            dungeonManager.level = 3; // すぐ地上に出ないように開始階を変更
         }
 
         [TearDown]
@@ -56,9 +51,14 @@ namespace RoguelikeExample.IntegrationTests
         [Timeout(70000)] // タイムアウトを1分強に設定（デフォルトは180,000ms）
         public async Task インゲームのモンキーテスト()
         {
-            var random = new RandomImpl();
-            Debug.Log($"Using {random}"); // 擬似乱数発生器のシード値を出力（再現可能にするため）
-            // Note: DungeonManagerも同様にシード値を出力しています
+            var random = new RandomImpl(); // 擬似乱数生成器
+            Debug.Log($"Using {random}"); // シード値を出力（再現可能にするため）
+
+            await SceneManager.LoadSceneAsync("Dungeon");
+
+            var dungeonManager = Object.FindAnyObjectByType<DungeonManager>();
+            dungeonManager.level = 3; // すぐ地上に出ないように開始階を変更
+            dungeonManager.randomSeed = random.Next().ToString(); // シード値を設定（再現に必要なシード値を1つで済ませる）
 
             var playerCharacterController = Object.FindAnyObjectByType<PlayerCharacterController>();
             var lastLocation = playerCharacterController.MapLocation();
