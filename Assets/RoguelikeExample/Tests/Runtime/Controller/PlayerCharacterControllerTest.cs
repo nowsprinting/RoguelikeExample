@@ -704,7 +704,7 @@ namespace RoguelikeExample.Controller
             }
 
             [Test]
-            public async Task ゲームパッドEastボタン同時押し_通路がない部屋_突き当りまで高速移動()
+            public async Task ゲームパッドEastボタン同時押し_通路がない部屋_突き当たりまで高速移動()
             {
                 _playerCharacterController.NewLevel(
                     MapHelper.CreateFromDumpStrings(new[]
@@ -721,7 +721,7 @@ namespace RoguelikeExample.Controller
                 _input.Press(gamepad.buttonEast);
                 await UniTask.DelayFrame(2);
 
-                _input.Set(gamepad.leftStick, Vector2.zero); // 離す
+                _input.Set(gamepad.leftStick, Vector2.zero); // 入力が受け付けられたら離す
                 _input.Release(gamepad.buttonEast);
                 await WaitForNextPlayerIdol(_turn);
 

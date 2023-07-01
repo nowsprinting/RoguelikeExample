@@ -27,7 +27,7 @@ namespace RoguelikeExample.IntegrationTests
     {
         [UnityTest]
         [RecordedTest("RoguelikeExample/Tests/TestData/AutomatedQA/recording-all.json")]
-        public IEnumerator アウトゲームのシナリオテスト_AQA記録ファイルを再生_タイトル画面を一通り遷移してインゲームに遷移()
+        public IEnumerator アウトゲームのシナリオテスト_記録ファイルを再生_各画面を一通り遷移してインゲームに遷移()
         {
             yield return RecordedTesting.TestPlayToEnd();
 

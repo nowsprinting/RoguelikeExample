@@ -58,6 +58,7 @@ namespace RoguelikeExample.IntegrationTests
 
             var dungeonManager = Object.FindAnyObjectByType<DungeonManager>();
             dungeonManager.level = 3; // すぐ地上に出ないように開始階を変更
+            dungeonManager.playerCharacterController.Status.AddExp(999999999); // すぐ死なないようプレイヤーキャラクターを強化
             dungeonManager.randomSeed = random.Next().ToString(); // シード値を設定（再現に必要なシード値を1つで済ませる）
 
             var playerCharacterController = Object.FindAnyObjectByType<PlayerCharacterController>();

@@ -26,10 +26,10 @@ namespace RoguelikeExample.Dungeon.Generator
     {
         private static object[] s_testCaseSource =
         {
-            new[] { 7, 7, 1, 3 }, // 最小サイズ
-            new[] { 40, 10, 5, 6 }, // 幅と高さが異なる
+            new[] { 7, 7, 1, 3 }, // 最小サイズのテストケース
+            new[] { 40, 10, 5, 6 }, // 幅と高さが異なるテストケース
         };
-        // Note: 開発時はパターンを増やして多数試行、以降は以降はリグレッションテストとして最小限のパターンのみ残す
+        // Note: 開発時はパターンを増やして多数試行、以降はリグレッションテストとして最小限のパターンのみ残す
 
         private const int RepeatCount = 1;
         // Note: 開発時は繰り返し回数を増やして多数試行、以降はリグレッションテストとして1回だけ実行
