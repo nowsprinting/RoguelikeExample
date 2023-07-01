@@ -2,7 +2,7 @@
   "dependencies": {
     "com.cysharp.unitask": "2.3.3",
     "com.nowsprinting.create-script-folders-with-tests": "1.2.0",
-    "com.nowsprinting.test-helper.monkey": "0.2.0",
+    "com.nowsprinting.test-helper.monkey": "0.3.0",
     "com.unity.ai.navigation": "1.1.4",
     "com.unity.automated-testing": "0.8.1-preview.2",
     "com.unity.collab-proxy": "2.0.5",
