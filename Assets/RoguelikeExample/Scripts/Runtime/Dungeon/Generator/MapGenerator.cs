@@ -23,7 +23,7 @@ namespace RoguelikeExample.Dungeon.Generator
         /// <param name="height">生成されるマップの高さ（7以上）</param>
         /// <param name="roomCount">部屋の最大数（1以上）</param>
         /// <param name="maxRoomSize">部屋の最大サイズ（3以上）</param>
-        /// <param name="random">擬似乱数発生器インスタンス</param>
+        /// <param name="random">擬似乱数生成器インスタンス</param>
         /// <returns></returns>
         public static MapChip[,] Generate(int width, int height, int roomCount, int maxRoomSize, IRandom random = null)
         {

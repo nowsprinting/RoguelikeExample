@@ -56,7 +56,7 @@ namespace RoguelikeExample.Dungeon
         [SerializeField, Tooltip("ルートとなる擬似乱数のシード値（再生モードに入ってから変更しても無効）")]
         internal string randomSeed;
 
-        internal IRandom Random { get; private set; } // ルートとなる擬似乱数発生器
+        internal IRandom Random { get; private set; } // ルートとなる擬似乱数生成器
         internal Turn Turn { get; private set; } = new Turn(); // 行動ターンのステートマシン
 
         private MapChip[,] _map; // 現在のレベルのマップ
@@ -94,7 +94,7 @@ namespace RoguelikeExample.Dungeon
                 Random = new RandomImpl(seed);
             }
 
-            Debug.Log($"Dungeon root random is: {Random}"); // 擬似乱数発生器のシード値をログ出力（再現可能にするため）
+            Debug.Log($"Dungeon root random is: {Random}"); // 擬似乱数生成器のシード値をログ出力（再現可能にするため）
 
             if (enemyManager != null)
             {

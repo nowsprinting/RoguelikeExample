@@ -35,7 +35,7 @@ namespace RoguelikeExample.Controller
         /// <summary>
         /// インゲーム開始時に <c>DungeonManager</c> から設定される
         /// </summary>
-        /// <param name="random">このキャラクターが消費する擬似乱数発生器インスタンス</param>
+        /// <param name="random">このキャラクターが消費する擬似乱数生成器インスタンス</param>
         /// <param name="turn">行動ターンのステートマシン（DungeonManagerが生成したインスタンス）</param>
         /// <param name="enemyManager">敵キャラクター管理</param>
         public void Initialize(IRandom random, Turn turn, EnemyManager enemyManager = null)
