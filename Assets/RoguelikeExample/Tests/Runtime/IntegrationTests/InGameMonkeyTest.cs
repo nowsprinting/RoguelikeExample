@@ -28,6 +28,7 @@ namespace RoguelikeExample.IntegrationTests
     public class InGameMonkeyTest
     {
         private readonly InputTestFixture _input = new InputTestFixture();
+        private IRandom _random; // モンキーテストで使用する擬似乱数生成器
 
         [SetUp]
         public async Task SetUp()
@@ -39,6 +40,16 @@ namespace RoguelikeExample.IntegrationTests
             InputSystem.RegisterBindingComposite<EightDirectionsComposite>();
             InputSystem.RegisterProcessor<SnapVector2Processor>();
             // Note: カスタムComposite, Interaction, Processorを使用しているプロジェクトでは、Setupの後に再Registerする
+
+            _random = new RandomImpl();
+            Debug.Log($"Using {_random}"); // シード値を出力（再現可能にするため）
+
+            await SceneManager.LoadSceneAsync("Dungeon");
+
+            var dungeonManager = Object.FindAnyObjectByType<DungeonManager>();
+            dungeonManager.level = 3; // すぐ地上に出ないように開始階を変更
+            dungeonManager.playerCharacterController.Status.AddExp(999999999); // すぐ死なないようプレイヤーキャラクターを強化
+            dungeonManager.randomSeed = _random.Next().ToString(); // 再現に必要なシード値を1つで済ませるため、_random.Next()を使用
         }
 
         [TearDown]
@@ -51,16 +62,6 @@ namespace RoguelikeExample.IntegrationTests
         [Timeout(70000)] // タイムアウトを1分強に設定（デフォルトは180,000ms）
         public async Task インゲームのモンキーテスト()
         {
-            var random = new RandomImpl(); // 擬似乱数生成器
-            Debug.Log($"Using {random}"); // シード値を出力（再現可能にするため）
-
-            await SceneManager.LoadSceneAsync("Dungeon");
-
-            var dungeonManager = Object.FindAnyObjectByType<DungeonManager>();
-            dungeonManager.level = 3; // すぐ地上に出ないように開始階を変更
-            dungeonManager.playerCharacterController.Status.AddExp(999999999); // すぐ死なないようプレイヤーキャラクターを強化
-            dungeonManager.randomSeed = random.Next().ToString(); // シード値を設定（再現に必要なシード値を1つで済ませる）
-
             var playerCharacterController = Object.FindAnyObjectByType<PlayerCharacterController>();
             var lastLocation = playerCharacterController.MapLocation();
             var dontMoveCount = 0;
@@ -77,12 +78,12 @@ namespace RoguelikeExample.IntegrationTests
             var expireTime = Time.time + 60.0f; // 1分間動作させる
             while (Time.time < expireTime)
             {
-                var key = keys[random.Next(keys.Length)]; // 操作するキーを抽選
+                var key = keys[_random.Next(keys.Length)]; // 操作するキーを抽選
                 _input.Press(key); // 押す
-                await UniTask.DelayFrame(random.Next(10));
+                await UniTask.DelayFrame(_random.Next(10));
 
                 _input.Release(key); // 離す
-                await UniTask.DelayFrame(random.Next(10));
+                await UniTask.DelayFrame(_random.Next(10));
 
                 var nowLocation = playerCharacterController.MapLocation();
                 if (nowLocation == lastLocation)
