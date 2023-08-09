@@ -17,17 +17,17 @@
 
 ### キーボード
 
-- hjklyubnキー：移動
-- hjklキー + controlもしくはshiftキー同時押しで高速移動（a.k.a. Run, Dash）
-- Spaceキー：進行方向に攻撃、選択肢を決定
-- Escapeキー：選択ダイアログをキャンセル
+- **hjklyubn**キー：移動
+- **hjkl**キーと**Control**もしくは**Shift**キー同時押し：高速移動（a.k.a. Run, Dash）
+- **Space**キー：進行方向に攻撃、選択肢を決定
+- **Escape**キー：選択ダイアログをキャンセル
 
 ### ゲームパッド
 
-- 左スティック：移動
-- 左スティック + Eastボタン同時押しで高速移動
-- Southボタン：進行方向に攻撃、選択肢を決定
-- Eastボタン：選択ダイアログをキャンセル
+- **左スティック**：移動
+- **左スティック**と**Eastボタン**（ABXYの右側）同時押し：高速移動
+- **Southボタン**：進行方向に攻撃、選択肢を決定
+- **Eastボタン**：選択ダイアログをキャンセル
 
 
 
@@ -108,12 +108,10 @@ MIT License
 
 ### サードパーティ ライセンス
 
-#### [PixelMplus](https://itouhiro.hatenablog.com/entry/20130602/font)
-
-Copyright (C) 2002-2013 M+ FONTS PROJECT
-
-M+ FONT LICENSE
-
-#### [kgsi/japanese_full.txt](https://gist.github.com/kgsi/ed2f1c5696a2211c1fd1e1e198c96ee4)
-
-ライセンス不明
+<dl>
+  <dt><a href="https://itouhiro.hatenablog.com/entry/20130602/font">PixelMplus</a></dt>
+  <dd>Copyright (C) 2002-2013 M+ FONTS PROJECT<br/>
+    M+ FONT LICENSE</dd>
+  <dt><a href="https://gist.github.com/kgsi/ed2f1c5696a2211c1fd1e1e198c96ee4">kgsi/japanese_full.txt</a></dt>
+  <dd>ライセンス未表記</dd>
+</dl>
