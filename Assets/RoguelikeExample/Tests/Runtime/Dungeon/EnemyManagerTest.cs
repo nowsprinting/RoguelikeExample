@@ -50,7 +50,7 @@ namespace RoguelikeExample.Dungeon
         [TearDown]
         public async Task TearDown()
         {
-            await Task.Delay(100); // オブジェクトの破棄を待つ
+            await Task.Delay(200); // オブジェクトの破棄を待つ
             await SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
         }
 
