@@ -44,7 +44,7 @@ namespace RoguelikeExample.Dungeon
         public async Task TearDown()
         {
             _input.TearDown();
-            await Task.Delay(100); // オブジェクトの破棄を待つ
+            await Task.Delay(200); // オブジェクトの破棄を待つ
         }
 
         [Test]
