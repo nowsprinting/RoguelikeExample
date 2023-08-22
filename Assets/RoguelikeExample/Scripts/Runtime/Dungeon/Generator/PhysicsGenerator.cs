@@ -2,7 +2,10 @@
 // This software is released under the MIT License.
 
 using System;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace RoguelikeExample.Dungeon.Generator
 {
@@ -34,27 +37,27 @@ namespace RoguelikeExample.Dungeon.Generator
 
         private static GameObject CreateObject(MapChip chip)
         {
-            GameObject gameObject;
             switch (chip)
             {
                 case MapChip.Wall:
-                    gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    break;
+                    return LoadFBX("Wall");
                 case MapChip.Room:
                 case MapChip.Corridor:
-                    gameObject = new GameObject(); // 床なし（暫定）
-                    break;
+                    return LoadFBX("Floor");
                 case MapChip.UpStairs:
-                    gameObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    break;
+                    return LoadFBX("UpStairs");
                 case MapChip.DownStairs:
-                    gameObject = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                    break;
+                    return LoadFBX("DownStairs");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
 
-            return gameObject;
+        private static GameObject LoadFBX(string name)
+        {
+            const string BasePath = "Assets/RoguelikeExample/Prefabs";
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(Path.Combine(BasePath, $"{name}.fbx"));
+            return Object.Instantiate(prefab);
         }
     }
 }

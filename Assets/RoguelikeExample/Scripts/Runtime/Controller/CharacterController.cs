@@ -11,6 +11,8 @@ namespace RoguelikeExample.Controller
     [DisallowMultipleComponent]
     public abstract class CharacterController : MonoBehaviour
     {
+        private const float CharacterPosY = 0.4f;
+
         // インスタンス生成時に設定されるもの
         protected IRandom _random;
         protected Turn _turn;
@@ -40,7 +42,7 @@ namespace RoguelikeExample.Controller
         /// <param name="row">0以上の整数</param>
         public void SetPositionFromMapLocation(int column, int row)
         {
-            transform.position = new Vector3(column, 0, -1 * row);
+            transform.position = new Vector3(column, CharacterPosY, -1 * row);
             NextLocation = (column, row);
         }
 
@@ -59,7 +61,7 @@ namespace RoguelikeExample.Controller
         /// <param name="animationMillis">移動アニメーションにかける時間（ミリ秒）</param>
         protected async UniTask MoveToNextLocation(int animationMillis)
         {
-            transform.position = new Vector3(NextLocation.column, 0, -1 * NextLocation.row);
+            transform.position = new Vector3(NextLocation.column, CharacterPosY, -1 * NextLocation.row);
             await UniTask.Delay(animationMillis); // TODO: 指定時間かけて移動する
         }
     }
