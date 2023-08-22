@@ -2,7 +2,21 @@
 
 [![Meta file check](https://github.com/nowsprinting/RoguelikeExample/actions/workflows/metacheck.yml/badge.svg)](https://github.com/nowsprinting/RoguelikeExample/actions/workflows/metacheck.yml)
 [![Test](https://github.com/nowsprinting/RoguelikeExample/actions/workflows/test.yml/badge.svg)](https://github.com/nowsprinting/RoguelikeExample/actions/workflows/test.yml)
-[![Integration Test](https://github.com/nowsprinting/RoguelikeExample/actions/workflows/test_integration.yml/badge.svg)](https://github.com/nowsprinting/RoguelikeExample/actions/workflows/test_integration.yml)
+[![Integration Test](https://github.com/nowsprinting/RoguelikeExample/actions/workflows/test-integration.yml/badge.svg)](https://github.com/nowsprinting/RoguelikeExample/actions/workflows/test-integration.yml)
+
+
+
+## このリポジトリについて
+
+このリポジトリは、書籍『[Unityバイブル R5夏号](https://www.borndigital.co.jp/book/30830.html)』（ボーンデジタル, 2023）のSECTION 06「ゲームプレイの自動テスト」のサンプルプロジェクトです。
+
+書籍は次のWebサイトから購入できます。
+
+- [Unityバイブル R5夏号（Amazon）](https://amzn.to/3E8bz1M)
+- [PDF版 Unityバイブル R5夏号（ボーンデジタル オンラインブックストア）](https://www.borndigital.co.jp/book/30845.html)
+
+プロジェクトは書籍発売以降もメンテナンスされますが、書籍に掲載されているテストコードは極力変更しない方針です。
+書籍発売時点のプロジェクトは、tag: [r5smr](https://github.com/nowsprinting/RoguelikeExample/tree/r5smr)を参照してください。
 
 
 
