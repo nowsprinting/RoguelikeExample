@@ -29,6 +29,8 @@
 
 ## ゲームプレイ
 
+UnityエディターでAssets/RoguelikeExample/Scenes/Dungeon.unityを開き、再生してください。
+
 ### キーボード
 
 - **hjklyubn**キー：移動
