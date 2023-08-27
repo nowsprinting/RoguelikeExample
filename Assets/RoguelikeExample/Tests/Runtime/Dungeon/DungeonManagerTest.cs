@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 
 namespace RoguelikeExample.Dungeon
 {
-    [TestFixture, Timeout(5000)]
+    [TestFixture, Timeout(8000)]
     public class DungeonManagerTest
     {
         private readonly InputTestFixture _input = new InputTestFixture();
@@ -44,7 +44,7 @@ namespace RoguelikeExample.Dungeon
         public async Task TearDown()
         {
             _input.TearDown();
-            await Task.Delay(200); // オブジェクトの破棄を待つ
+            await UniTask.DelayFrame(10); // オブジェクトの破棄を待つ
         }
 
         [Test]

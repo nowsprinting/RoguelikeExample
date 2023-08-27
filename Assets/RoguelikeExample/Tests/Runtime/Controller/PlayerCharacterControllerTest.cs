@@ -83,7 +83,7 @@ namespace RoguelikeExample.Controller
             public async Task TearDown()
             {
                 _input.TearDown();
-                await Task.Delay(100); // オブジェクトの破棄を待つ
+                await UniTask.DelayFrame(10); // オブジェクトの破棄を待つ
                 await SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
             }
 
@@ -359,7 +359,7 @@ namespace RoguelikeExample.Controller
             public async Task TearDown()
             {
                 _input.TearDown();
-                await Task.Delay(100); // オブジェクトの破棄を待つ
+                await UniTask.DelayFrame(10); // オブジェクトの破棄を待つ
                 await SceneManager.UnloadSceneAsync(TestContext.CurrentContext.Test.ClassName);
             }
 
