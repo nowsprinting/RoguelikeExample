@@ -16,7 +16,7 @@ namespace RoguelikeExample.Dungeon
     /// 敵キャラクター管理クラスのテスト
     /// 主に敵インスタンス生成ロジックのテスト
     /// </summary>
-    [TestFixture, Timeout(8000)]
+    [TestFixture, Timeout(5000)]
     public class EnemyManagerTest
     {
         private PlayerCharacterController _playerCharacterController;

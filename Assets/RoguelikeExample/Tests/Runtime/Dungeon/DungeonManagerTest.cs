@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 
 namespace RoguelikeExample.Dungeon
 {
-    [TestFixture, Timeout(8000)]
+    [TestFixture, Timeout(5000)]
     public class DungeonManagerTest
     {
         private readonly InputTestFixture _input = new InputTestFixture();
