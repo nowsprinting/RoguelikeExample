@@ -17,6 +17,7 @@ namespace RoguelikeExample.Dungeon
     /// 主に敵インスタンス生成ロジックのテスト
     /// </summary>
     [TestFixture, Timeout(5000)]
+    [Category("IgnoreCI")] // CI環境ではfpsが低いため、このテストはスキップする
     public class EnemyManagerTest
     {
         private PlayerCharacterController _playerCharacterController;
