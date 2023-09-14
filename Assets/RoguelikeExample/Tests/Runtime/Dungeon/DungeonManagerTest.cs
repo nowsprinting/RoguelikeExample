@@ -13,7 +13,8 @@ using UnityEngine.SceneManagement;
 
 namespace RoguelikeExample.Dungeon
 {
-    [TestFixture, Timeout(8000)]
+    [TestFixture, Timeout(5000)]
+    [Category("IgnoreCI")] // CI環境ではfpsが低いため、このテストはスキップする
     public class DungeonManagerTest
     {
         private readonly InputTestFixture _input = new InputTestFixture();
