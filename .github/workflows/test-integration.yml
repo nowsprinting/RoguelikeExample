@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Koji Hasegawa.
+# Copyright (c) 2023-2024 Koji Hasegawa.
 # This software is released under the MIT License.
 
 name: Integration Test
@@ -33,8 +33,8 @@ jobs:
       fail-fast: false
       matrix:
         unityVersion: # Available versions see: https://game.ci/docs/docker/versions
-          - 2022.3.4f1
-          - 2023.1.2f1
+          - 2022.3.17f1
+          - 2023.2.5f1
 
     steps:
       - name: Checkout repository
